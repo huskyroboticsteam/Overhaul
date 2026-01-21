@@ -5,14 +5,14 @@
 namespace Constants {
 
 /**
-  @namespace Network
+  @namespace Constants::Network
   @brief Network constants
 */
 namespace Network {
 const char* MC_PROTOCOL_ENDPOINT = "/mission-control";
 
 /**
-  @namespace Keys
+  @namespace Constants::Network::Keys
   @brief Network keys
 */
 namespace Keys {
