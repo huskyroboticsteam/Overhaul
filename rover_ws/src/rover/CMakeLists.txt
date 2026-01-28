@@ -1,6 +1,9 @@
 cmake_minimum_required(VERSION 3.8)
 project(rover)
 
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+
 if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
   add_compile_options(-Wall -Wextra -Wpedantic)
 endif()
@@ -9,17 +12,17 @@ endif()
 find_package(ament_cmake REQUIRED)
 find_package(rclcpp REQUIRED)
 
-add_executable(rover src/rover.cpp)
-target_include_directories(rover PUBLIC
+add_executable(Rover src/Rover.cpp)
+target_include_directories(Rover PUBLIC
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
   $<INSTALL_INTERFACE:include>)
-target_compile_features(rover PUBLIC c_std_99 cxx_std_17)  # Require C99 and C++17
+target_compile_features(Rover PUBLIC c_std_99 cxx_std_17)  # Require C99 and C++17
 ament_target_dependencies(
-  rover
-  "rclcpp"
+  Rover
+  rclcpp
 )
 
-install(TARGETS rover
+install(TARGETS Rover
   DESTINATION lib/${PROJECT_NAME})
 
 if(BUILD_TESTING)
