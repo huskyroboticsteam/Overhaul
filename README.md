@@ -8,4 +8,4 @@ In a separate terminal from where you built, `source /opt/ros/humble/setup.bash`
 
 Then, `cd rover_ws && source install/local_setup.bash`
 
-Finally, `ros2 run rover Rover --ros-args -r peripheral:=<peripheral>`
+Finally, `ros2 run rover Rover --ros-args -p peripheral:=<peripheral>`
