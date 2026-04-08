@@ -1,5 +1,8 @@
+Read instructions in .devcontainer/README.md first! This will allow all of our builds to be in the same environments
+(hopefully)!
+
 ## Building
-In one terminal, `source /opt/ros/humble/setup.bash`
+In one terminal, `source /opt/ros/humble/setup.bash` (Should be sourced by default but just in case)
 
 Then run the build command in the project root directory, `colcon build`
 

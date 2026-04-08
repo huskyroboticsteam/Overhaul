@@ -16,7 +16,11 @@ RUN groupadd --gid $USER_GID $USERNAME \
     && echo $USERNAME ALL=\(root\) NOPASSWD:ALL > /etc/sudoers.d/$USERNAME \
     && chmod 0440 /etc/sudoers.d/$USERNAME
 RUN apt-get update && apt-get upgrade -y
+
+# Install dependencies and tools
 RUN apt-get install -y python3-pip
+RUN apt-get install -y vim
+RUN apt-get install -y vim
 ENV SHELL /bin/bash
 
 # ********************************************************
@@ -25,4 +29,8 @@ ENV SHELL /bin/bash
 
 # [Optional] Set the default user. Omit if you want to keep the default as root.
 USER $USERNAME
+
+# Update bashrc to use alias's, sourcing etc.
+RUN echo "source /opt/ros/humble/setup.bash" >> ~/.bashrc 
+
 CMD ["/bin/bash"]
