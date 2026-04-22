@@ -1,6 +1,11 @@
 Read instructions in .devcontainer/README.md first! This will allow all of our builds to be in the same environments
 (hopefully)!
 
+## Docker
+1. Install Dev Containers extension to vscode 
+2. Install docker on your device
+3. Run `Dev Containers: Reopen in Container` in vscode
+
 ## Building
 In one terminal, `source /opt/ros/humble/setup.bash` (Should be sourced by default but just in case)
 
