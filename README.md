@@ -12,3 +12,15 @@ In a separate terminal from where you built, `source /opt/ros/humble/setup.bash`
 Then, `source install/local_setup.bash`
 
 Finally, `ros2 run rover Rover --ros-args -p peripheral:=<peripheral>`
+
+## Adding new ROS2 Packages
+Suppose we want to add a ROS2 package (i.e rosbag2). Remember to update the following:
+
+1. `package.xml` - Add `<depend>rosbag2</depend>`
+2. `CMakeLists.txt` - Add `find_package(rosbag2 REQUIRED)`
+3. `CMakeLists.txt` - Add `rosbag2` under `ament_target_dependencies`
+
+After adding, run the following:
+
+1. Install external dependencies `rosdep install --from-paths src --ignore-src -y` (as ChatGPT says, "get ingredients")
+2. Run CMake `colcon build --packages-select rover` (as ChatGPT says "cook the meal")

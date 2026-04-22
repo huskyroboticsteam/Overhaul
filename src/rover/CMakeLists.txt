@@ -11,6 +11,7 @@ endif()
 # find dependencies
 find_package(ament_cmake REQUIRED)
 find_package(rclcpp REQUIRED)
+find_package(rcl_interfaces REQUIRED)
 
 include(FetchContent)
 
@@ -22,7 +23,7 @@ FetchContent_Declare(
 )
 FetchContent_MakeAvailable(foxglove)
 
-add_executable(Rover src/Rover.cpp)
+add_executable(Rover src/Rover.cpp src/Globals.cpp)
 target_include_directories(Rover PUBLIC
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
   $<INSTALL_INTERFACE:include>
@@ -40,6 +41,7 @@ target_compile_features(Rover PUBLIC c_std_99 cxx_std_17)  # Require C99 and C++
 ament_target_dependencies(
   Rover
   rclcpp
+  rcl_interfaces
 )
 
 install(TARGETS Rover
