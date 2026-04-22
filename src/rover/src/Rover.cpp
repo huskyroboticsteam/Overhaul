@@ -2,7 +2,7 @@
 
 #include <string>
 
-#include <foxglove/server.hpp>
+// #include <foxglove/server.hpp>
 #include <rclcpp/rclcpp.hpp>
 
 using namespace Globals;
@@ -23,11 +23,6 @@ class Rover : public rclcpp::Node {
 int main(int argc, char ** argv)
 {
   rclcpp::init(argc, argv);
-
-  foxglove::WebSocketServerOptions ws_options;
-  auto result = foxglove::WebSocketServer::create(std::move(ws_options));
-  if (!result.has_value()) { return 1; }
-  Globals::Network::server = result.value();
 
   rclcpp::spin(std::make_shared<Rover>());
   rclcpp::shutdown();

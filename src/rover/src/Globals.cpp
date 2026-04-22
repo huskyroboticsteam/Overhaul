@@ -11,7 +11,6 @@ namespace Globals {
   @brief Network globals
 */
 namespace Network {
-foxglove::WebSocketServer server;
 
 }
 }
