@@ -18,6 +18,19 @@ Then, `source install/local_setup.bash`
 
 Finally, `ros2 run rover Rover --ros-args -p peripheral:=<peripheral>`
 
+Running mc node `ros2 run mc --ros-args`
+
+## Running on the Jetson (TODO!!)
+1. Run `docker build --network=host -t my_mavros_env .` to build on the Jetson
+2. Run ```docker run -it --rm \
+  --net=host \
+  --device=/dev/ttyACM0:/dev/ttyACM0 \
+  --group-add dialout \
+  --name mavros_container \
+  my_mavros_env bash```
+3. `ros2 run mavros mavros_node --ros-args -p fcu_url:=/dev/ttyACM0:57600`
+4. In second terminal: `docker exec -it mavros_container bash` and then `ros2 topic list`, etc
+
 ## Adding new ROS2 Packages
 Suppose we want to add a custom ROS2 package (i.e rosbag2). Remember to update the following:
 
