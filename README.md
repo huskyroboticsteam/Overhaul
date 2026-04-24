@@ -13,6 +13,8 @@ Then, `source install/local_setup.bash`
 
 Finally, `ros2 run rover Rover --ros-args -p peripheral:=<peripheral>`
 
+Running mc node `ros2 run mc --ros-args`
+
 ## Adding new ROS2 Packages
 Suppose we want to add a ROS2 package (i.e rosbag2). Remember to update the following:
 

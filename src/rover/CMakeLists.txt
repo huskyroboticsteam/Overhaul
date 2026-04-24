@@ -13,6 +13,9 @@ find_package(ament_cmake REQUIRED)
 find_package(rclcpp REQUIRED)
 find_package(rcl_interfaces REQUIRED)
 
+# Find the JSON library
+find_package(nlohmann_json 3.2.0 REQUIRED)
+
 include(FetchContent)
 
 # FetchContent_Declare(
@@ -23,12 +26,22 @@ include(FetchContent)
 # )
 # FetchContent_MakeAvailable(foxglove)
 
+include_directories()
+
 add_executable(Rover src/Rover.cpp src/Globals.cpp)
+add_executable(MissionControlInterface mc/mc.cpp mc/WebSocketServer.cpp mc/WebSocketProtocol.cpp)
 target_include_directories(Rover PUBLIC
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
   $<INSTALL_INTERFACE:include>)
 
 file(GLOB CONFIGURE_DEPENDS
+)
+
+target_compile_features(MissionControlInterface PUBLIC c_std_99 cxx_std_17)  # Require C99 and C++17
+ament_target_dependencies(
+  MissionControlInterface
+  rclcpp
+  rcl_interfaces
 )
 
 target_compile_features(Rover PUBLIC c_std_99 cxx_std_17)  # Require C99 and C++17
@@ -38,7 +51,7 @@ ament_target_dependencies(
   rcl_interfaces
 )
 
-install(TARGETS Rover
+install(TARGETS Rover MissionControlInterface
   DESTINATION lib/${PROJECT_NAME})
 
 if(BUILD_TESTING)

@@ -11,6 +11,5 @@ namespace Globals {
   @brief Network globals
 */
 namespace Network {
-
 }
 }
