@@ -27,6 +27,15 @@ ENV SHELL /bin/bash
 # * Anything else you want to do like clean up goes here *
 # ********************************************************
 
+# Install MAVROS packages
+RUN apt-get install -y ros-humble-mavros ros-humble-mavros-extras
+
+# Install GeographicLib datasets (MAVROS requirement)
+RUN wget https://raw.githubusercontent.com/mavlink/mavros/ros2/mavros/scripts/install_geographiclib_datasets.sh \
+    && chmod +x install_geographiclib_datasets.sh \
+    && ./install_geographiclib_datasets.sh \
+    && rm install_geographiclib_datasets.sh
+
 # [Optional] Set the default user. Omit if you want to keep the default as root.
 USER $USERNAME
 
