@@ -1,0 +1,16 @@
+<map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
+<area shape="rect" id="Node000000" href="$classutil_1_1impl_1_1Notifiable.html" title=" " alt="" coords="5,169,134,194"/>
+<area shape="rect" id="Node000001" href="$classutil_1_1AsyncTask.html" title=" " alt="" coords="184,5,344,46"/>
+<area shape="poly" id="edge3_Node000000_Node000001" title=" " alt="" coords="88,154,128,109,180,62,210,44,213,49,183,66,132,112,92,158"/>
+<area shape="rect" id="Node000002" href="$classutil_1_1PeriodicTask.html" title="Implements a task that executes a function periodically." alt="" coords="394,35,514,75"/>
+<area shape="poly" id="edge8_Node000000_Node000002" title=" " alt="" coords="97,157,135,130,181,106,236,87,292,73,393,57,394,63,293,78,237,92,183,111,138,134,100,161"/>
+<area shape="rect" id="Node000003" href="$classutil_1_1PeriodicScheduler.html" title=" " alt="" coords="189,120,338,176"/>
+<area shape="poly" id="edge5_Node000000_Node000003" title=" " alt="" coords="149,165,188,159,189,164,150,171"/>
+<area shape="rect" id="Node000004" href="$classutil_1_1AsyncTask.html" title="An abstract class that can be overridden to run long&#45;running tasks and encapsulate task&#45;related data." alt="" coords="182,201,346,226"/>
+<area shape="poly" id="edge6_Node000000_Node000004" title=" " alt="" coords="150,192,182,198,181,203,149,197"/>
+<area shape="rect" id="Node000005" href="$classutil_1_1PeriodicScheduler.html" title="Uses a single thread to periodically invoke callbacks at a given frequency." alt="" coords="189,251,338,291"/>
+<area shape="poly" id="edge7_Node000000_Node000005" title=" " alt="" coords="109,200,183,237,208,248,206,252,181,241,107,205"/>
+<area shape="rect" id="Node000006" href="$classutil_1_1Watchdog.html" title="Implements a thread&#45;safe watchdog." alt="" coords="185,316,342,341"/>
+<area shape="poly" id="edge9_Node000000_Node000006" title=" " alt="" coords="90,206,129,254,155,279,183,301,207,312,205,317,180,305,151,283,125,258,86,209"/>
+<area shape="poly" id="edge4_Node000001_Node000002" title=" " alt="" coords="359,38,394,43,393,48,358,43"/>
+</map>
