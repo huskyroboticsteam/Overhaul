@@ -3,6 +3,8 @@
 #include "../src/Constants.cpp"
 #include "../utils/core.h"
 
+#include <rclcpp/logging.hpp>			// ROS debugging
+
 #include <string>
 namespace net {
 namespace websocket {
@@ -12,7 +14,7 @@ using nlohmann::json;
 SingleClientWSServer::ProtocolData::ProtocolData(std::unique_ptr<WebSocketProtocol> protocol)
 	: protocol(std::move(protocol)) {}
 
-SingleClientWSServer::SingleClientWSServer(const std::string& serverName, uint16_t port)
+SingleClientWSServer::SingleClientWSServer(const std::string& serverName, uint16_t port, rclcpp::Node* node)
 	: serverName(serverName), clientAddress("AddressUnkown"), port(port), server(), isRunning(false), protocolMap(),
 	  serverThread(), pingScheduler(serverName + "_PingSched") {
 	// disable websocket logging
@@ -56,8 +58,8 @@ void SingleClientWSServer::serverTask() {
 		server.start_accept();
 		server.run();
 	} catch (const websocketpp::exception& e) {
-		// LOG_F(ERROR, "Server=%s - An error occurred while starting: %s", serverName.c_str(),
-		// 	  e.what());
+		RCLCPP_ERROR_THROTTLE(node->get_logger(), *node->get_clock(), 1000, "Server=%s - An error occurred while starting: %s", 
+			serverName.c_str(), e.what());
 	}
 }
 
@@ -115,8 +117,8 @@ void SingleClientWSServer::sendRawString(const std::string& protocolPath,
 			conn->send(str, websocketpp::frame::opcode::text);
 		}
 	} else {
-		// LOG_F(WARNING, "Server=%s : Can't send message to nonexistent endpoint: %s",
-		// 	  serverName.c_str(), protocolPath.c_str());
+		RCLCPP_WARN_SKIPFIRST(node->get_logger(), "Server=%s : Can't send message to nonexistent endpoint: %s",
+		 	  serverName.c_str(), protocolPath.c_str());
 	}
 }
 
@@ -135,11 +137,10 @@ bool SingleClientWSServer::validate(connection_hdl hdl) {
 			return true;
 		} else {
 			auto existingConn = server.get_con_from_hdl(pd.client.value());
-			// LOG_F(INFO,
-			// 	  "Server=%s, Endpoint=%s : Rejected connection from %s - A client is already "
-			// 	  "connected: %s\n",
-			// 	  serverName.c_str(), path.c_str(), conn->get_remote_endpoint().c_str(),
-			// 	  existingConn->get_remote_endpoint().c_str());
+			RCLCPP_INFO_ONCE(node->get_logger(), "Server=%s, Endpoint=%s : Rejected connection from %s - A client is already "
+				  "connected: %s\n",
+				  serverName.c_str(), path.c_str(), conn->get_remote_endpoint().c_str(),
+				  existingConn->get_remote_endpoint().c_str());
 			return false;
 		}
 	} else {

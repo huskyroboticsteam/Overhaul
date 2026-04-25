@@ -11,6 +11,8 @@ In one terminal, `source /opt/ros/humble/setup.bash` (Should be sourced by defau
 
 Then run the build command in the project root directory, `colcon build`
 
+For cleaning the build run `rm -r build install`
+
 ## Running
 In a separate terminal from where you built, `source /opt/ros/humble/setup.bash`
 
@@ -18,7 +20,7 @@ Then, `source install/local_setup.bash`
 
 Finally, `ros2 run rover Rover --ros-args -p peripheral:=<peripheral>`
 
-Running mc node `ros2 run mc --ros-args`
+Running mc node `ros2 run MissionControlInterface`
 
 ## Adding new ROS2 Packages
 Suppose we want to add a custom ROS2 package (i.e rosbag2). Remember to update the following:
@@ -43,3 +45,4 @@ Add install steps into Dockerfile. For example, add the following to Dockerfile:
   - Go to "Wired Settings" and make sure "Shared to other computers" is checked (under IPv4)
   - Try disabling the firewall with the following command: `sudo ufw disable`. If it works after disabling the firewall, set `DEFAULT_FORWARD_POLICY` to `ACCEPT` in `/etc/default/ufw`. You can re-enable ufw after it is set. 
   - There might also be some DNS issues on the Jetson. Good luck if that's the case. 
+  - In the event that it says 'rover' not found ensure that you sourced both of the bash scripts espcially 'install/local_setup.bash'

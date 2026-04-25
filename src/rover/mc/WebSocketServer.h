@@ -12,6 +12,7 @@
 #include <nlohmann/json.hpp>
 #include <websocketpp/config/asio_no_tls.hpp>
 #include <websocketpp/server.hpp>
+#include <rclcpp/rclcpp.hpp>
 
 namespace net {
 namespace websocket {
@@ -40,7 +41,7 @@ public:
 	 * @param serverName The name of this server. This is used only for logging purposes.
 	 * @param port The local port to bind to. This is not validated until start() is called.
 	 */
-	SingleClientWSServer(const std::string& serverName, uint16_t port);
+	SingleClientWSServer(const std::string& serverName, uint16_t port, rclcpp::Node* node);
 
 	/**
 	 * @brief Destroy the server after calling stop()
@@ -123,6 +124,7 @@ private:
 	std::map<std::string, ProtocolData> protocolMap;
 	std::thread serverThread;
 	util::PeriodicScheduler<> pingScheduler;
+	rclcpp::Node* node;
 
 	// called when connection is received and being validated.
 	// return true to accept, false to reject

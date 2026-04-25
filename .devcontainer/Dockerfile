@@ -20,7 +20,6 @@ RUN apt-get update && apt-get upgrade -y
 # Install dependencies and tools
 RUN apt-get install -y python3-pip
 RUN apt-get install -y vim
-RUN apt-get install -y vim
 
 # Install Husky Robotics dependencies
 RUN apt install -y curl wget
@@ -30,7 +29,7 @@ RUN mkdir -p /etc/apt/keyrings/
 RUN wget -P /etc/apt/keyrings/ "https://huskyroboticsteam.github.io/ubuntu-repo/KEY.gpg"
 RUN gpg --no-default-keyring --keyring ./temp-keyring.gpg --import /etc/apt/keyrings/KEY.gpg
 RUN gpg --no-default-keyring --keyring ./temp-keyring.gpg --export --output /etc/apt/keyrings/KEY.gpg --yes
-RUN rm temp-keyring.gpg
+RUN rm temp-keyring.gpg*
 
 RUN wget -P /etc/apt/sources.list.d "https://huskyroboticsteam.github.io/ubuntu-repo/husky_robotics.list"
 

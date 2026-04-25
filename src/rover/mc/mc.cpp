@@ -11,8 +11,9 @@ using namespace Globals;
 class MissionControlInterface : public rclcpp::Node {
   public:
     MissionControlInterface() : Node("MissionControlInterface_node"), 
-                                server_("DefaultServer", WS_SERVER_PORT) {
-      
+                                server_("DefaultServer", WS_SERVER_PORT, this) {
+      RCLCPP_INFO_ONCE(this->get_logger(), "Starting Mission Control Node");
+      server_.start();
     }
   private:
     net::websocket::SingleClientWSServer server_;
