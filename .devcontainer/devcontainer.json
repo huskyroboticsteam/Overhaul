@@ -8,6 +8,7 @@
             "USERNAME": "vscode"
         }
     },
+    "forwardPorts": "[3001]",
     "workspaceFolder": "/home/ws",
     "workspaceMount": "source=${localWorkspaceFolder},target=/home/ws,type=bind",
     "customizations": {

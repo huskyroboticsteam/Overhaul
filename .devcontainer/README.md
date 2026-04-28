@@ -9,4 +9,4 @@ The instructions are based on the tutorial online https://docs.ros.org/en/humble
 CLI instructions:
 
 From this directory you can build via `docker build .`.
-
+run the container using the `-p 3002:3002` flag to expose the websocket port

@@ -16,7 +16,7 @@ SingleClientWSServer::ProtocolData::ProtocolData(std::unique_ptr<WebSocketProtoc
 
 SingleClientWSServer::SingleClientWSServer(const std::string& serverName, uint16_t port, rclcpp::Node* node)
 	: serverName(serverName), clientAddress("AddressUnkown"), port(port), server(), isRunning(false), protocolMap(),
-	  serverThread(), pingScheduler(serverName + "_PingSched") {
+	  serverThread(), pingScheduler(serverName + "_PingSched"), node(node) {
 	// disable websocket logging
 	server.set_access_channels(websocketpp::log::alevel::none);
 	server.set_error_channels(websocketpp::log::elevel::none);
@@ -53,7 +53,7 @@ bool SingleClientWSServer::start() {
 
 void SingleClientWSServer::serverTask() {
 	try {
-		// loguru::set_thread_name(serverName.c_str());
+		RCLCPP_INFO_ONCE(node->get_logger(), "Listening on %d", port);
 		server.listen(port);
 		server.start_accept();
 		server.run();
@@ -144,8 +144,8 @@ bool SingleClientWSServer::validate(connection_hdl hdl) {
 			return false;
 		}
 	} else {
-		// LOG_F(INFO, "Server=%s : Rejected connection to unrecognized endpoint %s from %s",
-		// 	  serverName.c_str(), path.c_str(), conn->get_remote_endpoint().c_str());
+		RCLCPP_INFO_ONCE(node->get_logger(), "Server=%s : Rejected connection to unrecognized endpoint %s from %s",
+		 	  serverName.c_str(), path.c_str(), conn->get_remote_endpoint().c_str());
 		return false;
 	}
 }
@@ -156,6 +156,8 @@ void SingleClientWSServer::onOpen(connection_hdl hdl) {
 	std::string path = conn->get_resource();
 	// LOG_F(INFO, "Server=%s, Endpoint=%s : Connection opened from %s", serverName.c_str(),
 	// 	  path.c_str(), client.c_str());
+	RCLCPP_INFO_ONCE(node->get_logger(), "Server=%s, Endpoint=%s : Connection opened from %s", serverName.c_str(),
+		  path.c_str(), client.c_str());
 
 	ProtocolData& protocolData = this->getProtocol(path).value();
 	{
@@ -168,7 +170,7 @@ void SingleClientWSServer::onOpen(connection_hdl hdl) {
 					ProtocolData& pd = this->getProtocol(path).value();
 					std::lock_guard lock(pd.mutex);
 					if (pd.client.has_value()) {
-						// LOG_F(3, "Ping!");
+						RCLCPP_INFO_ONCE(node->get_logger(), "Ping!");
 						server.ping(pd.client.value(), path);
 					}
 				});
@@ -191,8 +193,8 @@ void SingleClientWSServer::onClose(connection_hdl hdl) {
 	auto conn = server.get_con_from_hdl(hdl);
 	std::string client = conn->get_remote_endpoint();
 	std::string path = conn->get_resource();
-	// LOG_F(INFO, "Server=%s, Endpoint=%s : Connection disconnected from %s", serverName.c_str(),
-	// 	  path.c_str(), client.c_str());
+	RCLCPP_INFO_ONCE(node->get_logger(), "Server=%s, Endpoint=%s : Connection disconnected from %s", serverName.c_str(),
+		  path.c_str(), client.c_str());
 
 	ProtocolData& protocolData = this->getProtocol(path).value();
 	{
@@ -215,11 +217,11 @@ void SingleClientWSServer::onMessage(connection_hdl hdl, message_t message) {
 		// No need to lock this pd because we only access the protocol, which is constant
 		ProtocolData& pd = protocolDataOpt.value();
 		std::string jsonStr = message->get_payload();
-		// LOG_F(2, "Message on %s: %s", path.c_str(), jsonStr.c_str());
+		RCLCPP_INFO_ONCE(node->get_logger(), "Message on %s: %s", path.c_str(), jsonStr.c_str());
 		json obj = json::parse(jsonStr);
 		pd.protocol->processMessage(obj);
 	} else {
-		// LOG_F(WARNING, "Received message on unknown protocol path %s", path.c_str());
+		RCLCPP_INFO_ONCE(node->get_logger(), "Received message on unknown protocol path %s", path.c_str());
 	}
 }
 
@@ -235,7 +237,7 @@ void SingleClientWSServer::onPong(connection_hdl hdl, const std::string& payload
 			pd.heartbeatInfo->second.feed();
 		}
 	} else {
-		// LOG_F(WARNING, "Received pong on unknown protocol path %s", payload.c_str());
+		RCLCPP_INFO_ONCE(node->get_logger(), "Received pong on unknown protocol path %s", payload.c_str());
 	}
 }
 
