@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<launch>
+    <node pkg="rover" exec="Rover" name="rover" />
+    <node pkg="can" exec="CAN" name="can" />
+</launch>
