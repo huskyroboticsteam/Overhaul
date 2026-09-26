@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <launch>
-    <node pkg="rover" exec="Rover" name="rover" />
-    <node pkg="can" exec="CAN" name="can" />
+    <node pkg="rover" exec="Rover" name="rover">
+        <param name="peripheral" value="launch" />
+    </node>
+    <node pkg="can" exec="CAN" name="can">
+        <param name="CAN_name" value="can0" />
+    </node>
 </launch>
