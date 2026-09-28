@@ -15,26 +15,58 @@ constexpr std::chrono::milliseconds READ_ERR_SLEEP(100);
 constexpr uint32_t CAN_MASK = 0x3F8; // UUID field
 
 CAN::CAN() : Node("CAN_node") {
-  auto can_name_desc = rcl_interfaces::msg::ParameterDescriptor{};
-  can_name_desc.description = "Specifies the name of the CAN interface, default can0";
-  this->declare_parameter("CAN_name", "can0", can_name_desc);
-  this->_can_name = this->get_parameter("CAN_name").as_string();
+	auto can_name_desc = rcl_interfaces::msg::ParameterDescriptor{};
+	can_name_desc.description = "Specifies the name of the CAN interface, default can0";
+	this->declare_parameter("CAN_name", "can0", can_name_desc);
+	this->can_name_ = this->get_parameter("CAN_name").as_string();
 
-  initCAN();
+	this->publisher_ = this->create_publisher<can::msg::CANPacket>("packets", rclcpp::QoS(rclcpp::KeepAll()));
 
-  receiveThreadFn();
+	initCAN();
+
+	// create dedicated CAN socket for reading
+	int recvFD = createCANSocket(CANDevice_t{0, 0, 0, CAN_UUID_JETSON});
+	if (recvFD < 0) {
+		RCLCPP_ERROR(this->get_logger(), "Unable to open CAN connection!");
+		return;
+	}
+
+	CANPacket_t packet;
+	while (true) {
+		// no synchronization necessary, since this thread owns the FD
+		if (receivePacket(recvFD, packet)) {
+			// Copy packet into message
+			can::msg::CANPacket message = can::msg::CANPacket();
+			can::msg::CANDevice device = can::msg::CANDevice();
+			device.device_uuid = packet.device.deviceUUID;
+			device.motor = packet.device.motorDomain;
+			device.peripheral = packet.device.peripheralDomain;
+			device.power = packet.device.powerDomain;
+
+			message.device = device;
+			message.priority = packet.priority;
+			message.contents_length = packet.contentsLength;
+			message.command = packet.command;
+			message.sender_uuid = packet.senderUUID;
+			for (int i = 0; i < packet.contentsLength; i++) {
+				message.contents[i] = packet.contents[i];
+			}
+
+			// Publish message
+			this->publisher_->publish(message);
+		} else {
+			// we had a bus error, so sleep for a bit
+			std::this_thread::sleep_for(READ_ERR_SLEEP);
+		}
+	}
 }
 
 void CAN::initCAN() {
   RCLCPP_INFO(this->get_logger(), "Initializing CAN");
-  this->_fd = createCANSocket({});
-  if (this->_fd < 0) {
+  this->fd_ = createCANSocket({});
+  if (this->fd_ < 0) {
     std::__throw_runtime_error("Unable to open CAN connection!");
   }
-
-  // start thread for recieving CAN packets
-	// std::thread receiveThread(&CAN::receiveThreadFn);
-	// receiveThread.detach();
 
   std::this_thread::sleep_for(std::chrono::milliseconds(500));
 }
@@ -47,10 +79,10 @@ int CAN::createCANSocket(std::optional<CANDevice_t> device) {
   }
 
   struct ifreq ifr;
-	std::strcpy(ifr.ifr_name, _can_name.c_str());
+	std::strcpy(ifr.ifr_name, this->can_name_.c_str());
 	if (ioctl(fd, SIOCGIFINDEX, &ifr) < 0) {
     RCLCPP_ERROR(this->get_logger(), "Failed to get hardware CAN interface index: %s", std::strerror(errno));
-		std::strcpy(ifr.ifr_name, (std::string("v") + _can_name).c_str());
+		std::strcpy(ifr.ifr_name, (std::string("v") + this->can_name_).c_str());
 		if (ioctl(fd, SIOCGIFINDEX, &ifr) < 0) {
       RCLCPP_ERROR(this->get_logger(), "Failed to get virtual CAN interface index: %s", std::strerror(errno));
       return -1;
@@ -86,30 +118,6 @@ int CAN::createCANSocket(std::optional<CANDevice_t> device) {
 	}
 
   return fd;
-}
-
-void CAN::receiveThreadFn() {
-	// create dedicated CAN socket for reading
-	int recvFD = createCANSocket(CANDevice_t{0, 0, 0, CAN_UUID_JETSON});
-	if (recvFD < 0) {
-    RCLCPP_ERROR(this->get_logger(), "Unable to open CAN connection!");
-		return;
-	}
-
-  CANPacket_t packet;
-	while (true) {
-		// no synchronization necessary, since this thread owns the FD
-		if (receivePacket(recvFD, packet)) {
-      RCLCPP_INFO(this->get_logger(), "Packet received!");
-			// Add packet to buffer
-			// std::unique_lock lock(bufferMutex);
-			// buffer.push(packet);
-			// lock.unlock();
-		} else {
-			// we had a bus error, so sleep for a bit
-			std::this_thread::sleep_for(READ_ERR_SLEEP);
-		}
-	}
 }
 
 bool CAN::receivePacket(int fd, CANPacket_t& packet) {

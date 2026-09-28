@@ -9,6 +9,7 @@ endif()
 find_package(ament_cmake REQUIRED)
 find_package(rclcpp REQUIRED)
 find_package(rcl_interfaces REQUIRED)
+find_package(rosidl_default_generators REQUIRED)
 
 include(FetchContent)
 FetchContent_Declare(
@@ -20,12 +21,21 @@ FetchContent_MakeAvailable(CAN26)
 add_library(CAN26 STATIC ${can26_SOURCE_DIR}/CANPacket.c)
 target_include_directories(CAN26 SYSTEM PUBLIC ${can26_SOURCE_DIR})
 
+# Create custom .msg/.srv into usable interfaces
+rosidl_generate_interfaces(${PROJECT_NAME}
+  "msg/CANDevice.msg"
+  "msg/CANPacket.msg"
+  # DEPENDENCIES
+)
+rosidl_get_typesupport_target(cpp_typesupport_target "${PROJECT_NAME}" "rosidl_typesupport_cpp")
+
 add_executable(CAN
   src/CAN.cpp)
 target_include_directories(CAN PUBLIC
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
   $<INSTALL_INTERFACE:include>)
-target_link_libraries(CAN CAN26)
+
+target_link_libraries(CAN ${cpp_typesupport_target} CAN26)
 
 target_compile_features(CAN PUBLIC c_std_99 cxx_std_17)  # Require C99 and C++17
 ament_target_dependencies(
@@ -51,4 +61,5 @@ if(BUILD_TESTING)
   ament_lint_auto_find_test_dependencies()
 endif()
 
+ament_export_dependencies(rosidl_default_runtime)
 ament_package()

@@ -5,6 +5,7 @@ extern "C" {
 }
 
 #include <rclcpp/rclcpp.hpp>
+#include <can/msg/can_packet.hpp>
 
 /**
  * @namespace can
@@ -36,11 +37,6 @@ class CAN : public rclcpp::Node {
     int createCANSocket(std::optional<CANDevice_t> device);
 
     /**
-     * @brief Thread function to read CAN packets from the network
-     */
-    void receiveThreadFn();
-
-    /**
      * @brief Recieves CAN packets from the file descriptor
      * 
      * @param fd the file descriptor to read from
@@ -50,8 +46,9 @@ class CAN : public rclcpp::Node {
      */
     bool receivePacket(int fd, CANPacket_t& packet);
 
-    std::string _can_name;
-    int _fd;
+    rclcpp::Publisher<can::msg::CANPacket>::SharedPtr publisher_;
+    std::string can_name_;
+    int fd_;
 };
 
 } // namespace can
