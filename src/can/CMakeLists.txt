@@ -29,23 +29,41 @@ rosidl_generate_interfaces(${PROJECT_NAME}
 )
 rosidl_get_typesupport_target(cpp_typesupport_target "${PROJECT_NAME}" "rosidl_typesupport_cpp")
 
-add_executable(CAN
-  src/CAN.cpp)
-target_include_directories(CAN PUBLIC
+add_executable(CANReceiver
+  src/CANReceiver.cpp)
+add_executable(CANSender
+  src/CANSender.cpp)
+
+target_include_directories(CANReceiver PUBLIC
+  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+  $<INSTALL_INTERFACE:include>)
+target_include_directories(CANSender PUBLIC
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
   $<INSTALL_INTERFACE:include>)
 
-target_link_libraries(CAN ${cpp_typesupport_target} CAN26)
+target_link_libraries(CANReceiver ${cpp_typesupport_target} CAN26)
+target_link_libraries(CANSender ${cpp_typesupport_target} CAN26)
 
-target_compile_features(CAN PUBLIC c_std_99 cxx_std_17)  # Require C99 and C++17
+target_compile_features(CANReceiver PUBLIC c_std_99 cxx_std_17)  # Require C99 and C++17
+target_compile_features(CANSender PUBLIC c_std_99 cxx_std_17)  # Require C99 and C++17
+
 ament_target_dependencies(
-  CAN
+  CANReceiver
+  rclcpp
+  rcl_interfaces
+)
+ament_target_dependencies(
+  CANSender
   rclcpp
   rcl_interfaces
 )
 
 install(TARGETS
-  CAN
+  CANReceiver
+  DESTINATION lib/${PROJECT_NAME}
+)
+install(TARGETS
+  CANSender
   DESTINATION lib/${PROJECT_NAME}
 )
 

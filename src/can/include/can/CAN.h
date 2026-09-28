@@ -13,42 +13,14 @@ extern "C" {
  */
 namespace can {
 
-class CAN : public rclcpp::Node {
-  public:
-    CAN();
-
-    /**
-    * @brief Initialize the CAN interface.
-    * 
-    * This should only be called once.
-    * 
-    * @note If CAN initialization fails, the program will exit.
-    */
-    void initCAN();
-
-  private:
-    /**
-     * @brief Creates the CAN Socket
-     * 
-     * @param device optional, will enable reception if provided
-     * 
-     * @return a file descriptor, or -1 on failure
-     */
-    int createCANSocket(std::optional<CANDevice_t> device);
-
-    /**
-     * @brief Recieves CAN packets from the file descriptor
-     * 
-     * @param fd the file descriptor to read from
-     * @param packet packet that will get written to once read
-     * 
-     * @return true if read a packet was received successfully, false otherwise
-     */
-    bool receivePacket(int fd, CANPacket_t& packet);
-
-    rclcpp::Publisher<can::msg::CANPacket>::SharedPtr publisher_;
-    std::string can_name_;
-    int fd_;
-};
+/**
+ * @brief Creates the CAN Socket
+ * 
+ * @param can_name name of the CAN interface
+ * @param device optional, will enable reception if provided
+ * 
+ * @return a file descriptor, or -1 on failure
+ */
+int createCANSocket(std::string can_name, std::optional<CANDevice_t> device);
 
 } // namespace can
