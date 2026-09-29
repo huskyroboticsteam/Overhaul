@@ -2,6 +2,8 @@
 
 #include "./CAN.h"
 
+#include <linux/can/raw.h>
+
 /**
  * @namespace can
  * @brief Utilities for interacting with CAN devices.
@@ -16,8 +18,8 @@ class CANSender : public rclcpp::Node {
     CANSender();
 
   private:
-    void sendCANPacket(const can::msg::CANPacket::SharedPtr msg);
-    bool sendCANFrame(const canfd_frame& frame);
+    void sendCANPacket(const can::msg::CANPacket::SharedPtr msg) const;
+    bool sendCANFrame(const canfd_frame& frame) const;
 
     rclcpp::Subscription<can::msg::CANPacket>::SharedPtr subscription_;
     int fd_;

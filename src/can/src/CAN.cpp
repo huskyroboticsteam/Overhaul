@@ -11,23 +11,24 @@ namespace can {
 // Match on UUID field to filter for packets addressed to this device
 constexpr uint32_t CAN_MASK = 0x3F8; // UUID field
 
-int createCANSocket(std::string can_name, std::optional<CANDevice_t> device) {
+int createCANSocket(std::string can_name, std::optional<rclcpp::Logger> logger, std::optional<CANDevice_t> device) {
+  rclcpp::Logger log = logger.value_or(rclcpp::get_logger("CAN"));
   int fd;
   if ((fd = socket(PF_CAN, SOCK_RAW, CAN_RAW)) < 0) {
-    RCLCPP_ERROR(this->get_logger(), "Failed to initialize CAN bus: %s", std::strerror(errno));
+	RCLCPP_ERROR(log, "Failed to initialize CAN bus: %s", std::strerror(errno));
     return -1;
   }
 
   struct ifreq ifr;
 	std::strcpy(ifr.ifr_name, can_name.c_str());
 	if (ioctl(fd, SIOCGIFINDEX, &ifr) < 0) {
-    RCLCPP_ERROR(this->get_logger(), "Failed to get hardware CAN interface index: %s", std::strerror(errno));
+    RCLCPP_ERROR(log, "Failed to get hardware CAN interface index: %s", std::strerror(errno));
 		std::strcpy(ifr.ifr_name, (std::string("v") + can_name).c_str());
 		if (ioctl(fd, SIOCGIFINDEX, &ifr) < 0) {
-      RCLCPP_ERROR(this->get_logger(), "Failed to get virtual CAN interface index: %s", std::strerror(errno));
+      RCLCPP_ERROR(log, "Failed to get virtual CAN interface index: %s", std::strerror(errno));
       return -1;
 		}
-    RCLCPP_INFO(this->get_logger(), "Found virtual CAN interface index.");
+    RCLCPP_INFO(log, "Found virtual CAN interface index.");
 	}
 
 	struct sockaddr_can addr;
@@ -36,7 +37,7 @@ int createCANSocket(std::string can_name, std::optional<CANDevice_t> device) {
 	addr.can_ifindex = ifr.ifr_ifindex;
 
 	if (bind(fd, (struct sockaddr*)&addr, sizeof(addr)) < 0) {
-    RCLCPP_ERROR(this->get_logger(), "Error binding CAN socket: %s", std::strerror(errno));
+    RCLCPP_ERROR(log, "Error binding CAN socket: %s", std::strerror(errno));
     return -1;
 	}
 

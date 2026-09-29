@@ -1,5 +1,7 @@
 #include "../include/can/CANReceiver.h"
 
+#include <linux/can/raw.h>
+
 namespace can {
 
 // time to sleep after getting a CAN read error
@@ -14,7 +16,8 @@ CANReceiver::CANReceiver() : Node("CAN_receiver_node") {
 	this->publisher_ = this->create_publisher<can::msg::CANPacket>("can_rx", rclcpp::QoS(rclcpp::KeepAll()));
 
 	// create dedicated CAN socket for reading
-	if ((int fd = createCANSocket(can_name, CANDevice_t{0, 0, 0, CAN_UUID_JETSON})) < 0) {
+	int fd = createCANSocket(can_name, this->get_logger(), CANDevice_t{0, 0, 0, CAN_UUID_JETSON});
+	if (fd < 0) {
 		RCLCPP_ERROR(this->get_logger(), "Unable to open CAN connection!");
 		return;
 	}
@@ -49,7 +52,7 @@ CANReceiver::CANReceiver() : Node("CAN_receiver_node") {
 	}
 }
 
-bool CAN::receivePacket(int fd, CANPacket_t& packet) {
+bool CANReceiver::receivePacket(int fd, CANPacket_t& packet) {
 	int ret;
 	can_frame frame;
 	ret = read(fd, &frame, sizeof(can_frame));

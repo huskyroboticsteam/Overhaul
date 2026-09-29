@@ -3,7 +3,10 @@
     <node pkg="rover" exec="Rover" name="rover">
         <param name="peripheral" value="launch" />
     </node>
-    <node pkg="can" exec="CAN" name="can">
+    <node pkg="can" exec="CANReceiver" name="can_rx">
+        <param name="CAN_name" value="can0" />
+    </node>
+    <node pkg="can" exec="CANSender" name="can_tx">
         <param name="CAN_name" value="can0" />
     </node>
 </launch>

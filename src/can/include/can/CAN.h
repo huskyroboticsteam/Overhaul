@@ -17,10 +17,11 @@ namespace can {
  * @brief Creates the CAN Socket
  * 
  * @param can_name name of the CAN interface
+ * @param logger optional, logger for errors
  * @param device optional, will enable reception if provided
  * 
  * @return a file descriptor, or -1 on failure
  */
-int createCANSocket(std::string can_name, std::optional<CANDevice_t> device);
+int createCANSocket(std::string can_name, std::optional<rclcpp::Logger> logger, std::optional<CANDevice_t> device);
 
 } // namespace can
