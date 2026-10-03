@@ -1,5 +1,5 @@
 var searchData=
 [
-  ['isrunning_0',['isRunning',['../classutil_1_1AsyncTask.html#a43503af0b5f2252e5921364b3d6671a2',1,'util::AsyncTask']]],
-  ['isrunninginternal_1',['isRunningInternal',['../classutil_1_1AsyncTask.html#a20bdfa788fbca27e37507bec70d893ee',1,'util::AsyncTask']]]
+  ['notifiable_0',['Notifiable',['../classutil_1_1impl_1_1Notifiable.html',1,'util::impl']]],
+  ['notify_1',['notify',['../classutil_1_1AsyncTask.html#aa3410b83c36ea34a1503ff6d61f093d7',1,'util::AsyncTask::notify()'],['../classutil_1_1PeriodicTask.html#ad060d682418dcce364fe2008b662cf2a',1,'util::PeriodicTask::notify()']]]
 ];

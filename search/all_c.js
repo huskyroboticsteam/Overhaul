@@ -1,4 +1,5 @@
 var searchData=
 [
-  ['task_0',['task',['../classutil_1_1AsyncTask.html#a04d4142e57b8738b26f16bc73e9d3962',1,'util::AsyncTask::task()'],['../classutil_1_1PeriodicTask.html#a3bc1c0ba21e0428d03a0485be52d765b',1,'util::PeriodicTask::task()']]]
+  ['_7eperiodicscheduler_0',['~PeriodicScheduler',['../classutil_1_1PeriodicScheduler.html#ae19968558ff7b978005372ff906e9dfc',1,'util::PeriodicScheduler']]],
+  ['_7eraiihelper_1',['~RAIIHelper',['../classutil_1_1RAIIHelper.html#ad5ef60b8e8b924b357060e4907544e73',1,'util::RAIIHelper']]]
 ];

@@ -1,3 +1,9 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="Node000000" href="$classnet_1_1websocket_1_1SingleClientWSServer.html" title="A WebSocket server class that only accepts a single client at a time to each endpoint served by this ..." alt="" coords="5,5,189,46"/>
+<area shape="rect" id="Node000000" title=" " alt="" coords="5,55,99,80"/>
+<area shape="rect" id="Node000001" href="$classRover.html" title=" " alt="" coords="183,5,238,31"/>
+<area shape="poly" id="edge1_Node000000_Node000001" title=" " alt="" coords="109,47,181,24,183,29,111,52"/>
+<area shape="rect" id="Node000002" href="$classcan_1_1CANReceiver.html" title=" " alt="" coords="147,55,274,80"/>
+<area shape="poly" id="edge2_Node000000_Node000002" title=" " alt="" coords="115,65,146,65,146,70,115,70"/>
+<area shape="rect" id="Node000003" href="$classcan_1_1CANSender.html" title="Node used to send CAN to the network." alt="" coords="152,104,269,130"/>
+<area shape="poly" id="edge3_Node000000_Node000003" title=" " alt="" coords="111,83,167,101,166,106,110,88"/>
 </map>

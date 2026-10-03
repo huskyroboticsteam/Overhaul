@@ -1,5 +1,5 @@
 var searchData=
 [
-  ['getclientaddress_0',['getClientAddress',['../classnet_1_1websocket_1_1SingleClientWSServer.html#a0cc981a4377d8bb0d1eedde98ba7d96e',1,'net::websocket::SingleClientWSServer']]],
-  ['getprotocolpath_1',['getProtocolPath',['../classnet_1_1websocket_1_1WebSocketProtocol.html#a3631c6a42909a6b7108b276b4dc791b3',1,'net::websocket::WebSocketProtocol']]]
+  ['isrunning_0',['isRunning',['../classutil_1_1AsyncTask.html#a43503af0b5f2252e5921364b3d6671a2',1,'util::AsyncTask']]],
+  ['isrunninginternal_1',['isRunningInternal',['../classutil_1_1AsyncTask.html#a20bdfa788fbca27e37507bec70d893ee',1,'util::AsyncTask']]]
 ];

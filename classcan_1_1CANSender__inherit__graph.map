@@ -1,0 +1,5 @@
+<map id="can::CANSender" name="can::CANSender">
+<area shape="rect" id="Node000001" title="Node used to send CAN to the network." alt="" coords="5,79,123,105"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="17,5,111,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="67,46,67,79,61,79,61,46"/>
+</map>

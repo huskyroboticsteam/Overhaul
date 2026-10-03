@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['hasmessagehandler_0',['hasMessageHandler',['../classnet_1_1websocket_1_1WebSocketProtocol.html#acd111e9fae06afd941ff7d9987d4304a',1,'net::websocket::WebSocketProtocol']]]
+  ['notify_0',['notify',['../classutil_1_1AsyncTask.html#aa3410b83c36ea34a1503ff6d61f093d7',1,'util::AsyncTask::notify()'],['../classutil_1_1PeriodicTask.html#ad060d682418dcce364fe2008b662cf2a',1,'util::PeriodicTask::notify()']]]
 ];
