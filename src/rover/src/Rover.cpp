@@ -1,11 +1,6 @@
-#include "./Globals.cpp"
-
 #include <string>
 
-// #include <foxglove/server.hpp>
 #include <rclcpp/rclcpp.hpp>
-
-using namespace Globals;
 
 class Rover : public rclcpp::Node {
   public:
@@ -20,12 +15,10 @@ class Rover : public rclcpp::Node {
   private:
 };
 
-int main(int argc, char ** argv)
+int main(int argc, char** argv)
 {
   rclcpp::init(argc, argv);
-
   rclcpp::spin(std::make_shared<Rover>());
   rclcpp::shutdown();
-
   return 0;
 }

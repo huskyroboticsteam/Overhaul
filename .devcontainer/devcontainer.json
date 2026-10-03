@@ -8,6 +8,9 @@
             "USERNAME": "vscode"
         }
     },
+    "runArgs": [
+        "--net=host"
+    ],
     "workspaceFolder": "/home/ws",
     "workspaceMount": "source=${localWorkspaceFolder},target=/home/ws,type=bind",
     "customizations": {
@@ -15,10 +18,7 @@
             "extensions":[
                 "ms-vscode.cpptools",
                 "ms-vscode.cpptools-themes",
-                "twxs.cmake",
-                "donjayamanne.python-extension-pack",
-                "eamodio.gitlens",
-                "ms-iot.vscode-ros"
+                "twxs.cmake"
             ]
         }
     },

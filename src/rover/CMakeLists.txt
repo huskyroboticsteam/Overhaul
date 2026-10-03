@@ -1,9 +1,6 @@
 cmake_minimum_required(VERSION 3.8)
 project(rover)
 
-set(CMAKE_CXX_STANDARD 17)
-set(CMAKE_CXX_STANDARD_REQUIRED ON)
-
 if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
   add_compile_options(-Wall -Wextra -Wpedantic)
 endif()
@@ -13,36 +10,10 @@ find_package(ament_cmake REQUIRED)
 find_package(rclcpp REQUIRED)
 find_package(rcl_interfaces REQUIRED)
 
-# Find the JSON library
-find_package(nlohmann_json 3.2.0 REQUIRED)
-
-include(FetchContent)
-
-# FetchContent_Declare(
-#   foxglove
-#   DOWNLOAD_EXTRACT_TIMESTAMP TRUE
-#   URL https://github.com/foxglove/foxglove-sdk/releases/download/sdk%2Fv0.17.2/foxglove-v0.17.2-cpp-aarch64-unknown-linux-gnu.zip
-#   URL_HASH SHA256=b53f9e1791aa5c48d925f9056ee7ebc4e1519238f70172a2e3960c4b88f8d841
-# )
-# FetchContent_MakeAvailable(foxglove)
-
-include_directories()
-
-add_executable(Rover src/Rover.cpp src/Globals.cpp)
-add_executable(MissionControlInterface mc/mc.cpp mc/WebSocketServer.cpp mc/WebSocketProtocol.cpp)
+add_executable(Rover src/Rover.cpp)
 target_include_directories(Rover PUBLIC
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
   $<INSTALL_INTERFACE:include>)
-
-file(GLOB CONFIGURE_DEPENDS
-)
-
-target_compile_features(MissionControlInterface PUBLIC c_std_99 cxx_std_17)  # Require C99 and C++17
-ament_target_dependencies(
-  MissionControlInterface
-  rclcpp
-  rcl_interfaces
-)
 
 target_compile_features(Rover PUBLIC c_std_99 cxx_std_17)  # Require C99 and C++17
 ament_target_dependencies(
@@ -51,8 +22,10 @@ ament_target_dependencies(
   rcl_interfaces
 )
 
-install(TARGETS Rover MissionControlInterface
-  DESTINATION lib/${PROJECT_NAME})
+install(TARGETS
+  Rover
+  DESTINATION lib/${PROJECT_NAME}
+)
 
 if(BUILD_TESTING)
   find_package(ament_lint_auto REQUIRED)
@@ -65,5 +38,11 @@ if(BUILD_TESTING)
   set(ament_cmake_cpplint_FOUND TRUE)
   ament_lint_auto_find_test_dependencies()
 endif()
+
+# Install launch files
+install(DIRECTORY
+  launch
+  DESTINATION share/${PROJECT_NAME}
+)
 
 ament_package()

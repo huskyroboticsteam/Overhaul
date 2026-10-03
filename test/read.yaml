@@ -1,0 +1,14 @@
+# ros2 topic pub --once /can_tx can/msg/CANPacket "$(cat read.yaml)"
+
+device:
+  device_uuid: 0x30
+  motor: true
+  peripheral: false
+  power: false
+
+priority: false
+contents_length: 2
+
+command: 0x8B
+sender_uuid: 0x01
+contents: [0x01, 0x00, 0x00, 0x00, 0x00, 0x00]

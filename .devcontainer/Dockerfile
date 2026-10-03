@@ -1,5 +1,8 @@
 FROM ros:humble
-ARG USERNAME=user
+
+ARG DEBIAN_FRONTEND=noninteractive
+
+ARG USERNAME=ros
 ARG USER_UID=1000
 ARG USER_GID=$USER_UID
 
@@ -14,49 +17,70 @@ RUN groupadd --gid $USER_GID $USERNAME \
     && apt-get update \
     && apt-get install -y sudo \
     && echo $USERNAME ALL=\(root\) NOPASSWD:ALL > /etc/sudoers.d/$USERNAME \
-    && chmod 0440 /etc/sudoers.d/$USERNAME
-RUN apt-get update && apt-get upgrade -y
+    && chmod 0440 /etc/sudoers.d/$USERNAME \
+    && rm -rf /var/lib/apt/lists/*
 
 # Install dependencies and tools
-RUN apt-get install -y python3-pip
-RUN apt-get install -y vim
-RUN apt-get install -y vim
+RUN apt-get update \
+    && apt-get install -y \
+    python3-pip \
+    vim \
+    && rm -rf /var/lib/apt/lists/*
 
 # Install Husky Robotics dependencies
-RUN apt install -y curl wget
+RUN apt-get update \
+    && apt-get install -y \
+    curl \
+    wget \
+    && rm -rf /var/lib/apt/lists/*
 
 # Transfer key
 RUN mkdir -p /etc/apt/keyrings/
 RUN wget -P /etc/apt/keyrings/ "https://huskyroboticsteam.github.io/ubuntu-repo/KEY.gpg"
 RUN gpg --no-default-keyring --keyring ./temp-keyring.gpg --import /etc/apt/keyrings/KEY.gpg
 RUN gpg --no-default-keyring --keyring ./temp-keyring.gpg --export --output /etc/apt/keyrings/KEY.gpg --yes
-RUN rm temp-keyring.gpg
-
+RUN rm temp-keyring.gpg*
 RUN wget -P /etc/apt/sources.list.d "https://huskyroboticsteam.github.io/ubuntu-repo/husky_robotics.list"
 
-RUN apt-get update
-RUN apt-get install -y build-essential unzip gnupg2 lsb-release git \
-	cmake libeigen3-dev libopencv-dev=4.5.4+dfsg-9ubuntu4 libopencv-contrib-dev \
-	libwebsocketpp-dev libboost-system-dev gpsd gpsd-clients libgps-dev nlohmann-json3-dev \
-	catch2 ublox-linux frozen libargparse-dev libavutil-dev libx264-dev
+RUN apt-get update \
+    && apt-get install -y \
+    build-essential \
+    catch2 \
+    cmake \
+    frozen \
+    git \
+    gnupg2 \
+    gpsd \
+    gpsd-clients \
+    libargparse-dev \
+    libavutil-dev \
+    libboost-system-dev \
+    libeigen3-dev \
+    libgps-dev \
+    libopencv-contrib-dev \
+    libopencv-dev=4.5.4+dfsg-9ubuntu4 \
+    libwebsocketpp-dev \
+    libx264-dev \
+    lsb-release \
+    nlohmann-json3-dev \
+    ublox-linux \
+    unzip \
+    && rm -rf /var/lib/apt/lists/*
 
 ENV SHELL=/bin/bash
-
-# Update dependencies
-
 
 # ********************************************************
 # * Anything else you want to do like clean up goes here *
 # ********************************************************
 
 # Install MAVROS packages
-RUN apt-get install -y ros-humble-mavros ros-humble-mavros-extras
+# RUN apt-get install -y ros-humble-mavros ros-humble-mavros-extras
 
 # Install GeographicLib datasets (MAVROS requirement)
-RUN wget https://raw.githubusercontent.com/mavlink/mavros/ros2/mavros/scripts/install_geographiclib_datasets.sh \
-    && chmod +x install_geographiclib_datasets.sh \
-    && ./install_geographiclib_datasets.sh \
-    && rm install_geographiclib_datasets.sh
+# RUN wget https://raw.githubusercontent.com/mavlink/mavros/ros2/mavros/scripts/install_geographiclib_datasets.sh \
+#     && chmod +x install_geographiclib_datasets.sh \
+#     && ./install_geographiclib_datasets.sh \
+#     && rm install_geographiclib_datasets.sh
 
 # [Optional] Set the default user. Omit if you want to keep the default as root.
 USER $USERNAME
