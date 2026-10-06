@@ -9,6 +9,7 @@ endif()
 find_package(ament_cmake REQUIRED)
 find_package(rclcpp REQUIRED)
 find_package(rcl_interfaces REQUIRED)
+find_package(rclpy REQUIRED)
 
 add_executable(Rover src/Rover.cpp)
 target_include_directories(Rover PUBLIC
@@ -43,6 +44,14 @@ endif()
 install(DIRECTORY
   launch
   DESTINATION share/${PROJECT_NAME}
+)
+# Install Python modules
+ament_python_install_package(${PROJECT_NAME})
+
+# Install Python executables
+install(PROGRAMS
+  rover/controller_node.py
+  DESTINATION lib/${PROJECT_NAME}
 )
 
 ament_package()
