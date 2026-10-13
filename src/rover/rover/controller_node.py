@@ -4,38 +4,68 @@
 import rclpy
 from rclpy.node import Node
 
+from pynput import keyboard
+
 from std_msgs.msg import String
+from geometry_msgs.msg import Twist
 
 
-class MinimalPublisher(Node):
+class Controller(Node):
 
     def __init__(self):
-        super().__init__('minimal_publisher')
-        self.publisher_ = self.create_publisher(String, 'topic', 10)
-        timer_period = 0.5  # seconds
-        self.timer = self.create_timer(timer_period, self.timer_callback)
-        self.i = 0
+        super().__init__('controller')
+        self.direction_publisher_ = self.create_publisher(Twist, 'direction', 10)
+        self.vector_ = Twist() # Desired vector
 
-    def timer_callback(self):
-        msg = String()
-        msg.data = 'Hello World: %d' % self.i
-        self.publisher_.publish(msg)
-        self.get_logger().info('Publishing: "%s"' % msg.data)
-        self.i += 1
+        # Setup default vector
+        self.vector_.linear.x = self.vector_.linear.y = self.vector_.linear.z = 0.0 
+        self.vector_.angular.x = self.vector_.angular.y = self.vector_.angular.z = 0.0 
+        self.direction_publisher_.publish(self.vector_)
+
+    def on_press(self, key):
+        if key == keyboard.KeyCode.from_char("w"):
+            self.vector_.linear.y = 1.0
+        if key == keyboard.KeyCode.from_char("a"):
+            self.vector_.linear.x = -1.0
+        if key == keyboard.KeyCode.from_char("s"):
+            self.vector_.linear.y = -1.0
+        if key == keyboard.KeyCode.from_char("d"):
+            self.vector_.linear.y = 1.0
+
+        print("Current vec " + str(self.vector_))
+
+        self.direction_publisher_.publish(self.vector_)
+        pass
+
+    def on_release(self, key):
+        # I am lazy, prob reset only for lifted key
+        self.vector_.linear.x = self.vector_.linear.y = self.vector_.linear.z = 0.0 
+        self.vector_.angular.x = self.vector_.angular.y = self.vector_.angular.z = 0.0 
+        pass
+
+    
 
 
 def main(args=None):
     rclpy.init(args=args)
 
-    minimal_publisher = MinimalPublisher()
+    controller = Controller()
 
-    rclpy.spin(minimal_publisher)
+    listener = keyboard.Listener(
+        on_press=controller.on_press,
+        on_release=controller.on_release)
+
+    listener.start()
+
+    rclpy.spin(controller)
 
     # Destroy the node explicitly
     # (optional - otherwise it will be done automatically
     # when the garbage collector destroys the node object)
-    minimal_publisher.destroy_node()
+    controller.destroy_node()
     rclpy.shutdown()
+
+
 
 
 if __name__ == '__main__':
