@@ -20,13 +20,18 @@ Finally, `ros2 run rover Rover --ros-args -p peripheral:=<peripheral>`
 
 Running mc node `ros2 run mc --ros-args`
 
+### Testing tools
+
+1. Install dep `pip install pynput`
+2. Run `ros2 run rover controller_node.py `
+
 ## Adding new ROS2 Packages
 Suppose we want to add a custom ROS2 package (i.e rosbag2). Remember to update the following:
 
 1. `package.xml` - Add `<depend>custom_node</depend>`
 2. `CMakeLists.txt` - Add `find_package(custom_node REQUIRED)`
 3. `CMakeLists.txt` - Add `custom_node` under `ament_target_dependencies`
-
+f
 After adding, run the following:
 
 1. Install external dependencies `rosdep install --from-paths src --ignore-src -y` (as ChatGPT says, "get ingredients")
