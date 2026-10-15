@@ -1,9 +1,28 @@
+# Pre-Setup Notes (Windows)
+
+Our codebase is developed for an NVIDIA Jetson TX2, which runs Ubuntu Linux; as such, much
+of our code will be Unix-specific.
+
+> ⚠️ The only supported platform is Ubuntu 22.04 LTS. Other versions/distros/platforms may work, but if you want as easy as possible, go with this version. 
+
+**Windows users:** You should use either [Windows Subsystem for
+Linux](https://docs.microsoft.com/en-us/windows/wsl/about) or a VM with a Linux
+distribution installed (Ubuntu recommended). Either should work fine. Whichever you use, install either the VM or WSL2 and follow the Linux instructions. As noted above, **use Ubuntu 22.04**.
+
+**From here on out, the installation instructions will assume you are using Ubuntu 22.04 LTS**. Windows users should run commands in either their Linux VM or their WSL
+terminal. For Linux users, we'll assume you're running Ubuntu; users of another
+distribution may need to change some instructions (e.g. package managers) depending on
+your distro.
+
 Read instructions in .devcontainer/README.md first! This will allow all of our builds to be in the same environments
 (hopefully)!
 
+> From here instructions assume that you are in a linux environment
+
 ## Docker
-1. Install Dev Containers extension to vscode 
-2. Install docker on your device
+1. Install Dev Containers extension to vscode
+    - Left side bar find extensions and search for Dev Containers. Correct one is by microsoft.
+2. Install [Docker Desktop](https://docs.docker.com/desktop/setup/install/windows-install/) on machine
 3. Run `Dev Containers: Reopen in Container` in vscode
 
 ## Building
