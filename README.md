@@ -5,9 +5,15 @@ of our code will be Unix-specific.
 
 > ⚠️ The only supported platform is Ubuntu 22.04 LTS. Other versions/distros/platforms may work, but if you want as easy as possible, go with this version. 
 
-**Windows users:** You should use either [Windows Subsystem for
-Linux](https://docs.microsoft.com/en-us/windows/wsl/about) or a VM with a Linux
-distribution installed (Ubuntu recommended). Either should work fine. Whichever you use, install either the VM or WSL2 and follow the Linux instructions. As noted above, **use Ubuntu 22.04**.
+We will be using vmware workstation (For additional support, this installation process is based on [CSE 478 virtual machine setup guide](https://courses.cs.washington.edu/courses/cse478/26sp/projects/introduction/) however please refer to instructions in this readme for specific files such as os images).
+
+1. First install vmware workstation, setup an account and install the [desktop application](https://support.broadcom.com/c/portal/login?redirect=%2Fgroup%2Fecx%2Fproductdownloads%3Fsubfamily%3DVMware%2520Workstation%2520Pro%26freeDownloads%3Dtrue&refererPlid=36&p_l_id=33047). 
+2. Install the [OS image](https://releases.ubuntu.com/jammy/) to your laptop.
+3. Finish all of the install instructions for the ubuntu install (This will take a long time so go do some homework or look through the repo).
+4. Install basic requirements
+        - `sudo apt install git`
+
+> Never update your VM! Ubuntu will try to do it for some reason, just don't do it. Same goes for os on laptops
 
 **From here on out, the installation instructions will assume you are using Ubuntu 22.04 LTS**. Windows users should run commands in either their Linux VM or their WSL
 terminal. For Linux users, we'll assume you're running Ubuntu; users of another
