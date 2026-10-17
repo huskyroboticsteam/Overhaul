@@ -7,7 +7,9 @@ ARG USER_UID=1000
 ARG USER_GID=$USER_UID
 
 # Delete user if it exists in container (e.g Ubuntu Noble: ubuntu)
-RUN if id -u $USER_UID ; then userdel id -un $USER_UID ; fi
+RUN if getent passwd "$USER_UID"; then \
+        userdel "$(getent passwd "$USER_UID" | cut -d: -f1)"; \
+    fi
 
 # Create the user
 RUN groupadd --gid $USER_GID $USERNAME \
@@ -52,14 +54,27 @@ RUN gpg --no-default-keyring --keyring ./temp-keyring.gpg --export --output /etc
 RUN rm temp-keyring.gpg*
 RUN wget -P /etc/apt/sources.list.d "https://huskyroboticsteam.github.io/ubuntu-repo/husky_robotics.list"
 
-# Set up VNC password (the password for connecting via VNC client)
-RUN mkdir -p /home/ros/.vnc && \
-    echo "dockervnc" | vncpasswd -f > /home/ros/.vnc/passwd && \
-    chmod 600 /home/ros/.vnc/passwd
+# Install Gazebo ROS Deps
+RUN curl https://packages.osrfoundation.org/gazebo.gpg --output /usr/share/keyrings/pkgs-osrf-archive-keyring.gpg
+RUN echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/pkgs-osrf-archive-keyring.gpg] https://packages.osrfoundation.org/gazebo/ubuntu-stable $(lsb_release -cs) main" | sudo tee /etc/apt/sources.list.d/gazebo-stable.list > /dev/null
+RUN apt-get update
+RUN apt-get install -y ignition-fortress
 
-# VNC startup configuration
-RUN echo '#!/bin/bash\nstartxfce4 &' > /home/ros/.vnc/xstartup && \
-    chmod +x /home/ros/.vnc/xstartup
+# Set up VNC password (the password for connecting via VNC client)
+# The echo string to xstartup is because the default xstartup does not want to work with the docker container
+# why? feel free to debug
+RUN mkdir -p /home/${USERNAME}/.vnc && \
+    echo "dockervnc" | vncpasswd -f > /home/${USERNAME}/.vnc/passwd && \
+    chmod 600 /home/${USERNAME}/.vnc/passwd && \
+    printf '#!/bin/sh\n\
+    unset WAYLAND_DISPLAY\n\
+    unset WAYLAND_SOCKET\n\
+    unset SESSION_MANAGER\n\
+    unset DBUS_SESSION_BUS_ADDRESS\n\
+    export DISPLAY=:1\n\
+    exec dbus-launch --exit-with-session startxfce4\n' > /home/${USERNAME}/.vnc/xstartup && \
+    chmod +x /home/${USERNAME}/.vnc/xstartup && \
+    chown -R ${USERNAME}:${USERNAME} /home/${USERNAME}/.vnc
 
 # Expose VNC port
 EXPOSE 5901
@@ -87,6 +102,7 @@ RUN apt-get update \
     nlohmann-json3-dev \
     ublox-linux \
     unzip \
+    ros-humble-ros-gz \
     && rm -rf /var/lib/apt/lists/*
 
 ENV SHELL=/bin/bash

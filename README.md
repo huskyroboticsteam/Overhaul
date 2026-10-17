@@ -1,19 +1,15 @@
 # Pre-Setup Notes
 
-Our codebase is developed for an NVIDIA Jetson TX2, which runs Ubuntu Linux; as such, much
+Our codebase is developed for an NVIDIA Jetson Orin, which runs Ubuntu Linux; as such, much
 of our code will be Unix-specific.
 
 > ⚠️ The only supported platform is Ubuntu 22.04 LTS. Other versions/distros/platforms may work, but if you want as easy as possible, go with this version. 
 
-We will be using vmware workstation for Windows, or UTM for Mac (For additional support, this installation process is based on [CSE 478 virtual machine setup guide](https://courses.cs.washington.edu/courses/cse478/26sp/projects/introduction/#optional-setting-up-the-virtual-machine) however please refer to instructions in this readme for specific files such as os images).
+the setup that we use for windows consist of a docker container that runs th linux enivronment that you will be developing on. There will be an additional VNC server setup script that can be used when wanting to test against something that requires a gui (sim most likely).
 
-1. First install the VM
-    - **Windows**: vmware workstation, setup an account and install the [desktop application](https://support.broadcom.com/c/portal/login?redirect=%2Fgroup%2Fecx%2Fproductdownloads%3Fsubfamily%3DVMware%2520Workstation%2520Pro%26freeDownloads%3Dtrue&refererPlid=36&p_l_id=33047). 
-    - **Mac**: UTM, click download from their [page](https://mac.getutm.app/).
-2. Install the [OS image](https://releases.ubuntu.com/jammy/) to your laptop.
-3. Finish all of the install instructions for the ubuntu install (This will take a long time so go do some homework or look through the repo).
-4. Install basic requirements
-        - `sudo apt install git`
+Here are the applications that you need to install on your own (Windows):
+1. https://www.realvnc.com/en/
+2. [WSL](https://learn.microsoft.com/en-us/windows/wsl/about)
 
 > Never update your VM! Ubuntu will try to do it for some reason, just don't do it. Same goes for os on laptops
 
