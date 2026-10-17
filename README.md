@@ -1,13 +1,15 @@
-# Pre-Setup Notes (Windows)
+# Pre-Setup Notes
 
 Our codebase is developed for an NVIDIA Jetson TX2, which runs Ubuntu Linux; as such, much
 of our code will be Unix-specific.
 
 > ⚠️ The only supported platform is Ubuntu 22.04 LTS. Other versions/distros/platforms may work, but if you want as easy as possible, go with this version. 
 
-We will be using vmware workstation (For additional support, this installation process is based on [CSE 478 virtual machine setup guide](https://courses.cs.washington.edu/courses/cse478/26sp/projects/introduction/) however please refer to instructions in this readme for specific files such as os images).
+We will be using vmware workstation for Windows, or UTM for Mac (For additional support, this installation process is based on [CSE 478 virtual machine setup guide](https://courses.cs.washington.edu/courses/cse478/26sp/projects/introduction/#optional-setting-up-the-virtual-machine) however please refer to instructions in this readme for specific files such as os images).
 
-1. First install vmware workstation, setup an account and install the [desktop application](https://support.broadcom.com/c/portal/login?redirect=%2Fgroup%2Fecx%2Fproductdownloads%3Fsubfamily%3DVMware%2520Workstation%2520Pro%26freeDownloads%3Dtrue&refererPlid=36&p_l_id=33047). 
+1. First install the VM
+    - **Windows**: vmware workstation, setup an account and install the [desktop application](https://support.broadcom.com/c/portal/login?redirect=%2Fgroup%2Fecx%2Fproductdownloads%3Fsubfamily%3DVMware%2520Workstation%2520Pro%26freeDownloads%3Dtrue&refererPlid=36&p_l_id=33047). 
+    - **Mac**: UTM, click download from their [page](https://mac.getutm.app/).
 2. Install the [OS image](https://releases.ubuntu.com/jammy/) to your laptop.
 3. Finish all of the install instructions for the ubuntu install (This will take a long time so go do some homework or look through the repo).
 4. Install basic requirements
@@ -18,9 +20,9 @@ We will be using vmware workstation (For additional support, this installation p
 **From here on out, the installation instructions will assume you are using Ubuntu 22.04 LTS**. Windows users should run commands in either their Linux VM or their WSL
 terminal. For Linux users, we'll assume you're running Ubuntu; users of another
 distribution may need to change some instructions (e.g. package managers) depending on
-your distro.
+your distro. Mac users can you run set of instructions in their local terminal or VM.
 
-Read instructions in .devcontainer/README.md first! This will allow all of our builds to be in the same environments
+Read instructions in [.devcontainer/README.md](.devcontainer/README.md) first! This will allow all of our builds to be in the same environments
 (hopefully)!
 
 > From here instructions assume that you are in a linux environment
@@ -28,8 +30,11 @@ Read instructions in .devcontainer/README.md first! This will allow all of our b
 ## Docker
 1. Install Dev Containers extension to vscode
     - Left side bar find extensions and search for Dev Containers. Correct one is by microsoft.
-2. Install [Docker Desktop](https://docs.docker.com/desktop/setup/install/windows-install/) on machine
-3. Run `Dev Containers: Reopen in Container` in vscode
+2. Install 
+    - [Window](https://docs.docker.com/desktop/setup/install/windows-install/)
+    - [Linux](https://docs.docker.com/desktop/setup/install/linux/)
+    - [Mac](https://docs.docker.com/desktop/setup/install/mac-install/)
+3. Run `Dev Containers: Reopen in Container` in vscode command palette
 
 ## Building
 In one terminal, `source /opt/ros/humble/setup.bash` (Should be sourced by default but just in case)
@@ -54,8 +59,8 @@ Suppose we want to add a custom ROS2 package (i.e rosbag2). Remember to update t
 
 After adding, run the following:
 
-1. Install external dependencies `rosdep install --from-paths src --ignore-src -y` (as ChatGPT says, "get ingredients")
-2. Run CMake `colcon build --packages-select rover` (as ChatGPT says "cook the meal")
+1. Install external dependencies `rosdep install --from-paths src --ignore-src -y` (as ChatGPT says, "get ingredients 🛒✨")
+2. Run CMake `colcon build --packages-select rover` (as ChatGPT says "cook the meal 🍳✨")
 
 ## Adding new (external) ROS2 Packages
 Add install steps into Dockerfile. For example, add the following to Dockerfile:
