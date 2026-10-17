@@ -1,6 +1,7 @@
 # Pre-Setup Notes
 
 To first clone the repo use the following command
+
 `git clone --recurse-submodules git@github.com:huskyroboticsteam/Overhaul.git`
 
 Our codebase is developed for an NVIDIA Jetson Orin, which runs Ubuntu Linux; as such, much
