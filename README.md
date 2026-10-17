@@ -79,6 +79,7 @@ Read instructions in [.devcontainer/README.md](.devcontainer/README.md) first! T
 
 ## Building
 In one terminal, `source /opt/ros/humble/setup.bash` (Should be sourced by default but just in case)
+For VM users use `. ~/ros2_humble/install/local_setup.bash`
 
 Then run the build command in the project root directory, `colcon build`
 
