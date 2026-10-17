@@ -1,5 +1,11 @@
 # Pre-Setup Notes
 
+To first clone the repo use the following command
+
+`git clone --recurse-submodules git@github.com:huskyroboticsteam/Overhaul.git`
+
+If you run into Overhaul_Simulator not cloning you can fix it by running: `git pull --recurse-submodules`
+
 Our codebase is developed for an NVIDIA Jetson Orin, which runs Ubuntu Linux; as such, much
 of our code will be Unix-specific.
 
@@ -41,7 +47,8 @@ Then wait for a really long time until it lets you type to exit. In the top bar 
 
 **If you need a graphical interface (you most likely will) you will need to do some more setup**
 
-First instal the VNC viewer application. Any works however I personally use [this one]((https://www.realvnc.com/en/))
+First instal the VNC viewer application. Any works however I personally use [this one](([https://www.realvnc.com/en/](https://www.realvnc.com/en/connect/download/viewer/?lai_sr=5-9&lai_sl=l&lai_na=3339)))
+
 
 Everytime you boot up the docker container you must follow the steps above to create a new terminal. Once in that terminal run the 
 
