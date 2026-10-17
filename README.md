@@ -8,9 +8,8 @@ of our code will be Unix-specific.
 the setup that we use for windows consist of a docker container that runs th linux enivronment that you will be developing on. There will be an additional VNC server setup script that can be used when wanting to test against something that requires a gui (sim most likely).
 
 Here are the applications that you need to install on your own (Windows):
-1. [VNC] (https://www.realvnc.com/en/)
-2. [WSL](https://learn.microsoft.com/en-us/windows/wsl/about)
-3. [Docker] (https://docs.docker.com/desktop/setup/install/windows-install/)
+1. [WSL](https://learn.microsoft.com/en-us/windows/wsl/about)
+2. [Docker](https://docs.docker.com/desktop/setup/install/windows-install/)
     - Ensure that when you launch Docker Desktop, you selection the option for WSL integration, otherwise go to settings in the top right -> WSL Integration -> Check Enable Integration and the distro Ubuntu-22.04
 3. If needed [vs code](https://code.visualstudio.com/download?_exp_download=d53503e735)
     - After you get vs code, install the Dev Containers Extension (Search in Extenssions on the left menu)
@@ -35,6 +34,8 @@ Then wait for a really long time until it lets you type to exit. In the top bar 
 ***Windows VNC***
 
 **If you need a graphical interface (you most likely will) you will need to do some more setup**
+
+First instal the VNC viewer application. Any works however I personally use [this one]((https://www.realvnc.com/en/))
 
 Everytime you boot up the docker container you must follow the steps above to create a new terminal. Once in that terminal run the 
 
