@@ -4,6 +4,8 @@ To first clone the repo use the following command
 
 `git clone --recurse-submodules git@github.com:huskyroboticsteam/Overhaul.git`
 
+If you run into Overhaul_Simulator not cloning you can fix it by running: `git pull --recurse-submodules`
+
 Our codebase is developed for an NVIDIA Jetson Orin, which runs Ubuntu Linux; as such, much
 of our code will be Unix-specific.
 
