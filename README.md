@@ -9,9 +9,12 @@ the setup that we use for windows consist of a docker container that runs th lin
 
 Here are the applications that you need to install on your own (Windows):
 1. [WSL](https://learn.microsoft.com/en-us/windows/wsl/about)
-2. [Docker](https://docs.docker.com/desktop/setup/install/windows-install/)
+        - Open a powershell terminal in windows by typing terminal in the windows search bar
+        - Run `wsl --install`
+        - Run `wsl.exe --install -d Ubuntu-22.04`
+3. [Docker](https://docs.docker.com/desktop/setup/install/windows-install/)
     - Ensure that when you launch Docker Desktop, you selection the option for WSL integration, otherwise go to settings in the top right -> WSL Integration -> Check Enable Integration and the distro Ubuntu-22.04
-3. If needed [vs code](https://code.visualstudio.com/download?_exp_download=d53503e735)
+4. If needed [vs code](https://code.visualstudio.com/download?_exp_download=d53503e735)
     - After you get vs code, install the Dev Containers Extension (Search in Extenssions on the left menu)
 
 > Never update your VM! Ubuntu will try to do it for some reason, just don't do it. Same goes for os on laptops
