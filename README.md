@@ -32,6 +32,9 @@ and search *Rebuild and Reopen in containers*
 
 > Normally just do *Reopen in containers* so you don't have to build every time
 
+**Running into the `failed to connect to the docker API at npipe:////./pipe/dockerDesktopLinuxEngine;`??**
+Enter the docker desktop app and go to the top right setting icon. Then enter the Resources tab on the left. Disable integration with WSL distro, save and restart in the bottom corner. Then recheck the enable integration with my defaul WSL distro. Rebuild and reopen and it should work! 
+
 Then wait for a really long time until it lets you type to exit. In the top bar of vs code click terminal and hit new terminal. **At this point you are in the VM and can start developing!**
 
 ***Windows VNC***
