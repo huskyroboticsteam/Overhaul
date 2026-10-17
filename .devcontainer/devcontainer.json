@@ -1,5 +1,6 @@
 {
     "name": "ROS 2 Development Container",
+    "forwardPorts": [5901],
     "privileged": true,
     "remoteUser": "vscode",
     "build": {
@@ -9,7 +10,7 @@
         }
     },
     "runArgs": [
-        "--net=host"
+        // "--net=host"
     ],
     "workspaceFolder": "/home/ws",
     "workspaceMount": "source=${localWorkspaceFolder},target=/home/ws,type=bind",

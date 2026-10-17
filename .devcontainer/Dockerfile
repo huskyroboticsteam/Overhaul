@@ -7,7 +7,7 @@ ARG USER_UID=1000
 ARG USER_GID=$USER_UID
 
 # Delete user if it exists in container (e.g Ubuntu Noble: ubuntu)
-RUN if id -u $USER_UID ; then userdel `id -un $USER_UID` ; fi
+RUN if id -u $USER_UID ; then userdel id -un $USER_UID ; fi
 
 # Create the user
 RUN groupadd --gid $USER_GID $USERNAME \
@@ -34,6 +34,16 @@ RUN apt-get update \
     wget \
     && rm -rf /var/lib/apt/lists/*
 
+RUN apt-get update && apt-get install -y \
+    xfce4 \
+    xfce4-terminal \
+    tigervnc-standalone-server \
+    tigervnc-common \
+    dbus-x11 \
+    fonts-liberation \
+    xfonts-base \
+    && rm -rf /var/lib/apt/lists/*
+
 # Transfer key
 RUN mkdir -p /etc/apt/keyrings/
 RUN wget -P /etc/apt/keyrings/ "https://huskyroboticsteam.github.io/ubuntu-repo/KEY.gpg"
@@ -41,6 +51,18 @@ RUN gpg --no-default-keyring --keyring ./temp-keyring.gpg --import /etc/apt/keyr
 RUN gpg --no-default-keyring --keyring ./temp-keyring.gpg --export --output /etc/apt/keyrings/KEY.gpg --yes
 RUN rm temp-keyring.gpg*
 RUN wget -P /etc/apt/sources.list.d "https://huskyroboticsteam.github.io/ubuntu-repo/husky_robotics.list"
+
+# Set up VNC password (the password for connecting via VNC client)
+RUN mkdir -p /home/ros/.vnc && \
+    echo "dockervnc" | vncpasswd -f > /home/ros/.vnc/passwd && \
+    chmod 600 /home/ros/.vnc/passwd
+
+# VNC startup configuration
+RUN echo '#!/bin/bash\nstartxfce4 &' > /home/ros/.vnc/xstartup && \
+    chmod +x /home/ros/.vnc/xstartup
+
+# Expose VNC port
+EXPOSE 5901
 
 RUN apt-get update \
     && apt-get install -y \
@@ -88,4 +110,5 @@ USER $USERNAME
 # Update bashrc to use alias's, sourcing etc.
 RUN echo "source /opt/ros/humble/setup.bash" >> ~/.bashrc 
 
-CMD ["/bin/bash"]
+# Start VNC server on display :1 (port 5901)
+CMD ["vncserver", ":1", "-geometry", "1280x720", "-depth", "24", "-localhost", "no", "-fg"]
