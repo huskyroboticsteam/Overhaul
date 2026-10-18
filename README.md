@@ -12,13 +12,20 @@ We will be using vmware workstation for Windows, or UTM for Mac (For additional 
     - **Mac**: UTM, click download from their [page](https://mac.getutm.app/).
 2. Install the [OS image](https://releases.ubuntu.com/jammy/) to your laptop.
 3. Finish all of the install instructions for the ubuntu install (This will take a long time so go do some homework or look through the repo).
-4. Install basic requirements
+4. Install basic requirements \
         - `sudo apt install git`
+5. Setup SSH keys in the VM
+6. Clone the repo inside of the VM \
+        - `git clone git@github.com:huskyroboticsteam/Overhaul.git`
+7. Generate SSH keys \
+        - 'ssh-keygen -t ed25519 -C "your_email@example.com"'
+8. Add the keys to your githubs SSH Keys
+9. Follow ROS install instructions on the [ROS website](https://docs.ros.org/en/humble/Installation/Alternatives/Ubuntu-Development-Setup.html)
+        - Follow all instructions up until ***Try some examples***
+10. Follow Gazebo ign Fortress [install guide](https://gazebosim.org/docs/fortress/ros_installation/)
 
 > Never update your VM! Ubuntu will try to do it for some reason, just don't do it. Same goes for os on laptops
 
-<<<<<<< HEAD
-=======
 **Next open a terminal and enter the Overhaul folder within this repo**
 
 ```bash
@@ -57,7 +64,6 @@ Then Open up real VNC
 4. It should connect to the session and you can now see the desktop!
 
 
->>>>>>> 737539adc12b8b1247fc35c347133bed8d0934c7
 **From here on out, the installation instructions will assume you are using Ubuntu 22.04 LTS**. Windows users should run commands in either their Linux VM or their WSL
 terminal. For Linux users, we'll assume you're running Ubuntu; users of another
 distribution may need to change some instructions (e.g. package managers) depending on
