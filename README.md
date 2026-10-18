@@ -1,66 +1,21 @@
 # Pre-Setup Notes
 
-To first clone the repo use the following command
-
-`git clone --recurse-submodules git@github.com:huskyroboticsteam/Overhaul.git`
-
-If you run into Overhaul_Simulator not cloning you can fix it by running: `git pull --recurse-submodules`
-
-Our codebase is developed for an NVIDIA Jetson Orin, which runs Ubuntu Linux; as such, much
+Our codebase is developed for an NVIDIA Jetson TX2, which runs Ubuntu Linux; as such, much
 of our code will be Unix-specific.
 
 > ⚠️ The only supported platform is Ubuntu 22.04 LTS. Other versions/distros/platforms may work, but if you want as easy as possible, go with this version. 
 
-the setup that we use for windows consist of a docker container that runs th linux enivronment that you will be developing on. There will be an additional VNC server setup script that can be used when wanting to test against something that requires a gui (sim most likely).
+We will be using vmware workstation for Windows, or UTM for Mac (For additional support, this installation process is based on [CSE 478 virtual machine setup guide](https://courses.cs.washington.edu/courses/cse478/26sp/projects/introduction/#optional-setting-up-the-virtual-machine) however please refer to instructions in this readme for specific files such as os images).
 
-Here are the applications that you need to install on your own (Windows):
-1. [WSL](https://learn.microsoft.com/en-us/windows/wsl/about)
-        - Open a powershell terminal in windows by typing terminal in the windows search bar
-        - Run `wsl --install`
-        - Run `wsl.exe --install -d Ubuntu-22.04`
-3. [Docker](https://docs.docker.com/desktop/setup/install/windows-install/)
-    - Ensure that when you launch Docker Desktop, you selection the option for WSL integration, otherwise go to settings in the top right -> WSL Integration -> Check Enable Integration and the distro Ubuntu-22.04
-4. If needed [vs code](https://code.visualstudio.com/download?_exp_download=d53503e735)
-    - After you get vs code, install the Dev Containers Extension (Search in Extenssions on the left menu)
+1. First install the VM
+    - **Windows**: vmware workstation, setup an account and install the [desktop application](https://support.broadcom.com/c/portal/login?redirect=%2Fgroup%2Fecx%2Fproductdownloads%3Fsubfamily%3DVMware%2520Workstation%2520Pro%26freeDownloads%3Dtrue&refererPlid=36&p_l_id=33047). 
+    - **Mac**: UTM, click download from their [page](https://mac.getutm.app/).
+2. Install the [OS image](https://releases.ubuntu.com/jammy/) to your laptop.
+3. Finish all of the install instructions for the ubuntu install (This will take a long time so go do some homework or look through the repo).
+4. Install basic requirements
+        - `sudo apt install git`
 
 > Never update your VM! Ubuntu will try to do it for some reason, just don't do it. Same goes for os on laptops
-
-**Next open a terminal and enter the Overhaul folder within this repo**
-
-```bash
-cd \Overhaul
-```
-
-**Then build the docker container**
-
-<kbd>ctrl</kbd> + <kbd>shift</kbd> + <kbd>p</kbd>
-and search *Rebuild and Reopen in containers*
-
-> Normally just do *Reopen in containers* so you don't have to build every time
-
-**Running into the `failed to connect to the docker API at npipe:////./pipe/dockerDesktopLinuxEngine;`??**
-Enter the docker desktop app and go to the top right setting icon. Then enter the Resources tab on the left. Disable integration with WSL distro, save and restart in the bottom corner. Then recheck the enable integration with my defaul WSL distro. Rebuild and reopen and it should work! 
-
-Then wait for a really long time until it lets you type to exit. In the top bar of vs code click terminal and hit new terminal. **At this point you are in the VM and can start developing!**
-
-***Windows VNC***
-
-**If you need a graphical interface (you most likely will) you will need to do some more setup**
-
-First instal the VNC viewer application. Any works however I personally use [this one]((https://www.realvnc.com/en/))
-
-Everytime you boot up the docker container you must follow the steps above to create a new terminal. Once in that terminal run the 
-
-```bash
-./start_vnc.sh
-```
-
-Then Open up real VNC
-1. If you have not made a connection to the session yet right click the background and click *new connection*
-2. Type in the address 127.0.0.1:5901, you can name the vnc session anything (mine is HRT_Container)
-3. connect to it and enter the password *dockervnc*
-4. It should connect to the session and you can now see the desktop!
-
 
 **From here on out, the installation instructions will assume you are using Ubuntu 22.04 LTS**. Windows users should run commands in either their Linux VM or their WSL
 terminal. For Linux users, we'll assume you're running Ubuntu; users of another
