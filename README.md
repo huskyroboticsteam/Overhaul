@@ -17,6 +17,47 @@ We will be using vmware workstation for Windows, or UTM for Mac (For additional 
 
 > Never update your VM! Ubuntu will try to do it for some reason, just don't do it. Same goes for os on laptops
 
+<<<<<<< HEAD
+=======
+**Next open a terminal and enter the Overhaul folder within this repo**
+
+```bash
+cd \Overhaul
+```
+
+**Then build the docker container**
+
+<kbd>ctrl</kbd> + <kbd>shift</kbd> + <kbd>p</kbd>
+and search *Rebuild and Reopen in containers*
+
+> Normally just do *Reopen in containers* so you don't have to build every time
+
+**Running into the `failed to connect to the docker API at npipe:////./pipe/dockerDesktopLinuxEngine;`??**
+Enter the docker desktop app and go to the top right setting icon. Then enter the Resources tab on the left. Disable integration with WSL distro, save and restart in the bottom corner. Then recheck the enable integration with my defaul WSL distro. Rebuild and reopen and it should work! 
+
+Then wait for a really long time until it lets you type to exit. In the top bar of vs code click terminal and hit new terminal. **At this point you are in the VM and can start developing!**
+
+***Windows VNC***
+
+**If you need a graphical interface (you most likely will) you will need to do some more setup**
+
+First instal the VNC viewer application. Any works however I personally use [this one](([https://www.realvnc.com/en/](https://www.realvnc.com/en/connect/download/viewer/?lai_sr=5-9&lai_sl=l&lai_na=3339)))
+
+
+Everytime you boot up the docker container you must follow the steps above to create a new terminal. Once in that terminal run the 
+
+```bash
+./start_vnc.sh
+```
+
+Then Open up real VNC
+1. If you have not made a connection to the session yet right click the background and click *new connection*
+2. Type in the address 127.0.0.1:5901, you can name the vnc session anything (mine is HRT_Container)
+3. connect to it and enter the password *dockervnc*
+4. It should connect to the session and you can now see the desktop!
+
+
+>>>>>>> 737539adc12b8b1247fc35c347133bed8d0934c7
 **From here on out, the installation instructions will assume you are using Ubuntu 22.04 LTS**. Windows users should run commands in either their Linux VM or their WSL
 terminal. For Linux users, we'll assume you're running Ubuntu; users of another
 distribution may need to change some instructions (e.g. package managers) depending on
