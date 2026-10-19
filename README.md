@@ -22,9 +22,10 @@ We will be using vmware workstation for Windows, or UTM for Mac (For additional 
 8. Add the keys to your githubs SSH Keys
 9. Clone the repository:\
         - `git clone git@github.com:huskyroboticsteam/Overhaul.git --recursive`
-11. Follow ROS install instructions on the [ROS website](https://docs.ros.org/en/humble/Installation/Alternatives/Ubuntu-Development-Setup.html)
+11. Follow ROS install instructions on the [ROS website](https://docs.ros.org/en/humble/Installation/Ubuntu-Install-Debs.html)
         - Follow all instructions up until ***Try some examples***
-12. Follow Gazebo ign Fortress [install guide](https://gazebosim.org/docs/fortress/ros_installation/)
+12. Install Gazebo ign Fortress [binaries](https://gazebosim.org/docs/fortress/install_ubuntu/) 
+13. Then install the ROS Gazebo dependencies [install guide](https://gazebosim.org/docs/fortress/ros_installation/)
 
 > Never update your VM! Ubuntu will try to do it for some reason, just don't do it. Same goes for os on laptops
 
