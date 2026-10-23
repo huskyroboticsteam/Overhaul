@@ -3,9 +3,11 @@
 <package format="3">
   <name>pixhawk_imu_gps_publisher</name>
   <version>0.0.0</version>
-  <description>TODO: Package description</description>
+  <description>Publishes the IMU and GPS data from the Pixhawk.</description>
   <maintainer email="raovishruth@gmail.com">powerlax</maintainer>
   <license>Apache-2.0</license>
+  <exec_depend>rclpy</exec_depend>
+  <exec_depend>std_msgs</exec_depend>
 
   <test_depend>ament_copyright</test_depend>
   <test_depend>ament_flake8</test_depend>

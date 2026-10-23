@@ -15,7 +15,7 @@ setup(
     zip_safe=True,
     maintainer='powerlax',
     maintainer_email='raovishruth@gmail.com',
-    description='TODO: Package description',
+    description='Publishes the IMU and GPS data from the Pixhawk.',
     license='Apache-2.0',
     extras_require={
         'test': [
@@ -24,6 +24,7 @@ setup(
     },
     entry_points={
         'console_scripts': [
+            'talker = pixhawk_imu_gps_publisher.testpub:main',
         ],
     },
 )
