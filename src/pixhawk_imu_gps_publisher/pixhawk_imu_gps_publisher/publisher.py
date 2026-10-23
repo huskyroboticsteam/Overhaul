@@ -140,7 +140,6 @@ class IMUGPSPublisher(Node):
         self.publisher_gps_ = self.create_publisher(String, 'pixhawk_gps', 10)
         timer_period = 0.1  # seconds
         self.timer = self.create_timer(timer_period, self.timer_callback)
-        self.i = 0
 
         args = get_args()
         print("Waiting for ardupilot connection on port {}...".format(args.port))
@@ -155,19 +154,16 @@ class IMUGPSPublisher(Node):
 
 
     def timer_callback(self):
-        msg = Vector3(x=self.ardupilot.attitude.pitch, y=self.ardupilot.attitude.pitch, z=self.ardupilot.attitude.pitch)
-        self.publisher_imu_.publish(msg)
-        self.get_logger().info('Publishing: "%s"' % msg.data)
-        self.i += 1
+        msg_imu = Vector3(x=self.ardupilot.attitude.pitch, y=self.ardupilot.attitude.yaw, z=self.ardupilot.attitude.roll)
+        msg_gps = Vector3(x=self.ardupilot.location.global_frame.lat, y=self.ardupilot.location.global_frame.lon, z=self.ardupilot.location.global_frame.alt)
+        self.publisher_imu_.publish(msg_imu)
+        self.publisher_gps_.publish(msg_gps)
+        self.get_logger().info('Publishing: "%s"' % msg_imu.data)
+        self.get_logger().info('Publishing: "%s"' % msg_gps.data)
 
 def main(args=None):
     rclpy.init(args=args)
     publisher = IMUGPSPublisher()
-
     rclpy.spin(publisher)
-
-    # Destroy the node explicitly
-    # (optional - otherwise it will be done automatically
-    # when the garbage collector destroys the node object)
     publisher.destroy_node()
     rclpy.shutdown()
