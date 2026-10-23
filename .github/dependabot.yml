@@ -1,0 +1,19 @@
+version: 2
+updates:
+  # Actions used by .github/workflows (ci.yml and docs.yml)
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: weekly
+    groups:
+      github-actions:
+        patterns:
+          - '*'
+
+  # Base images for the CI-built image (Dockerfile) and the devcontainer
+  - package-ecosystem: docker
+    directories:
+      - /
+      - /.devcontainer
+    schedule:
+      interval: weekly
