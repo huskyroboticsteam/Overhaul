@@ -24,7 +24,7 @@ setup(
     },
     entry_points={
         'console_scripts': [
-            'talker = pixhawk_imu_gps_publisher.testpub:main',
+            'talker = pixhawk_imu_gps_publisher.publisher:main',
         ],
     },
 )
