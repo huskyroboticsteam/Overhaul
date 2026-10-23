@@ -6,6 +6,8 @@ ARG USERNAME=ros
 ARG USER_UID=1000
 ARG USER_GID=$USER_UID
 
+SHELL ["/bin/bash", "-o", "pipefail", "-c"]
+
 # Delete user if it exists in container (e.g Ubuntu Noble: ubuntu)
 RUN if getent passwd "$USER_UID"; then \
         userdel "$(getent passwd "$USER_UID" | cut -d: -f1)"; \
@@ -124,7 +126,9 @@ ENV SHELL=/bin/bash
 USER $USERNAME
 
 # Update bashrc to use alias's, sourcing etc.
-RUN echo "source /opt/ros/humble/setup.bash" >> ~/.bashrc 
+# Source ROS, and the workspace once it has been built
+RUN echo "source /opt/ros/humble/setup.bash" >> ~/.bashrc \
+    && echo '[ -f /home/ws/install/setup.bash ] && source /home/ws/install/setup.bash' >> ~/.bashrc
 
 # Start VNC server on display :1 (port 5901)
 CMD ["vncserver", ":1", "-geometry", "1280x720", "-depth", "24", "-localhost", "no", "-fg"]
