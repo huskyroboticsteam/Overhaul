@@ -15,7 +15,7 @@ CANSender::CANSender() : Node("CAN_sender_node") {
 	std::string can_name = this->get_parameter("CAN_name").as_string();
 
     this->subscription_ = this->create_subscription<can::msg::CANPacket>(
-        "can_tx", rclcpp::QoS(rclcpp::KeepAll()), std::bind(&CANSender::sendCANPacket, this, std::placeholders::_1));
+        "can/tx", rclcpp::QoS(rclcpp::KeepAll()), std::bind(&CANSender::sendCANPacket, this, std::placeholders::_1));
 
     this->fd_ = createCANSocket(can_name, this->get_logger(), CANDevice_t{});
     

@@ -9,6 +9,10 @@ class CANReceiver : public rclcpp::Node {
     CANReceiver();
 
   private:
+    /**
+     * @brief Attempts to read from the file descriptor and publish the message.
+     * Will sleep for READ_ERR_SLEEP after a bus error
+     */
     void publishPacket();
 
     /**

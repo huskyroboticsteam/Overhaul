@@ -13,7 +13,7 @@ CANReceiver::CANReceiver() : Node("CAN_receiver_node") {
 	this->declare_parameter("CAN_name", "can0", can_name_desc);
 	std::string can_name = this->get_parameter("CAN_name").as_string();
 
-	this->publisher_ = this->create_publisher<can::msg::CANPacket>("can_rx", rclcpp::QoS(rclcpp::KeepAll()));
+	this->publisher_ = this->create_publisher<can::msg::CANPacket>("can/rx", rclcpp::QoS(rclcpp::KeepAll()));
 
 	// create dedicated CAN socket for reading
 	int fd = createCANSocket(can_name, this->get_logger(), CANDevice_t{0, 0, 0, CAN_UUID_JETSON});
