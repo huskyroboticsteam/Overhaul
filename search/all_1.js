@@ -8,5 +8,6 @@ var searchData=
   ['constants_3a_3adrive_5',['Drive',['../namespaceConstants_1_1Drive.html',1,'Constants']]],
   ['constants_3a_3anetwork_6',['Network',['../namespaceConstants_1_1Network.html',1,'Constants']]],
   ['constants_3a_3anetwork_3a_3akeys_7',['Keys',['../namespaceConstants_1_1Network_1_1Keys.html',1,'Constants::Network']]],
-  ['createcansocket_8',['createCANSocket',['../namespacecan.html#a11b7350ca42aa4b59947be86e6f972c2',1,'can']]]
+  ['controller_8',['Controller',['../classrover_1_1rover_1_1controller__node_1_1Controller.html',1,'rover::rover::controller_node']]],
+  ['createcansocket_9',['createCANSocket',['../namespacecan.html#a11b7350ca42aa4b59947be86e6f972c2',1,'can']]]
 ];

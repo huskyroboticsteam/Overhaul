@@ -1,9 +1,5 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="Node000000" title=" " alt="" coords="5,55,99,80"/>
-<area shape="rect" id="Node000001" href="$classRover.html" title=" " alt="" coords="183,5,238,31"/>
-<area shape="poly" id="edge1_Node000000_Node000001" title=" " alt="" coords="109,47,181,24,183,29,111,52"/>
-<area shape="rect" id="Node000002" href="$classcan_1_1CANReceiver.html" title=" " alt="" coords="147,55,274,80"/>
-<area shape="poly" id="edge2_Node000000_Node000002" title=" " alt="" coords="115,65,146,65,146,70,115,70"/>
-<area shape="rect" id="Node000003" href="$classcan_1_1CANSender.html" title="Node used to send CAN to the network." alt="" coords="152,104,269,130"/>
-<area shape="poly" id="edge3_Node000000_Node000003" title=" " alt="" coords="111,83,167,101,166,106,110,88"/>
+<area shape="rect" id="Node000000" title=" " alt="" coords="5,13,58,38"/>
+<area shape="rect" id="Node000001" href="$classrover_1_1rover_1_1controller__node_1_1Controller.html" title=" " alt="" coords="106,5,244,46"/>
+<area shape="poly" id="edge1_Node000000_Node000001" title=" " alt="" coords="73,23,105,23,105,28,73,28"/>
 </map>
