@@ -115,6 +115,10 @@ colcon test --ctest-args -LE linter && colcon test-result --verbose
 `-LE linter` skips the ament linters, which the code doesn't pass yet.
 
 CI (`.github/workflows/ci.yml`) builds the root `Dockerfile`, runs the tests in it, and pushes an amd64/arm64 image to GHCR on every push to `main` and every PR commit (`latest` and `main` tags from `main`, `pr-<n>` from PRs, plus `sha-<commit>`). Dependabot (`.github/dependabot.yml`) opens weekly PRs for action and base-image updates.
+### Testing tools
+
+1. Install dep `pip install pynput`
+2. Run `ros2 run rover controller_node.py `
 
 ## Adding new ROS2 Packages
 Suppose we want to add a custom ROS2 package (i.e rosbag2). Remember to update the following:
@@ -122,7 +126,7 @@ Suppose we want to add a custom ROS2 package (i.e rosbag2). Remember to update t
 1. `package.xml` - Add `<depend>custom_node</depend>`
 2. `CMakeLists.txt` - Add `find_package(custom_node REQUIRED)`
 3. `CMakeLists.txt` - Add `custom_node` under `ament_target_dependencies`
-
+f
 After adding, run the following:
 
 1. Install external dependencies `rosdep install --from-paths src --ignore-src -y` (as ChatGPT says, "get ingredients 🛒✨")
