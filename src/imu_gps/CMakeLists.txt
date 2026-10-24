@@ -27,9 +27,9 @@ if(BUILD_TESTING)
   ament_lint_auto_find_test_dependencies()
 endif()
 
-ament_python_install_package(pixhawk_imu_gps_publisher)
+ament_python_install_package(${PROJECT_NAME})
 install(PROGRAMS
-  pixhawk_imu_gps_publisher/publisher.py
+  imu_gps/publisher.py
   DESTINATION lib/${PROJECT_NAME}
 )
 

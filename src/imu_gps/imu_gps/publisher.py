@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 import atexit
 import time
 import sys
@@ -79,8 +80,12 @@ class IMUGPSPublisher(Node):
         self.get_logger().info('Publishing: "%s"' % msg_gps.x)
 
 def main(args=None):
+    print("hi")
     rclpy.init(args=args)
     publisher = IMUGPSPublisher()
     rclpy.spin(publisher)
     publisher.destroy_node()
     rclpy.shutdown()
+
+if __name__ == '__main__':
+    main()
