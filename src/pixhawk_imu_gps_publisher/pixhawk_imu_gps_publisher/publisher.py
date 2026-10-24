@@ -137,7 +137,7 @@ class IMUGPSPublisher(Node):
     def __init__(self):
         super().__init__('pixhawk_imu_gps_publisher')
         self.publisher_imu_ = self.create_publisher(Vector3, 'pixhawk_imu', 10)
-        self.publisher_gps_ = self.create_publisher(String, 'pixhawk_gps', 10)
+        self.publisher_gps_ = self.create_publisher(Vector3, 'pixhawk_gps', 10)
         timer_period = 0.1  # seconds
         self.timer = self.create_timer(timer_period, self.timer_callback)
 
@@ -158,8 +158,8 @@ class IMUGPSPublisher(Node):
         msg_gps = Vector3(x=self.ardupilot.location.global_frame.lat, y=self.ardupilot.location.global_frame.lon, z=self.ardupilot.location.global_frame.alt)
         self.publisher_imu_.publish(msg_imu)
         self.publisher_gps_.publish(msg_gps)
-        self.get_logger().info('Publishing: "%s"' % msg_imu.data)
-        self.get_logger().info('Publishing: "%s"' % msg_gps.data)
+        self.get_logger().info('Publishing: "%s"' % msg_imu.x)
+        self.get_logger().info('Publishing: "%s"' % msg_gps.x)
 
 def main(args=None):
     rclpy.init(args=args)
