@@ -36,15 +36,15 @@ RUN apt-get update \
     wget \
     && rm -rf /var/lib/apt/lists/*
 
-RUN apt-get update && apt-get install -y \
-    xfce4 \
-    xfce4-terminal \
-    tigervnc-standalone-server \
-    tigervnc-common \
-    dbus-x11 \
-    fonts-liberation \
-    xfonts-base \
-    && rm -rf /var/lib/apt/lists/*
+# RUN apt-get update && apt-get install -y \
+#     xfce4 \
+#     xfce4-terminal \
+#     tigervnc-standalone-server \
+#     tigervnc-common \
+#     dbus-x11 \
+#     fonts-liberation \
+#     xfonts-base \
+#     && rm -rf /var/lib/apt/lists/*
 
 # Transfer key
 RUN mkdir -p /etc/apt/keyrings/
@@ -63,21 +63,21 @@ RUN apt-get install -y ignition-fortress
 # Set up VNC password (the password for connecting via VNC client)
 # The echo string to xstartup is because the default xstartup does not want to work with the docker container
 # why? feel free to debug
-RUN mkdir -p /home/${USERNAME}/.vnc && \
-    echo "dockervnc" | vncpasswd -f > /home/${USERNAME}/.vnc/passwd && \
-    chmod 600 /home/${USERNAME}/.vnc/passwd && \
-    printf '#!/bin/sh\n\
-    unset WAYLAND_DISPLAY\n\
-    unset WAYLAND_SOCKET\n\
-    unset SESSION_MANAGER\n\
-    unset DBUS_SESSION_BUS_ADDRESS\n\
-    export DISPLAY=:1\n\
-    exec dbus-launch --exit-with-session startxfce4\n' > /home/${USERNAME}/.vnc/xstartup && \
-    chmod +x /home/${USERNAME}/.vnc/xstartup && \
-    chown -R ${USERNAME}:${USERNAME} /home/${USERNAME}/.vnc
+# RUN mkdir -p /home/${USERNAME}/.vnc && \
+#     echo "dockervnc" | vncpasswd -f > /home/${USERNAME}/.vnc/passwd && \
+#     chmod 600 /home/${USERNAME}/.vnc/passwd && \
+#     printf '#!/bin/sh\n\
+#     unset WAYLAND_DISPLAY\n\
+#     unset WAYLAND_SOCKET\n\
+#     unset SESSION_MANAGER\n\
+#     unset DBUS_SESSION_BUS_ADDRESS\n\
+#     export DISPLAY=:1\n\
+#     exec dbus-launch --exit-with-session startxfce4\n' > /home/${USERNAME}/.vnc/xstartup && \
+#     chmod +x /home/${USERNAME}/.vnc/xstartup && \
+#     chown -R ${USERNAME}:${USERNAME} /home/${USERNAME}/.vnc
 
 # Expose VNC port
-EXPOSE 5901
+# EXPOSE 5901
 
 RUN apt-get update \
     && apt-get install -y \
@@ -127,4 +127,4 @@ USER $USERNAME
 RUN echo "source /opt/ros/humble/setup.bash" >> ~/.bashrc 
 
 # Start VNC server on display :1 (port 5901)
-CMD ["vncserver", ":1", "-geometry", "1280x720", "-depth", "24", "-localhost", "no", "-fg"]
+# CMD ["vncserver", ":1", "-geometry", "1280x720", "-depth", "24", "-localhost", "no", "-fg"]

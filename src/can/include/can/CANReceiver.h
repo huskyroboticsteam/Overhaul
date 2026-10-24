@@ -9,6 +9,8 @@ class CANReceiver : public rclcpp::Node {
     CANReceiver();
 
   private:
+    void publishPacket();
+
     /**
      * @brief Recieves CAN packets from the file descriptor
      * 
@@ -17,8 +19,9 @@ class CANReceiver : public rclcpp::Node {
      * 
      * @return true if read a packet was received successfully, false otherwise
      */
-    bool receivePacket(int fd, CANPacket_t& packet);
+    bool receivePacket(CANPacket_t& packet);
 
+    rclcpp::TimerBase::SharedPtr timer_;
     rclcpp::Publisher<can::msg::CANPacket>::SharedPtr publisher_;
     std::string can_name_;
     int fd_;
