@@ -12,6 +12,7 @@ import rclpy
 from rclpy.node import Node
 from std_msgs.msg import String
 from geometry_msgs.msg import Vector3
+from imu_gps.msg import GPSData, IMUData
 
 # This if is required because dronekit is not up to date for python 3.10
 if sys.version_info.major == 3 and sys.version_info.minor >= 10:
@@ -54,8 +55,8 @@ def get_args():
 class IMUGPSPublisher(Node):
     def __init__(self):
         super().__init__('pixhawk_imu_gps_publisher')
-        self.publisher_imu_ = self.create_publisher(Vector3, 'pixhawk_imu', 10)
-        self.publisher_gps_ = self.create_publisher(Vector3, 'pixhawk_gps', 10)
+        self.publisher_imu_ = self.create_publisher(IMUData, 'pixhawk_imu', 10)
+        self.publisher_gps_ = self.create_publisher(GPSData, 'pixhawk_gps', 10)
         timer_period = 0.1  # seconds
         self.timer = self.create_timer(timer_period, self.timer_callback)
 
@@ -72,15 +73,14 @@ class IMUGPSPublisher(Node):
 
 
     def timer_callback(self):
-        msg_imu = Vector3(x=self.ardupilot.attitude.pitch, y=self.ardupilot.attitude.yaw, z=self.ardupilot.attitude.roll)
-        msg_gps = Vector3(x=self.ardupilot.location.global_frame.lat, y=self.ardupilot.location.global_frame.lon, z=self.ardupilot.location.global_frame.alt)
+        msg_imu = IMUData(pitch=self.ardupilot.attitude.pitch, yaw=self.ardupilot.attitude.yaw, roll=self.ardupilot.attitude.roll)
+        msg_gps = GPSData(latitute=self.ardupilot.location.global_frame.lat, longitude=self.ardupilot.location.global_frame.lon, altitude=self.ardupilot.location.global_frame.alt)
         self.publisher_imu_.publish(msg_imu)
         self.publisher_gps_.publish(msg_gps)
-        self.get_logger().info('Publishing: "%s"' % msg_imu.x)
-        self.get_logger().info('Publishing: "%s"' % msg_gps.x)
+        self.get_logger().info('Publishing: "%s"' % msg_imu.pitch)
+        self.get_logger().info('Publishing: "%s"' % msg_gps.latitute)
 
 def main(args=None):
-    print("hi")
     rclpy.init(args=args)
     publisher = IMUGPSPublisher()
     rclpy.spin(publisher)
