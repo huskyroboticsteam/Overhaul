@@ -79,6 +79,12 @@ class IMUGPSPublisher(Node):
         self.publisher_gps_.publish(msg_gps)
         self.get_logger().info('Publishing Pixhawk IMU Data: Pitch: "%s" Yaw: "%s" Roll: "%s"' % (msg_imu.pitch, msg_imu.yaw, msg_imu.roll))
         self.get_logger().info('Publishing Pixhawk GPS Data: Latitude: "%s" Longitude: "%s" Altitude: "%s"' % (msg_gps.latitute, msg_gps.longitude, msg_gps.altitude))
+        if (self.ardupilot._last_heartbeat > self.ardupilot._heartbeat_warning):
+            self.get_logger().warn("No heartbeat from Pixhawk for {} seconds".format(self.ardupilot._last_heartbeat))
+        if (self.ardupilot._last_heartbeat > self.ardupilot._heartbeat_error):
+            self.get_logger().error("No heartbeat from Pixhawk for {} seconds".format(self.ardupilot._last_heartbeat))
+        if (msg_gps.latitute == 0 or msg_gps.longitude == 0 or msg_gps.altitude == 0):
+            self.get_logger().warn("GPS data from the Pixhawk is zero, check Pixhawk connection")
 
 def main(args=None):
     rclpy.init(args=args)
