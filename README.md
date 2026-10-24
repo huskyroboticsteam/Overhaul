@@ -1,3 +1,7 @@
+# Design
+
+![Overhaul ROS2 Design](design.svg)
+
 # Pre-Setup Notes
 
 Our codebase is developed for an NVIDIA Jetson TX2, which runs Ubuntu Linux; as such, much
