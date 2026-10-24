@@ -77,8 +77,8 @@ class IMUGPSPublisher(Node):
         msg_gps = GPSData(latitute=self.ardupilot.location.global_frame.lat, longitude=self.ardupilot.location.global_frame.lon, altitude=self.ardupilot.location.global_frame.alt)
         self.publisher_imu_.publish(msg_imu)
         self.publisher_gps_.publish(msg_gps)
-        self.get_logger().info('Publishing: "%s"' % msg_imu.pitch)
-        self.get_logger().info('Publishing: "%s"' % msg_gps.latitute)
+        self.get_logger().info('Publishing Pixhawk IMU Data: Pitch: "%s" Yaw: "%s" Roll: "%s"' % (msg_imu.pitch, msg_imu.yaw, msg_imu.roll))
+        self.get_logger().info('Publishing Pixhawk GPS Data: Latitude: "%s" Longitude: "%s" Altitude: "%s"' % (msg_gps.latitute, msg_gps.longitude, msg_gps.altitude))
 
 def main(args=None):
     rclpy.init(args=args)
