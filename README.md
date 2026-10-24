@@ -1,3 +1,9 @@
+# Design
+
+![Overhaul ROS2 Design](design.svg)
+
+Edit [design.excalidraw](design.excalidraw) with the Excalidraw VS Code extension. CI regenerates `design.svg` when you push.
+
 # Pre-Setup Notes
 
 Our codebase is developed for an NVIDIA Jetson TX2, which runs Ubuntu Linux; as such, much
