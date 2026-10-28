@@ -12,9 +12,6 @@ from rclpy.node import Node
 from geometry_msgs.msg import Quaternion
 from sensor_msgs.msg import NavSatFix
 
-
-from imu_gps.msg import GPSData, IMUData
-
 # This if is required because dronekit is not up to date for python 3.10
 if sys.version_info.major == 3 and sys.version_info.minor >= 10:
     import collections
