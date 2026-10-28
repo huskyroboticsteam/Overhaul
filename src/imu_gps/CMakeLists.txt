@@ -13,8 +13,7 @@ find_package(rcl_interfaces REQUIRED)
 find_package(rclpy REQUIRED)
 find_package(geometry_msgs REQUIRED)
 find_package(sensor_msgs REQUIRED)
-find_package(tf2_ros_py REQUIRED)
-find_package(python3-numpy REQUIRED)
+
 
 
 

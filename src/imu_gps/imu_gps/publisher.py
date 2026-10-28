@@ -2,16 +2,13 @@
 import atexit
 import time
 import sys
-import asyncio
-import websockets
-import json
+
 import argparse
 import math
 import numpy as np
 
 import rclpy
 from rclpy.node import Node
-from std_msgs.msg import String
 from geometry_msgs.msg import Quaternion
 from sensor_msgs.msg import NavSatFix
 
