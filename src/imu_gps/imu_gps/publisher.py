@@ -7,11 +7,15 @@ import websockets
 import json
 import argparse
 import math
+import numpy as np
 
 import rclpy
 from rclpy.node import Node
 from std_msgs.msg import String
-from geometry_msgs.msg import Vector3
+from geometry_msgs.msg import Quaternion
+from sensor_msgs.msg import NavSatFix
+
+
 from imu_gps.msg import GPSData, IMUData
 
 # This if is required because dronekit is not up to date for python 3.10
@@ -20,6 +24,30 @@ if sys.version_info.major == 3 and sys.version_info.minor >= 10:
     setattr(collections, "MutableMapping", collections.abc.MutableMapping)
 import dronekit
 
+# Method epically stolen from ROS2 Humble Tutorial, see
+# https://docs.ros.org/en/humble/Tutorials/Intermediate/Tf2/Writing-A-Tf2-Static-Broadcaster-Py.html
+def quaternion_from_euler(ai, aj, ak):
+    ai /= 2.0
+    aj /= 2.0
+    ak /= 2.0
+    ci = math.cos(ai)
+    si = math.sin(ai)
+    cj = math.cos(aj)
+    sj = math.sin(aj)
+    ck = math.cos(ak)
+    sk = math.sin(ak)
+    cc = ci*ck
+    cs = ci*sk
+    sc = si*ck
+    ss = si*sk
+
+    q = np.empty((4, ))
+    q[0] = cj*sc - sj*cs
+    q[1] = cj*ss + sj*cc
+    q[2] = cj*cs - sj*sc
+    q[3] = cj*cc + sj*ss
+
+    return q
 
 def debug_GPS_vars():
     args = get_args()
@@ -55,8 +83,8 @@ def get_args():
 class IMUGPSPublisher(Node):
     def __init__(self):
         super().__init__('pixhawk_imu_gps_publisher')
-        self.publisher_imu_ = self.create_publisher(IMUData, 'pixhawk_imu', 10)
-        self.publisher_gps_ = self.create_publisher(GPSData, 'pixhawk_gps', 10)
+        self.publisher_imu_ = self.create_publisher(Quaternion, 'pixhawk_imu', 10)
+        self.publisher_gps_ = self.create_publisher(NavSatFix, 'pixhawk_gps', 10)
         timer_period = 0.1  # seconds
         self.timer = self.create_timer(timer_period, self.timer_callback)
 
@@ -73,17 +101,28 @@ class IMUGPSPublisher(Node):
 
 
     def timer_callback(self):
-        msg_imu = IMUData(pitch=self.ardupilot.attitude.pitch, yaw=self.ardupilot.attitude.yaw, roll=self.ardupilot.attitude.roll)
-        msg_gps = GPSData(latitute=self.ardupilot.location.global_frame.lat, longitude=self.ardupilot.location.global_frame.lon, altitude=self.ardupilot.location.global_frame.alt)
+        q = quaternion_from_euler(self.ardupilot.attitude.roll, self.ardupilot.attitude.pitch, self.ardupilot.attitude.yaw)
+        msg_imu = Quaternion()
+        msg_imu.x = q[0]
+        msg_imu.y = q[1]
+        msg_imu.z = q[2]
+        msg_imu.w = q[3]
+
+        msg_gps = NavSatFix()
+        msg_gps.latitude = self.ardupilot.location.global_frame.lat
+        msg_gps.longitude = self.ardupilot.location.global_frame.lon
+        msg_gps.altitude = self.ardupilot.location.global_frame.alt
+
         self.publisher_imu_.publish(msg_imu)
         self.publisher_gps_.publish(msg_gps)
-        self.get_logger().info('Publishing Pixhawk IMU Data: Pitch: "%s" Yaw: "%s" Roll: "%s"' % (msg_imu.pitch, msg_imu.yaw, msg_imu.roll))
-        self.get_logger().info('Publishing Pixhawk GPS Data: Latitude: "%s" Longitude: "%s" Altitude: "%s"' % (msg_gps.latitute, msg_gps.longitude, msg_gps.altitude))
+
+        self.get_logger().info('Publishing Pixhawk IMU Data as Quaternion: x: "%s" y: "%s" z: "%s" w: "%s"' % (msg_imu.x, msg_imu.y, msg_imu.z, msg_imu.w))
+        self.get_logger().info('Publishing Pixhawk GPS Data: Latitude: "%s" Longitude: "%s" Altitude: "%s"' % (msg_gps.latitude, msg_gps.longitude, msg_gps.altitude))
         if (self.ardupilot._last_heartbeat > self.ardupilot._heartbeat_warning):
             self.get_logger().warn("No heartbeat from Pixhawk for {} seconds".format(self.ardupilot._last_heartbeat))
         if (self.ardupilot._last_heartbeat > self.ardupilot._heartbeat_error):
             self.get_logger().error("No heartbeat from Pixhawk for {} seconds".format(self.ardupilot._last_heartbeat))
-        if (msg_gps.latitute == 0 or msg_gps.longitude == 0 or msg_gps.altitude == 0):
+        if (msg_gps.latitude == 0 or msg_gps.longitude == 0 or msg_gps.altitude == 0):
             self.get_logger().warn("GPS data from the Pixhawk is zero, check Pixhawk connection")
 
 def main(args=None):
