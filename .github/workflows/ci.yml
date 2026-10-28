@@ -1,0 +1,105 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: docker/setup-buildx-action@v3
+
+      - name: Build image
+        uses: docker/build-push-action@v6
+        # Only the publish job's build summary and .dockerbuild record are kept
+        env:
+          DOCKER_BUILD_SUMMARY: false
+          DOCKER_BUILD_RECORD_UPLOAD: false
+        with:
+          context: .
+          load: true
+          tags: overhaul:test
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+      # Linters (ament_lint_auto) are excluded for now; remove `-LE linter` to enforce them
+      - name: Run tests
+        run: |
+          docker run --rm overhaul:test \
+            bash -c 'colcon test --ctest-args -LE linter --event-handlers console_direct+ && colcon test-result --verbose'
+
+  publish:
+    needs: test
+    # Fork PRs get a read-only token and can't push to GHCR
+    if: github.event_name == 'push' || github.event.pull_request.head.repo.full_name == github.repository
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: docker/setup-qemu-action@v3
+
+      - uses: docker/setup-buildx-action@v3
+
+      - uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ghcr.io/${{ github.repository }}
+          tags: |
+            type=raw,value=latest,enable={{is_default_branch}}
+            type=ref,event=branch
+            type=ref,event=pr
+            type=sha
+
+      # amd64 for laptops, arm64 for the Jetson and Apple Silicon Macs
+      - id: build
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          platforms: linux/amd64,linux/arm64
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+      - name: Add pull command to summary
+        env:
+          TAGS: ${{ steps.meta.outputs.tags }}
+          DIGEST: ${{ steps.build.outputs.digest }}
+        run: |
+          image="ghcr.io/${GITHUB_REPOSITORY,,}"
+          sha_tag=$(grep -m1 ':sha-' <<< "$TAGS")
+          {
+            echo "## Docker image"
+            echo
+            echo "Pull this exact build (amd64 + arm64):"
+            echo
+            echo '```bash'
+            echo "docker pull $sha_tag"
+            echo '```'
+            echo
+            echo "Tags: $(sed 's/.*:\(.*\)/`\1`/' <<< "$TAGS" | paste -sd ' ' -)"
+            echo
+            echo "Digest: \`$DIGEST\`"
+            echo
+            echo "[Package page](${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/pkgs/container/${image##*/})"
+          } >> "$GITHUB_STEP_SUMMARY"
