@@ -62,8 +62,8 @@ class IMUGPSPublisher(Node):
     def __init__(self):
         super().__init__('pixhawk_imu_gps_publisher')
         args = get_args()
-        self.publisher_imu_ = self.create_publisher(QuaternionStamped, 'pixhawk_imu', int(args.frequency))
-        self.publisher_gps_ = self.create_publisher(NavSatFix, 'pixhawk_gps', int(args.frequency))
+        self.publisher_imu_ = self.create_publisher(QuaternionStamped, '/imu/pixhawk', int(args.frequency))
+        self.publisher_gps_ = self.create_publisher(NavSatFix, '/gps/pixhawk', int(args.frequency))
         timer_period = 1.0 / args.frequency  # seconds
         self.timer = self.create_timer(timer_period, self.timer_callback)
 
@@ -87,7 +87,7 @@ class IMUGPSPublisher(Node):
         msg_imu.quaternion.y = q[1]
         msg_imu.quaternion.z = q[2]
         msg_imu.quaternion.w = q[3]
-        msg_imu.header.frame_id = "pixhawk_imu"
+        msg_imu.header.frame_id = "imu_link"
 
         msg_gps = NavSatFix()
         msg_gps.header.stamp = self.get_clock().now().to_msg()
