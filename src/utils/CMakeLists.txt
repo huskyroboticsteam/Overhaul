@@ -8,24 +8,24 @@ endif()
 # find dependencies
 find_package(ament_cmake REQUIRED)
 find_package(rclcpp REQUIRED)
-find_package(geometry_msgs REQUIRED)
+find_package(mc REQUIRED)
 
-add_executable(TeleopKey src/TeleopKey.cpp
+add_executable(FakeMC src/FakeMissionControl.cpp
   src/KeyboardReader.cpp
 )
-target_include_directories(TeleopKey PUBLIC
+target_include_directories(FakeMC PUBLIC
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
   $<INSTALL_INTERFACE:include>)
 
-target_compile_features(TeleopKey PUBLIC c_std_99 cxx_std_17)  # Require C99 and C++17
+target_compile_features(FakeMC PUBLIC c_std_99 cxx_std_17)  # Require C99 and C++17
 ament_target_dependencies(
-  TeleopKey
+  FakeMC
   rclcpp
-  geometry_msgs
+  mc
 )
 
 install(TARGETS
-  TeleopKey
+  FakeMC
   DESTINATION lib/${PROJECT_NAME}
 )
 
@@ -40,5 +40,11 @@ if(BUILD_TESTING)
   set(ament_cmake_cpplint_FOUND TRUE)
   ament_lint_auto_find_test_dependencies()
 endif()
+
+# Install launch files
+install(DIRECTORY
+  launch
+  DESTINATION share/${PROJECT_NAME}
+)
 
 ament_package()
