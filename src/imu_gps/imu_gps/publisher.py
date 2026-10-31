@@ -87,7 +87,7 @@ class IMUGPSPublisher(Node):
         msg_imu.quaternion.y = q[1]
         msg_imu.quaternion.z = q[2]
         msg_imu.quaternion.w = q[3]
-        msg_imu.header.frame_id = "pixhawk_imu"
+        msg_imu.header.frame_id = "imu_link"
 
         msg_gps = NavSatFix()
         msg_gps.header.stamp = self.get_clock().now().to_msg()
