@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<launch>
+    <arg name="world" default="$(find-pkg-share rover_gazebo)/worlds/flat.sdf" />
+    <arg name="drive_test" default="true" />
+
+    <!-- -s runs the server with no GUI, -r starts the simulation unpaused -->
+    <include file="$(find-pkg-share ros_gz_sim)/launch/gz_sim.launch.py">
+        <arg name="gz_args" value="-s -r -v 3 $(var world)" />
+    </include>
+
+    <include file="$(find-pkg-share rover_description)/launch/description.launch.xml">
+        <arg name="model" value="$(find-pkg-share rover_gazebo)/urdf/rover_sim.urdf.xacro" />
+        <arg name="use_sim_time" value="true" />
+    </include>
+
+    <node pkg="ros_gz_sim" exec="create" args="-topic robot_description -name rover -z 0.05" />
+
+    <node pkg="ros_gz_bridge" exec="parameter_bridge" name="gz_bridge">
+        <param name="config_file" value="$(find-pkg-share rover_gazebo)/config/bridge.yaml" />
+        <param name="use_sim_time" value="true" />
+    </node>
+
+    <node pkg="foxglove_bridge" exec="foxglove_bridge" name="foxglove_bridge">
+        <param name="address" value="0.0.0.0" />
+        <param name="port" value="8765" />
+        <param name="use_sim_time" value="true" />
+    </node>
+
+    <node pkg="rover_gazebo" exec="drive_test" name="drive_test" if="$(var drive_test)" />
+</launch>

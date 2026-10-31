@@ -4,3 +4,5 @@ install/
 log/
 **/__pycache__/
 **/.DS_Store
+# Simulation only, keeps Gazebo out of the rover image
+src/rover_gazebo/

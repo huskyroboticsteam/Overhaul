@@ -1,6 +1,6 @@
 {
     "name": "ROS 2 Development Container",
-    "forwardPorts": [5901],
+    "forwardPorts": [5901, 8765],
     "privileged": true,
     "remoteUser": "vscode",
     "build": {

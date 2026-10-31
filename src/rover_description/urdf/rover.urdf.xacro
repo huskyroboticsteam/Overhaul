@@ -1,0 +1,102 @@
+<?xml version="1.0"?>
+<robot name="rover" xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+  <xacro:property name="chassis_length" value="0.8" />
+  <xacro:property name="chassis_width" value="0.5" />
+  <xacro:property name="chassis_height" value="0.2" />
+  <xacro:property name="chassis_mass" value="20.0" />
+
+  <xacro:property name="wheel_radius" value="0.15" />
+  <xacro:property name="wheel_width" value="0.1" />
+  <xacro:property name="wheel_mass" value="2.0" />
+  <!-- Distance between the front and rear axles -->
+  <xacro:property name="wheel_base" value="0.6" />
+  <!-- Distance between the left and right wheel centers -->
+  <xacro:property name="wheel_track" value="0.62" />
+
+  <material name="chassis_blue">
+    <color rgba="0.2 0.4 0.8 1.0" />
+  </material>
+  <material name="wheel_black">
+    <color rgba="0.1 0.1 0.1 1.0" />
+  </material>
+  <material name="spoke_white">
+    <color rgba="0.9 0.9 0.9 1.0" />
+  </material>
+
+  <!-- KDL can't handle a root link with inertia, so the root is an empty link on the ground -->
+  <link name="base_footprint" />
+
+  <joint name="base_joint" type="fixed">
+    <parent link="base_footprint" />
+    <child link="base_link" />
+    <origin xyz="0 0 ${wheel_radius}" />
+  </joint>
+
+  <link name="base_link">
+    <visual>
+      <geometry>
+        <box size="${chassis_length} ${chassis_width} ${chassis_height}" />
+      </geometry>
+      <material name="chassis_blue" />
+    </visual>
+    <collision>
+      <geometry>
+        <box size="${chassis_length} ${chassis_width} ${chassis_height}" />
+      </geometry>
+    </collision>
+    <inertial>
+      <mass value="${chassis_mass}" />
+      <inertia
+        ixx="${chassis_mass * (chassis_width**2 + chassis_height**2) / 12}"
+        iyy="${chassis_mass * (chassis_length**2 + chassis_height**2) / 12}"
+        izz="${chassis_mass * (chassis_length**2 + chassis_width**2) / 12}"
+        ixy="0" ixz="0" iyz="0" />
+    </inertial>
+  </link>
+
+  <!-- Each wheel is rotated so its +Z axis points left, which makes positive spin drive forward -->
+  <xacro:macro name="wheel" params="name x y">
+    <joint name="${name}_wheel_joint" type="continuous">
+      <parent link="base_link" />
+      <child link="${name}_wheel" />
+      <origin xyz="${x} ${y} 0" rpy="${-pi / 2} 0 0" />
+      <axis xyz="0 0 1" />
+    </joint>
+
+    <link name="${name}_wheel">
+      <visual>
+        <geometry>
+          <cylinder radius="${wheel_radius}" length="${wheel_width}" />
+        </geometry>
+        <material name="wheel_black" />
+      </visual>
+      <!-- A plain cylinder looks the same at any angle, so this bar makes spinning visible -->
+      <visual>
+        <geometry>
+          <box size="${wheel_radius * 1.8} 0.03 ${wheel_width + 0.002}" />
+        </geometry>
+        <material name="spoke_white" />
+      </visual>
+      <collision>
+        <geometry>
+          <cylinder radius="${wheel_radius}" length="${wheel_width}" />
+        </geometry>
+      </collision>
+      <inertial>
+        <mass value="${wheel_mass}" />
+        <inertia
+          ixx="${wheel_mass * (3 * wheel_radius**2 + wheel_width**2) / 12}"
+          iyy="${wheel_mass * (3 * wheel_radius**2 + wheel_width**2) / 12}"
+          izz="${wheel_mass * wheel_radius**2 / 2}"
+          ixy="0" ixz="0" iyz="0" />
+      </inertial>
+    </link>
+  </xacro:macro>
+
+  <xacro:wheel name="front_left" x="${wheel_base / 2}" y="${wheel_track / 2}" />
+  <xacro:wheel name="front_right" x="${wheel_base / 2}" y="${-wheel_track / 2}" />
+  <xacro:wheel name="rear_left" x="${-wheel_base / 2}" y="${wheel_track / 2}" />
+  <xacro:wheel name="rear_right" x="${-wheel_base / 2}" y="${-wheel_track / 2}" />
+
+</robot>

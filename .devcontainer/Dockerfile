@@ -81,6 +81,9 @@ RUN mkdir -p /home/${USERNAME}/.vnc && \
 # Expose VNC port
 EXPOSE 5901
 
+# Expose Foxglove bridge port
+EXPOSE 8765
+
 RUN apt-get update \
     && apt-get install -y \
     build-essential \
@@ -104,7 +107,10 @@ RUN apt-get update \
     nlohmann-json3-dev \
     ublox-linux \
     unzip \
+    ros-humble-foxglove-bridge \
+    ros-humble-robot-state-publisher \
     ros-humble-ros-gz \
+    ros-humble-xacro \
     && rm -rf /var/lib/apt/lists/*
 
 ENV SHELL=/bin/bash
