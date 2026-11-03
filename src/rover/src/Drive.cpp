@@ -45,7 +45,7 @@ class Drive : public rclcpp::Node {
         std::sqrt(std::pow(desired_vec.linear.x, 2) + 
         std::pow(desired_vec.linear.y, 2));
 
-      RCLCPP_INFO(this->get_logger(), "mag, %f", desired_swerve_state->linear.x);
+      RCLCPP_INFO(this->get_logger(), "mag, %f desired, %f", desired_swerve_state->linear.x, desired_rot);
 
       for (Publisher<Twist>::SharedPtr motor_publisher : drive_unit_subscribers) {
         motor_publisher->publish(*desired_swerve_state);
