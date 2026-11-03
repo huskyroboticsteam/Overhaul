@@ -14,7 +14,6 @@ class Rover : public rclcpp::Node {
 
       std::string peripheral = this->get_parameter("peripheral").as_string();
       RCLCPP_INFO(this->get_logger(), "Peripheral: %s", peripheral.c_str());
-      RCLCPP_INFO(this->get_logger(), "TEST-------------------------------------");
     }
   private:
 };
