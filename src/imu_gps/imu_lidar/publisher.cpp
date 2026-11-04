@@ -50,7 +50,7 @@ UnitreeLidarSDKNode::UnitreeLidarSDKNode(const rclcpp::NodeOptions &options)
   // ROS2
   pub_imu_  = create_publisher<sensor_msgs::msg::Imu>(imu_topic_, 10);
   pub_quat_ = create_publisher<geometry_msgs::msg::QuaternionStamped>(quat_topic_, 10);
-  timer_ = create_wall_timer(std::chrono::milliseconds(1),
+  timer_ = create_wall_timer(std::chrono::milliseconds(100),
                              std::bind(&UnitreeLidarSDKNode::timer_callback, this));
 }
 
@@ -86,7 +86,8 @@ void UnitreeLidarSDKNode::timer_callback()
   sensor_msgs::msg::Imu imuMsg;
   imuMsg.header.frame_id = imu_frame_;
   imuMsg.header.stamp = timestamp;
-  imuMsg.orientation_covariance[0] = -1.0;   // orientation intentionally not provided here
+  imuMsg.orientation = quatMsg.quaternion;
+
   imuMsg.angular_velocity.x = imu.angular_velocity[0];
   imuMsg.angular_velocity.y = imu.angular_velocity[1];
   imuMsg.angular_velocity.z = imu.angular_velocity[2];
