@@ -9,4 +9,6 @@
     <node pkg="can" exec="CANSender" name="can_tx">
         <param name="CAN_name" value="can0" />
     </node>
+    <node pkg="imu_gps" exec="publisher.py" name="pixhawk_publisher_node"></node>
+    <node pkg="imu_gps" exec="unitree_lidar_imu" name="unitree_lidar_imu_node"></node>
 </launch>
