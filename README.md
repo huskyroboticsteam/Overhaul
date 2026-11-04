@@ -26,6 +26,9 @@ We will be using vmware workstation for Windows, or UTM for Mac (For additional 
         - Follow all instructions up until ***Try some examples***
 12. Install Gazebo ign Fortress [binaries](https://gazebosim.org/docs/fortress/install_ubuntu/) 
 13. Then install the ROS Gazebo dependencies [install guide](https://gazebosim.org/docs/fortress/ros_installation/)
+13. Install foxglove: \
+`sudo apt install ros-$ROS_DISTRO-foxglove-bridge
+ros2 launch foxglove_bridge foxglove_bridge_launch.xml`
 
 > Never update your VM! Ubuntu will try to do it for some reason, just don't do it. Same goes for os on laptops
 
@@ -110,6 +113,9 @@ Or with the image CI publishes (`--net=host` so it can reach the host's `can0`):
 ```bash
 docker run --rm --net=host ghcr.io/huskyroboticsteam/overhaul:latest
 ```
+
+## Foxglove
+There are a multitude of tools you can use to visualize robot state however one that might be able to resolve the evil windows gazebo rending is Foxglove. Instructions for setup can be found here: https://docs.foxglove.dev/docs/getting-started/frameworks/ros2?modality=live
 
 ## Tests
 ```bash

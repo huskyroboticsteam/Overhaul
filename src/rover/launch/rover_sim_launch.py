@@ -21,7 +21,9 @@ from launch.actions import DeclareLaunchArgument
 from launch.actions import IncludeLaunchDescription
 from launch.conditions import IfCondition
 from launch.launch_description_sources import PythonLaunchDescriptionSource
+from launch.launch_description_sources import FrontendLaunchDescriptionSource
 from launch.substitutions import LaunchConfiguration, PathJoinSubstitution
+from launch_ros.substitutions import FindPackageShare
 
 from launch_ros.actions import Node
 
@@ -33,8 +35,8 @@ def generate_launch_description():
     pkg_project_bringup = get_package_share_directory('ros_gz_example_bringup')
     pkg_project_gazebo = get_package_share_directory('ros_gz_example_gazebo')
     pkg_project_description = get_package_share_directory('ros_gz_example_description')
-    pkg_rover = get_package_share_directory('rover')
     pkg_ros_gz_sim = get_package_share_directory('ros_gz_sim')
+    pkg_foxglove = get_package_share_directory('foxglove_bridge')
 
     # Load the SDF file from "description" package
     sdf_file  =  os.path.join(pkg_project_description, 'models', 'diff_drive', 'model.sdf')
@@ -54,6 +56,12 @@ def generate_launch_description():
         name='Drive',
         output='both',)
 
+    drive = Node(
+        package='rover',
+        executable='Drive',
+        name='Drive',
+        output='both',)
+
     # Setup to launch the simulator and Gazebo world
     gz_sim = IncludeLaunchDescription(
         PythonLaunchDescriptionSource(
@@ -64,6 +72,21 @@ def generate_launch_description():
             'diff_drive.sdf'
         ])}.items(),
     )
+
+    foxglove_bridge = IncludeLaunchDescription(
+        FrontendLaunchDescriptionSource(
+            PathJoinSubstitution([
+                FindPackageShare('foxglove_bridge'),
+                'launch',
+                'foxglove_bridge_launch.xml'
+            ])
+        ),
+        launch_arguments={
+            'port': '8765',
+            'address': '0.0.0.0'
+        }.items()
+    )
+
 
     # Takes the description and joint angles as inputs and publishes the 3D poses of the robot links
     robot_state_publisher = Node(
@@ -100,6 +123,7 @@ def generate_launch_description():
         gz_sim,
         DeclareLaunchArgument('rviz', default_value='true',
                               description='Open RViz.'),
+        foxglove_bridge,
         bridge,
         robot_state_publisher,
         rviz,
