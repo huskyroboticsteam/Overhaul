@@ -58,7 +58,7 @@ class IMUGPSPublisher(Node):
 
     # Creates the 2 publishers that output QuaternionStamped and NavSatFix messages 
     # at the specified frequency (default 10 Hz)
-    # Also connects to the Pixhawk. Remember to run as root
+    # Also connects to the Pixhawk.
     def __init__(self):
         super().__init__('pixhawk_imu_gps_publisher')
         args = get_args()
