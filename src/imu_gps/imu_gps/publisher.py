@@ -7,7 +7,7 @@ import numpy as np
 
 import rclpy
 from rclpy.node import Node
-from geometry_msgs.msg import QuaternionStamped
+from sensor_msgs.msg import Imu
 from sensor_msgs.msg import NavSatFix
 
 # This if is required because dronekit is not up to date for python 3.10
@@ -62,7 +62,7 @@ class IMUGPSPublisher(Node):
     def __init__(self):
         super().__init__('pixhawk_imu_gps_publisher')
         args = get_args()
-        self.publisher_imu_ = self.create_publisher(QuaternionStamped, '/imu/pixhawk', int(args.frequency))
+        self.publisher_imu_ = self.create_publisher(Imu, '/imu/pixhawk', int(args.frequency))
         self.publisher_gps_ = self.create_publisher(NavSatFix, '/gps/pixhawk', int(args.frequency))
         timer_period = 1.0 / args.frequency  # seconds
         self.timer = self.create_timer(timer_period, self.timer_callback)
@@ -81,12 +81,12 @@ class IMUGPSPublisher(Node):
     # Also logs the published data and checks for heartbeat and GPS validity
     def timer_callback(self):
         q = quaternion_from_euler(self.ardupilot.attitude.roll, self.ardupilot.attitude.pitch, self.ardupilot.attitude.yaw)
-        msg_imu = QuaternionStamped()
+        msg_imu = Imu()
+        msg_imu.orientation.x = q[0]
+        msg_imu.orientation.y = q[1]
+        msg_imu.orientation.z = q[2]
+        msg_imu.orientation.w = q[3]
         msg_imu.header.stamp = self.get_clock().now().to_msg()
-        msg_imu.quaternion.x = q[0]
-        msg_imu.quaternion.y = q[1]
-        msg_imu.quaternion.z = q[2]
-        msg_imu.quaternion.w = q[3]
         msg_imu.header.frame_id = "imu_link"
 
         msg_gps = NavSatFix()
@@ -99,7 +99,7 @@ class IMUGPSPublisher(Node):
         self.publisher_imu_.publish(msg_imu)
         self.publisher_gps_.publish(msg_gps)
 
-        self.get_logger().info('Publishing Pixhawk IMU Data as Quaternion: x: "%s" y: "%s" z: "%s" w: "%s"' % (msg_imu.quaternion.x, msg_imu.quaternion.y, msg_imu.quaternion.z, msg_imu.quaternion.w))
+        self.get_logger().info('Publishing Pixhawk IMU Data: x: "%s" y: "%s" z: "%s" w: "%s"' % (msg_imu.orientation.x, msg_imu.orientation.y, msg_imu.orientation.z, msg_imu.orientation.w))
         self.get_logger().info('Publishing Pixhawk GPS Data: Latitude: "%s" Longitude: "%s" Altitude: "%s"' % (msg_gps.latitude, msg_gps.longitude, msg_gps.altitude))
         if (self.ardupilot._last_heartbeat > self.ardupilot._heartbeat_warning):
             self.get_logger().warn("No heartbeat from Pixhawk for {} seconds".format(self.ardupilot._last_heartbeat))
