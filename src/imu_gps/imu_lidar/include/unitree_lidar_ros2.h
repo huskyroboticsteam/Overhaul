@@ -3,7 +3,6 @@
 #include <string>
 
 #include "rclcpp/rclcpp.hpp"
-#include "geometry_msgs/msg/quaternion_stamped.hpp"
 #include "sensor_msgs/msg/imu.hpp"
 
 #include "unitree_lidar_sdk.h"
@@ -18,7 +17,6 @@ public:
 
 private:
   // ROS
-  rclcpp::Publisher<geometry_msgs::msg::QuaternionStamped>::SharedPtr pub_quat_;
   rclcpp::Publisher<sensor_msgs::msg::Imu>::SharedPtr pub_imu_;
   rclcpp::TimerBase::SharedPtr timer_;
 
@@ -35,6 +33,6 @@ private:
   std::string imu_frame_;
   std::string imu_topic_;
 
-  std::string quat_frame_;
-  std::string quat_topic_;
+  uint32_t last_seq_{0};
+  bool have_seq_{false};
 };
