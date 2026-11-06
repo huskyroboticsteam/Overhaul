@@ -1,6 +1,6 @@
 var searchData=
 [
-  ['scheduleevent_0',['scheduleEvent',['../classutil_1_1PeriodicScheduler.html#abb81bec9a351199c3430515e8302ba62',1,'util::PeriodicScheduler']]],
-  ['start_1',['start',['../classutil_1_1AsyncTask.html#abe5a114fae049066657d73ccbdd9f3c3',1,'util::AsyncTask']]],
-  ['stop_2',['stop',['../classutil_1_1AsyncTask.html#a349580908c4774c5d99159f5be226f95',1,'util::AsyncTask']]]
+  ['raiihelper_0',['RAIIHelper',['../classutil_1_1RAIIHelper.html',1,'util::RAIIHelper'],['../classutil_1_1RAIIHelper.html#a319819be0066e81cf1e89762676b4130',1,'util::RAIIHelper::RAIIHelper(const std::function&lt; void()&gt; &amp;f)'],['../classutil_1_1RAIIHelper.html#a87d7a2d46207f257adebfd8f31b3101f',1,'util::RAIIHelper::RAIIHelper(RAIIHelper &amp;&amp;other)']]],
+  ['removeevent_1',['removeEvent',['../classutil_1_1PeriodicScheduler.html#ad4ca024dc74ffdcf80fea87e5c17a516',1,'util::PeriodicScheduler']]],
+  ['rover_2',['Rover',['../classRover.html',1,'']]]
 ];
