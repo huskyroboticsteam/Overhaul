@@ -45,7 +45,7 @@ UnitreeLidarSDKNode::UnitreeLidarSDKNode(const rclcpp::NodeOptions &options)
   pub_imu_  = create_publisher<sensor_msgs::msg::Imu>(imu_topic_, 10);
   RCLCPP_INFO(this->get_logger(), "LIDAR IMU Data Publisher Created");
 
-  timer_ = create_wall_timer(std::chrono::milliseconds(100),
+  timer_ = create_wall_timer(std::chrono::milliseconds(1),
                              std::bind(&UnitreeLidarSDKNode::timer_callback, this));
   RCLCPP_INFO(this->get_logger(), "Polling from LiDAR at 10 Hz");
 }
