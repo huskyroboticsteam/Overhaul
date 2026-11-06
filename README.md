@@ -102,6 +102,10 @@ Finally, `ros2 run rover Rover --ros-args -p peripheral:=<peripheral>`
 
 Running mc node `ros2 run mc --ros-args`
 
+> Alternatively you can launch all nodes with:\
+> ros2 launch rover rover_launch.xml
+>
+
 Or with the image CI publishes (`--net=host` so it can reach the host's `can0`):
 ```bash
 docker run --rm --net=host ghcr.io/huskyroboticsteam/overhaul:latest
@@ -115,6 +119,7 @@ colcon test --ctest-args -LE linter && colcon test-result --verbose
 `-LE linter` skips the ament linters, which the code doesn't pass yet.
 
 CI (`.github/workflows/ci.yml`) builds the root `Dockerfile`, runs the tests in it, and pushes an amd64/arm64 image to GHCR on every push to `main` and every PR commit (`latest` and `main` tags from `main`, `pr-<n>` from PRs, plus `sha-<commit>`). Dependabot (`.github/dependabot.yml`) opens weekly PRs for action and base-image updates.
+
 ### Testing tools
 
 1. Install dep `pip install pynput`

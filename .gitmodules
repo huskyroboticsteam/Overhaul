@@ -1,0 +1,3 @@
+[submodule "Overhaul_Simulator"]
+	path = Overhaul_Simulator
+	url = git@github.com:huskyroboticsteam/Overhaul_Simulator.git
