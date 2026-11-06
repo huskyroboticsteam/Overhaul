@@ -8,20 +8,17 @@
 UnitreeLidarSDKNode::UnitreeLidarSDKNode(const rclcpp::NodeOptions &options)
   : Node("unitree_lidar_sdk_node", options)
 {
-  
+  // Declare parameters (use port ttyACM0)
   declare_parameter<std::string>("port", "/dev/ttyACM0");
   declare_parameter<int>("baudrate", 4000000);
   declare_parameter<int>("cloud_scan_num", 18);
   declare_parameter<double>("range_max", 50.0);
   declare_parameter<double>("range_min", 0.0);
 
-  declare_parameter<std::string>("imu_frame", "/imu/unilidar");
-  declare_parameter<std::string>("imu_topic", "/imu/unilidar");
+  declare_parameter<std::string>("imu_frame", "unilidar_imu");
+  declare_parameter<std::string>("imu_topic", "unilidar/imu");
 
-  declare_parameter<std::string>("quat_frame", "unilidar_imu");
-  declare_parameter<std::string>("quat_topic", "unilidar/quaternion");
-
-  
+  // Read parameters
   port_ = get_parameter("port").as_string();
   baudrate_ = get_parameter("baudrate").as_int();
   cloud_scan_num_ = get_parameter("cloud_scan_num").as_int();
@@ -31,13 +28,8 @@ UnitreeLidarSDKNode::UnitreeLidarSDKNode(const rclcpp::NodeOptions &options)
   imu_frame_ = get_parameter("imu_frame").as_string();
   imu_topic_ = get_parameter("imu_topic").as_string();
 
-  quat_frame_ = get_parameter("quat_frame").as_string();
-  quat_topic_ = get_parameter("quat_topic").as_string();
-
-  
+  // Initialize UnitreeLidarReader (SDK2)
   lsdk_ = unilidar_sdk2::createUnitreeLidarReader();
-  RCLCPP_INFO(this->get_logger(), "Waiting for Lidar on port: %s...", port_.c_str());
-
   if (lsdk_->initializeSerial(port_,
                               static_cast<uint32_t>(baudrate_),
                               static_cast<uint16_t>(cloud_scan_num_),
@@ -49,71 +41,63 @@ UnitreeLidarSDKNode::UnitreeLidarSDKNode(const rclcpp::NodeOptions &options)
     throw std::runtime_error("Unitree lidar initialization failed");
   }
 
+  // Create Publisher for IMU Data
   pub_imu_  = create_publisher<sensor_msgs::msg::Imu>(imu_topic_, 10);
-  RCLCPP_INFO(this->get_logger(), "Created LIDAR's Publisher for IMU Data");
-  pub_quat_ = create_publisher<geometry_msgs::msg::QuaternionStamped>(quat_topic_, 10);
-<<<<<<< Updated upstream
+  RCLCPP_INFO(this->get_logger(), "LIDAR IMU Data Publisher Created");
+
   timer_ = create_wall_timer(std::chrono::milliseconds(100),
-=======
-  RCLCPP_INFO(this->get_logger(), "Created LIDAR's Publisher for Quaternion Data");
-  timer_ = create_wall_timer(std::chrono::milliseconds(1),
->>>>>>> Stashed changes
                              std::bind(&UnitreeLidarSDKNode::timer_callback, this));
+  RCLCPP_INFO(this->get_logger(), "Polling from LiDAR at 10 Hz");
 }
 
+// Shut down node when entering ctrl + c
 UnitreeLidarSDKNode::~UnitreeLidarSDKNode()
 {
   if (lsdk_ != nullptr)
   {
-    lsdk_->closeSerial();
+    lsdk_->closeSerial();  
     lsdk_ = nullptr;
+    RCLCPP_INFO(this->get_logger(), "Unitree Lidar serial port closed successfully.");
   }
 }
 
+
+
 void UnitreeLidarSDKNode::timer_callback()
 {
+  // ensure received packets are IMU packets
   if (lsdk_->runParse() != LIDAR_IMU_DATA_PACKET_TYPE) return;
 
+  // Poll and extract sensor data
   unilidar_sdk2::LidarImuData imu;
   if (!lsdk_->getImuData(imu)) return;
 
-  // Use the ROS clock; the lidar's hardware clock is not epoch-synced by default.
+  // get timestamp of IMU packet
   const rclcpp::Time timestamp = this->now();
 
-  // Orientation goes to Quaternion Topic
-  geometry_msgs::msg::QuaternionStamped quatMsg;
-  quatMsg.header.frame_id = quat_frame_;
-  quatMsg.header.stamp = timestamp;
-  quatMsg.quaternion.x = imu.quaternion[0];
-  quatMsg.quaternion.y = imu.quaternion[1];
-  quatMsg.quaternion.z = imu.quaternion[2];
-  quatMsg.quaternion.w = imu.quaternion[3];
-
-  // Linear Acceleration + Angular Velocity goes to IMU topic
+  // Create ROS Message
   sensor_msgs::msg::Imu imuMsg;
   imuMsg.header.frame_id = imu_frame_;
   imuMsg.header.stamp = timestamp;
-<<<<<<< Updated upstream
-  imuMsg.orientation = quatMsg.quaternion;
-=======
 
-  imuMsg.orientation_covariance[0] = 0.01; 
-  imuMsg.orientation_covariance[4] = 0.01;
-  imuMsg.orientation_covariance[8] = 0.01;
->>>>>>> Stashed changes
-
-  imuMsg.angular_velocity.x = imu.angular_velocity[0];
-  imuMsg.angular_velocity.y = imu.angular_velocity[1];
-  imuMsg.angular_velocity.z = imu.angular_velocity[2];
-  imuMsg.linear_acceleration.x = imu.linear_acceleration[0];
-  imuMsg.linear_acceleration.y = imu.linear_acceleration[1];
-  imuMsg.linear_acceleration.z = imu.linear_acceleration[2];
+  // Retrieve Quaternion Data from LiDAR
   imuMsg.orientation.x = imu.quaternion[0];
   imuMsg.orientation.y = imu.quaternion[1];
   imuMsg.orientation.z = imu.quaternion[2];
   imuMsg.orientation.w = imu.quaternion[3];
 
-  pub_quat_->publish(quatMsg);
+  // Retrieve Angular Velocity from LiDAR
+  imuMsg.angular_velocity.x = imu.angular_velocity[0];
+  imuMsg.angular_velocity.y = imu.angular_velocity[1];
+  imuMsg.angular_velocity.z = imu.angular_velocity[2];
+
+  // Retrieve Linear Acceleration from LiDAR
+  imuMsg.linear_acceleration.x = imu.linear_acceleration[0];
+  imuMsg.linear_acceleration.y = imu.linear_acceleration[1];
+  imuMsg.linear_acceleration.z = imu.linear_acceleration[2];
+
+
+  // Broadcast full IMU packet with timestamp to unilidar/imu topic
   pub_imu_->publish(imuMsg);
 }
 

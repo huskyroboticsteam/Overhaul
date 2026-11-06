@@ -3,6 +3,7 @@
 #include <string>
 
 #include "rclcpp/rclcpp.hpp"
+#include "geometry_msgs/msg/quaternion_stamped.hpp"
 #include "sensor_msgs/msg/imu.hpp"
 
 #include "unitree_lidar_sdk.h"

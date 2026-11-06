@@ -58,7 +58,7 @@ install(PROGRAMS
 
 install(DIRECTORY
   launch
-  DESTINATION imu_gps/src/${PROJECT_NAME}
+  DESTINATION share/${PROJECT_NAME}
 )
 
 ament_package()
