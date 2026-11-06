@@ -1,6 +1,7 @@
 #include "../include/utils/KeyboardReader.h"
 
-#include <mc/msg/mc_packet.hpp>
+#include <mc/msg/joint_power_request.hpp>
+
 #include <rclcpp/rclcpp.hpp> 
 
 namespace utils {
@@ -10,7 +11,9 @@ class FakeMissionControl : public rclcpp::Node {
     FakeMissionControl() : Node("fake_mc"), input_(), dirty_(false) {
       this->timer_ = this->create_wall_timer(std::chrono::nanoseconds(0), std::bind(&FakeMissionControl::getKey, this));
 
-      this->pub_ = this->create_publisher<mc::msg::MCPacket>("/mc", rclcpp::QoS(rclcpp::KeepAll()));
+      this->joint_power_pub_ = this->create_publisher<mc::msg::JointPowerRequest>(
+        "mc/joint_power_request", rclcpp::QoS(rclcpp::KeepAll())
+      );
     }
 
     ~FakeMissionControl() {
@@ -29,25 +32,28 @@ class FakeMissionControl : public rclcpp::Node {
         return -1;
       }
 
-      mc::msg::MCPacket packet;
+      mc::msg::JointPowerRequest joint_power_packet;
+
       switch(this->c_) {
         case KEYCODE_UP:
-          packet.type = "drive up";
-          this->dirty_ = true;
+          // packet.type = "drive up";
+          // this->dirty_ = true;
           break;
 
         case 'w':
-          packet.type = "drive";
-          this->dirty_ = true;
+          joint_power_packet.joint = "shoulder";
+          joint_power_packet.power = 1.0;
+          this->joint_power_pub_->publish(joint_power_packet);
+          break;
+
+        case 's':
+          joint_power_packet.joint = "shoulder";
+          joint_power_packet.power = -1.0;
+          this->joint_power_pub_->publish(joint_power_packet);
           break;
 
         default:
           break;
-      }
-
-      if (this->dirty_) {
-        this->pub_->publish(packet);
-        this->dirty_ = false;
       }
 
       return 0;
@@ -55,7 +61,7 @@ class FakeMissionControl : public rclcpp::Node {
 
     KeyboardReader input_;
     rclcpp::TimerBase::SharedPtr timer_;
-    rclcpp::Publisher<mc::msg::MCPacket>::SharedPtr pub_;
+    rclcpp::Publisher<mc::msg::JointPowerRequest>::SharedPtr joint_power_pub_;
 
     bool dirty_;
     char c_;

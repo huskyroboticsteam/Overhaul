@@ -11,6 +11,8 @@
   <buildtool_depend>rosidl_default_generators</buildtool_depend>
 
   <depend>rclcpp</depend>
+  <depend>can</depend>
+  <depend>geometry_msgs</depend>
   <depend>rcl_interfaces</depend>
 
   <exec_depend>rosidl_default_runtime</exec_depend>

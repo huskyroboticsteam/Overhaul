@@ -9,4 +9,5 @@
     <node pkg="can" exec="CANSender" name="can_tx">
         <param name="CAN_name" value="can0" />
     </node>
+    <node pkg="mc" exec="MissionControlProtocol" name="mcp" />
 </launch>
