@@ -48,6 +48,8 @@ UnitreeLidarSDKNode::UnitreeLidarSDKNode(const rclcpp::NodeOptions &options)
   timer_ = create_wall_timer(std::chrono::milliseconds(1),
                              std::bind(&UnitreeLidarSDKNode::timer_callback, this));
   RCLCPP_INFO(this->get_logger(), "Polling from LiDAR at 1000 Hz, publishing at 500 Hz");
+} 
+
 // Shut down node when entering ctrl + c
 UnitreeLidarSDKNode::~UnitreeLidarSDKNode()
 {
