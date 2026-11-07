@@ -88,6 +88,11 @@ class IMUGPSPublisher(Node):
         msg_imu.orientation.w = q[3]
         msg_imu.header.stamp = self.get_clock().now().to_msg()
         msg_imu.header.frame_id = "imu_link"
+        msg_imu.orientation_covariance = [6.983857080968629e-05, 4.42800892223726e-06, -1.4563799542387746e-06, 
+                                          4.42800892223726e-06, 3.0399722842091425e-07, -8.891833734435512e-08, 
+                                          -1.4563799542387746e-06, -8.891833734435512e-08, 3.734139264632667e-08]
+        msg_imu.angular_velocity_covariance = [-1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
+        msg_imu.linear_acceleration_covariance = [-1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
 
         msg_gps = NavSatFix()
         msg_gps.header.stamp = self.get_clock().now().to_msg()

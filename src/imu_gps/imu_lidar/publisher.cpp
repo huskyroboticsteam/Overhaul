@@ -16,7 +16,7 @@ UnitreeLidarSDKNode::UnitreeLidarSDKNode(const rclcpp::NodeOptions &options)
   declare_parameter<double>("range_min", 0.0);
 
   declare_parameter<std::string>("imu_frame", "unilidar_imu");
-  declare_parameter<std::string>("imu_topic", "unilidar/imu");
+  declare_parameter<std::string>("imu_topic", "/imu/lidar");
 
   // Read parameters
   port_ = get_parameter("port").as_string();
@@ -48,8 +48,6 @@ UnitreeLidarSDKNode::UnitreeLidarSDKNode(const rclcpp::NodeOptions &options)
   timer_ = create_wall_timer(std::chrono::milliseconds(1),
                              std::bind(&UnitreeLidarSDKNode::timer_callback, this));
   RCLCPP_INFO(this->get_logger(), "Polling from LiDAR at 1000 Hz, publishing at 500 Hz");
-}
-
 // Shut down node when entering ctrl + c
 UnitreeLidarSDKNode::~UnitreeLidarSDKNode()
 {
@@ -85,16 +83,25 @@ void UnitreeLidarSDKNode::timer_callback()
   imuMsg.orientation.y = imu.quaternion[1];
   imuMsg.orientation.z = imu.quaternion[2];
   imuMsg.orientation.w = imu.quaternion[3];
+  imuMsg.orientation_covariance = {8.543068027834089e-07, 2.0119617120236034e-08, 1.2355307220230947e-07, 
+                                  2.0119617120236034e-08, 2.612990272942886e-06, 1.4687900427637633e-07, 
+                                  1.2355307220230947e-07, 1.4687900427637633e-07, 1.0493471902336669e-06};
 
   // Retrieve Angular Velocity from LiDAR
   imuMsg.angular_velocity.x = imu.angular_velocity[0];
   imuMsg.angular_velocity.y = imu.angular_velocity[1];
   imuMsg.angular_velocity.z = imu.angular_velocity[2];
+  imuMsg.angular_velocity_covariance = {0.0003557801624545512, 2.276833304388468e-05, -9.766761338406529e-05, 
+                                        2.276833304388468e-05, 0.0004791685591795729, 4.155375687924402e-05, 
+                                        -9.766761338406529e-05, 4.155375687924402e-05, 0.00045224778701255866};
 
   // Retrieve Linear Acceleration from LiDAR
   imuMsg.linear_acceleration.x = imu.linear_acceleration[0];
   imuMsg.linear_acceleration.y = imu.linear_acceleration[1];
   imuMsg.linear_acceleration.z = imu.linear_acceleration[2];
+  imuMsg.linear_acceleration_covariance = {0.10027424272803934, -0.0014685746365046056, -0.03839344188748068, 
+                                          -0.0014685746365046056, 0.036102655563778126, 0.030189153318523607, 
+                                          -0.03839344188748068, 0.030189153318523607, 0.311645705112446};
 
 
   // Broadcast full IMU packet with timestamp to unilidar/imu topic
