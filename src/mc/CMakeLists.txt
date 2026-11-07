@@ -26,23 +26,23 @@ rosidl_generate_interfaces(${PROJECT_NAME}
 
 rosidl_get_typesupport_target(cpp_typesupport_target "${PROJECT_NAME}" "rosidl_typesupport_cpp")
 
-add_executable(MissionControlProtocol src/MissionControlProtocol.cpp)
-target_include_directories(MissionControlProtocol PUBLIC
+add_executable(MCBridge src/MissionControlBridge.cpp)
+target_include_directories(MCBridge PUBLIC
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
   $<INSTALL_INTERFACE:include>)
 
-target_compile_features(MissionControlProtocol PUBLIC c_std_99 cxx_std_17)  # Require C99 and C++17
+target_compile_features(MCBridge PUBLIC c_std_99 cxx_std_17)  # Require C99 and C++17
 ament_target_dependencies(
-  MissionControlProtocol
+  MCBridge
   rclcpp
   can
   rcl_interfaces
 )
 
-target_link_libraries(MissionControlProtocol ${cpp_typesupport_target})
+target_link_libraries(MCBridge ${cpp_typesupport_target})
 
 install(TARGETS
-  MissionControlProtocol
+  MCBridge
   DESTINATION lib/${PROJECT_NAME}
 )
 

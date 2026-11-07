@@ -3,7 +3,7 @@
 <package format="3">
   <name>mc</name>
   <version>0.0.0</version>
-  <description>Mission Control Protocol (on DS laptop)</description>
+  <description>Mission Control Bridge</description>
   <maintainer email="uwrobots@uw.edu">uwrobots</maintainer>
   <license>Apache-2.0</license>
 

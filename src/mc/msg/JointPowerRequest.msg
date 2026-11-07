@@ -1,3 +1,3 @@
 string joint
 
-float64 power
+float32 power

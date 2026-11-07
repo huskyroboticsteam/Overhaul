@@ -12,7 +12,7 @@ class FakeMissionControl : public rclcpp::Node {
       this->timer_ = this->create_wall_timer(std::chrono::nanoseconds(0), std::bind(&FakeMissionControl::getKey, this));
 
       this->joint_power_pub_ = this->create_publisher<mc::msg::JointPowerRequest>(
-        "mc/joint_power_request", rclcpp::QoS(rclcpp::KeepAll())
+      "mc/joint_power_request", rclcpp::QoS(rclcpp::KeepAll())
       );
     }
 
@@ -48,6 +48,18 @@ class FakeMissionControl : public rclcpp::Node {
 
         case 's':
           joint_power_packet.joint = "shoulder";
+          joint_power_packet.power = -1.0;
+          this->joint_power_pub_->publish(joint_power_packet);
+          break;
+
+        case 'f':
+          joint_power_packet.joint = "elbow";
+          joint_power_packet.power = 1.0;
+          this->joint_power_pub_->publish(joint_power_packet);
+          break;
+
+        case 'h':
+          joint_power_packet.joint = "elbow";
           joint_power_packet.power = -1.0;
           this->joint_power_pub_->publish(joint_power_packet);
           break;

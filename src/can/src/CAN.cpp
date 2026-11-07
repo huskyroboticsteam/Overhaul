@@ -61,4 +61,55 @@ int createCANSocket(std::string can_name, std::optional<rclcpp::Logger> logger, 
   return fd;
 }
 
+can::msg::CANDevice can2ros_device(CANDevice_t device) {
+	return can::build<can::msg::CANDevice>()
+		.device_uuid(device.deviceUUID)
+		.motor(device.motorDomain)
+		.peripheral(device.peripheralDomain)
+		.power(device.powerDomain);
+}
+
+CANDevice_t ros2can_device(can::msg::CANDevice device) {
+	return CANDevice_t{device.peripheral, device.motor, device.power, device.device_uuid};
+}
+
+can::msg::CANPacket can2ros_packet(CANPacket_t packet) {
+	std::array<uint8_t, 6UL> array;
+	for (int i = 0; i < 6; i++) { array[i] = packet.contents[i]; }
+
+	return can::build<can::msg::CANPacket>()
+		.device(can2ros_device(packet.device))
+		.priority(packet.priority)
+		.contents_length(packet.contentsLength)
+		.command(packet.command)
+		.sender_uuid(packet.senderUUID)
+		.contents(array);
+}
+
+CANPacket_t ros2can_packet(can::msg::CANPacket packet) {
+	return CANPacket_t{
+		ros2can_device(packet.device),
+		(CANPriority_t) packet.priority,
+		packet.contents_length,
+		packet.command,
+		packet.sender_uuid,
+		{packet.contents[0],
+		 packet.contents[1],
+		 packet.contents[2],
+		 packet.contents[3],
+		 packet.contents[4],
+		 packet.contents[5]}
+	};
+}
+
+can::msg::CANPacket createMotorVelocityPacket(can::msg::CANDevice device, double vel) {
+	CANDevice_t jetson = CANDevice_t{0, 0, 0, 0x1};
+
+	CANPacket_t packet = CANMotorPacket_BLDC_SetInputVelocity(
+		jetson, ros2can_device(device), vel, 0.0f
+	);
+
+	return can2ros_packet(packet);
+}
+
 } // namespace can

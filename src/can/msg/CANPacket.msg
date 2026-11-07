@@ -1,6 +1,6 @@
 CANDevice device
 
-bool priority
+bool priority 0
 
 uint8 contents_length
 
