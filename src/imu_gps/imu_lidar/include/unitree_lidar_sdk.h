@@ -20,7 +20,7 @@ public:
      * return -1 if we failed to open the serial port.
      */
     virtual int initializeSerial(
-        std::string port = "/dev/ttyACM0",
+        std::string port = "/dev/unitree_lidar",
         uint32_t baudrate = 4000000,
         uint16_t cloud_scan_num = 18,
         bool use_system_timestamp = true,
