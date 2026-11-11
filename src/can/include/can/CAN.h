@@ -17,11 +17,11 @@ namespace can {
 
 /**
  * @brief Creates the CAN Socket
- * 
+ *
  * @param can_name name of the CAN interface
  * @param logger optional, logger for errors
  * @param device optional, will enable reception if provided
- * 
+ *
  * @return a file descriptor, or -1 on failure
  */
 int createCANSocket(std::string can_name, std::optional<rclcpp::Logger> logger, std::optional<CANDevice_t> device);
@@ -34,4 +34,4 @@ CANPacket_t ros2can_packet(can::msg::CANPacket packet);
 
 can::msg::CANPacket createMotorVelocityPacket(can::msg::CANDevice device, float vel);
 
-} // namespace can
+}  // namespace can

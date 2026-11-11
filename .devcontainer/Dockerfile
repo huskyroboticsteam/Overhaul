@@ -46,14 +46,6 @@ RUN apt-get update \
 #     xfonts-base \
 #     && rm -rf /var/lib/apt/lists/*
 
-# Transfer key
-RUN mkdir -p /etc/apt/keyrings/
-RUN wget -P /etc/apt/keyrings/ "https://huskyroboticsteam.github.io/ubuntu-repo/KEY.gpg"
-RUN gpg --no-default-keyring --keyring ./temp-keyring.gpg --import /etc/apt/keyrings/KEY.gpg
-RUN gpg --no-default-keyring --keyring ./temp-keyring.gpg --export --output /etc/apt/keyrings/KEY.gpg --yes
-RUN rm temp-keyring.gpg*
-RUN wget -P /etc/apt/sources.list.d "https://huskyroboticsteam.github.io/ubuntu-repo/husky_robotics.list"
-
 # Install Gazebo ROS Deps
 RUN curl https://packages.osrfoundation.org/gazebo.gpg --output /usr/share/keyrings/pkgs-osrf-archive-keyring.gpg
 RUN echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/pkgs-osrf-archive-keyring.gpg] https://packages.osrfoundation.org/gazebo/ubuntu-stable $(lsb_release -cs) main" | sudo tee /etc/apt/sources.list.d/gazebo-stable.list > /dev/null
@@ -78,6 +70,14 @@ RUN apt-get install -y ignition-fortress
 
 # Expose VNC port
 # EXPOSE 5901
+
+# Transfer key
+RUN mkdir -p /etc/apt/keyrings/
+RUN wget -P /etc/apt/keyrings/ "https://huskyroboticsteam.github.io/ubuntu-repo/KEY.gpg"
+RUN gpg --no-default-keyring --keyring ./temp-keyring.gpg --import /etc/apt/keyrings/KEY.gpg
+RUN gpg --no-default-keyring --keyring ./temp-keyring.gpg --export --output /etc/apt/keyrings/KEY.gpg --yes
+RUN rm temp-keyring.gpg*
+RUN wget -P /etc/apt/sources.list.d "https://huskyroboticsteam.github.io/ubuntu-repo/husky_robotics.list"
 
 RUN apt-get update \
     && apt-get install -y \

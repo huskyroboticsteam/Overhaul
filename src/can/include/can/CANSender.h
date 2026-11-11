@@ -14,15 +14,15 @@ namespace can {
  * @brief Node used to send CAN to the network.
  */
 class CANSender : public rclcpp::Node {
-  public:
-    CANSender();
+public:
+  CANSender();
 
-  private:
-    void sendCANPacket(const can::msg::CANPacket::SharedPtr msg) const;
-    bool sendCANFrame(const canfd_frame& frame) const;
+private:
+  void sendCANPacket(const can::msg::CANPacket::SharedPtr msg) const;
+  bool sendCANFrame(const canfd_frame& frame) const;
 
-    rclcpp::Subscription<can::msg::CANPacket>::SharedPtr subscription_;
-    int fd_;
+  rclcpp::Subscription<can::msg::CANPacket>::SharedPtr subscription_;
+  int fd_;
 };
 
-} // namespace can
+}  // namespace can

@@ -3,12 +3,12 @@
 #include <signal.h>
 #include <stdio.h>
 #ifndef _WIN32
-# include <cstring>
-# include <stdexcept>
-# include <termios.h>
-# include <unistd.h>
+#include <cstring>
+#include <stdexcept>
+#include <termios.h>
+#include <unistd.h>
 #else
-# include <windows.h>
+#include <windows.h>
 #endif
 
 #define KEYCODE_RIGHT 0x43
@@ -29,20 +29,20 @@
 namespace utils {
 
 class KeyboardReader {
-  public:
-    KeyboardReader();
+public:
+  KeyboardReader();
 
-    void readOne(char *c);
+  void readOne(char* c);
 
 #ifndef _WIN32
-    void shutdown();
+  void shutdown();
 #endif
 
-  private:
+private:
 #ifndef _WIN32
-    int kfd;
-    struct termios cooked;
+  int kfd;
+  struct termios cooked;
 #endif
 };
 
-} // namespace utils
+}  // namespace utils

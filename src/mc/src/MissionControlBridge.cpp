@@ -15,20 +15,17 @@ MissionControlBridge::MissionControlBridge() : Node("mc_node"), server_() {
   // this->server_name_ = this->get_parameter("server_name").as_string();
   this->port_ = this->get_parameter("port").get_value<uint16_t>();
 
-
   // disable websocket logging
   this->server_.set_access_channels(websocketpp::log::alevel::none);
   this->server_.set_error_channels(websocketpp::log::elevel::none);
-	this->server_.set_reuse_addr(true);
-	this->server_.init_asio();
+  this->server_.set_reuse_addr(true);
+  this->server_.init_asio();
 
-  this->server_.set_open_handler([&](websocketpp::connection_hdl hdl){ this->onOpen(hdl); });
-	this->server_.set_message_handler(
-		[&](websocketpp::connection_hdl hdl, message_t msg) { this->onMessage(hdl, msg); });
+  this->server_.set_open_handler([&](websocketpp::connection_hdl hdl) { this->onOpen(hdl); });
+  this->server_.set_message_handler([&](websocketpp::connection_hdl hdl, message_t msg) { this->onMessage(hdl, msg); });
 
-  this->elbow_pub_ = this->create_publisher<std_msgs::msg::Float32>(
-    "motor/elbow/power", rclcpp::QoS(rclcpp::KeepAll())
-  );
+  this->elbow_pub_ =
+      this->create_publisher<std_msgs::msg::Float32>("motor/elbow/power", rclcpp::QoS(rclcpp::KeepAll()));
 }
 
 MissionControlBridge::~MissionControlBridge() {
@@ -40,7 +37,8 @@ void MissionControlBridge::handleDriveRequest(const mc::msg::DriveRequest::Share
   geometry_msgs::msg::Vector3 drive = dir.linear;
   geometry_msgs::msg::Vector3 orientation = dir.angular;
 
-  RCLCPP_DEBUG(this->get_logger(), "%f, %f, %f (%f, %f, %f)", drive.x, drive.y, drive.z, orientation.x, orientation.y, orientation.z);
+  RCLCPP_DEBUG(this->get_logger(), "%f, %f, %f (%f, %f, %f)", drive.x, drive.y, drive.z, orientation.x, orientation.y,
+               orientation.z);
 }
 
 void MissionControlBridge::handleJointPowerRequest(const mc::msg::JointPowerRequest::SharedPtr msg) const {
@@ -67,16 +65,16 @@ void MissionControlBridge::handleJointPowerRequest(const mc::msg::JointPowerRequ
 }
 
 void MissionControlBridge::tryConnect() {
-	try {
-		this->server_.listen(this->port_);
+  try {
+    this->server_.listen(this->port_);
     // std::string str = this->server_.get_local_endpoint().address().to_string().c_str();
     // std::string str = this->server_.get_connection()->get_raw_socket().
     // RCLCPP_INFO(this->get_logger(), str.c_str());
-		this->server_.start_accept();
-		this->server_.run();
-	} catch (const websocketpp::exception& e) {
+    this->server_.start_accept();
+    this->server_.run();
+  } catch (const websocketpp::exception& e) {
     RCLCPP_ERROR(this->get_logger(), "An error occurred while starting: %s", e.what());
-	}
+  }
 }
 
 void MissionControlBridge::onOpen(websocketpp::connection_hdl hdl) {
@@ -87,32 +85,32 @@ void MissionControlBridge::onOpen(websocketpp::connection_hdl hdl) {
   RCLCPP_INFO(this->get_logger(), "Endpoint=%s : Connection opened from %s", path.c_str(), client.c_str());
 }
 
-void MissionControlBridge::onMessage(websocketpp::connection_hdl hdl, std::shared_ptr<websocketpp::config::core::message_type> message) {
+void MissionControlBridge::onMessage(websocketpp::connection_hdl hdl,
+                                     std::shared_ptr<websocketpp::config::core::message_type> message) {
   auto conn = this->server_.get_con_from_hdl(hdl);
   std::string path = conn->get_resource();
-  
+
   std::string str = message->get_payload();
 
   RCLCPP_INFO(this->get_logger(), "Message on %s: %s", path.c_str(), str.c_str());
 }
 
-} // namespace mc
+}  // namespace mc
 
-int main(int argc, char** argv)
-{
+int main(int argc, char** argv) {
   rclcpp::init(argc, argv);
 
   rclcpp::executors::SingleThreadedExecutor executor;
   auto node = std::make_shared<mc::MissionControlBridge>();
   executor.add_node(node);
 
-	std::thread thread = std::thread([node]() {
+  std::thread thread = std::thread([node]() {
     while (rclcpp::ok()) {
       node->tryConnect();
     }
   });
 
-	while (rclcpp::ok()) {
+  while (rclcpp::ok()) {
     executor.spin();
   }
 
