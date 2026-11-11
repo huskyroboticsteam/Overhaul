@@ -20,6 +20,8 @@ import dronekit
 # https://docs.ros.org/en/humble/Tutorials/Intermediate/Tf2/Writing-A-Tf2-Static-Broadcaster-Py.html
 # Converts Euler angles (in radians) (roll, pitch, yaw) to a quaternion.
 def quaternion_from_euler(ai, aj, ak):
+    if (ai.__class__ != float) or (aj.__class__ != float) or (ak.__class__ != float):
+        raise TypeError("Arguments must be float")
     ai /= 2.0
     aj /= 2.0
     ak /= 2.0
