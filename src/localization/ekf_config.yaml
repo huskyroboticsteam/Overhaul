@@ -1,0 +1,8 @@
+frequency: 60
+sensor_timeout: 0.1
+two_d_mode: false
+map_frame: map  # depends on what in the UDRF/TF2 Tree
+odom_frame: odom # depends on what in the UDRF/TF2 Tree
+base_link_frame: base_link # depends on what in the UDRF/TF2 Tree
+world_frame: odom 
+publish_tf: true
