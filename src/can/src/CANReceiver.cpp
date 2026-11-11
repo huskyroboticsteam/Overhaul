@@ -22,7 +22,7 @@ CANReceiver::CANReceiver() : Node("CAN_receiver_node") {
 		return;
 	}
 
-	timer_ = this->create_wall_timer(std::chrono::nanoseconds(0), std::bind(&CANReceiver::publishPacket, this));
+	this->timer_ = this->create_wall_timer(std::chrono::hours(24), std::bind(&CANReceiver::publishPacket, this));
 }
 
 void CANReceiver::publishPacket() {
