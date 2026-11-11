@@ -1,7 +1,4 @@
 var searchData=
 [
-  ['wait_5ffor_0',['wait_for',['../classutil_1_1AsyncTask.html#a2b34460811bb50dcb489cf23c37c16bc',1,'util::AsyncTask']]],
-  ['wait_5funtil_1',['wait_until',['../classutil_1_1AsyncTask.html#abc4d80fa7b70b161eccd7768becd551a',1,'util::AsyncTask']]],
-  ['wait_5funtil_5fdone_2',['wait_until_done',['../classutil_1_1AsyncTask.html#a5cee170436fad0663894fc3045c70f95',1,'util::AsyncTask']]],
-  ['watchdog_3',['Watchdog',['../classutil_1_1Watchdog.html',1,'util::Watchdog&lt; Clock &gt;'],['../classutil_1_1Watchdog.html#affa979a1b52b624dd8faa484d70a720d',1,'util::Watchdog::Watchdog(const std::string &amp;name, std::chrono::milliseconds duration, const std::function&lt; void()&gt; &amp;callback, bool keepCallingOnDeath=false)'],['../classutil_1_1Watchdog.html#abd37ee03af44ca1c545ad489cd70395e',1,'util::Watchdog::Watchdog(std::chrono::milliseconds duration, const std::function&lt; void()&gt; &amp;callback, bool keepCallingOnDeath=false)']]]
+  ['task_0',['task',['../classutil_1_1AsyncTask.html#a04d4142e57b8738b26f16bc73e9d3962',1,'util::AsyncTask::task()'],['../classutil_1_1PeriodicTask.html#a3bc1c0ba21e0428d03a0485be52d765b',1,'util::PeriodicTask::task()']]]
 ];

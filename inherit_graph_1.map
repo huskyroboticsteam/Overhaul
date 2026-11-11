@@ -1,11 +1,13 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="Node000000" title=" " alt="" coords="5,80,99,106"/>
+<area shape="rect" id="Node000000" title=" " alt="" coords="5,104,99,130"/>
 <area shape="rect" id="Node000001" href="$classDrive.html" title=" " alt="" coords="185,5,236,31"/>
-<area shape="poly" id="edge2_Node000000_Node000001" title=" " alt="" coords="88,70,146,40,183,24,185,29,148,45,90,75"/>
-<area shape="rect" id="Node000002" href="$classRover.html" title=" " alt="" coords="183,55,238,80"/>
-<area shape="poly" id="edge3_Node000000_Node000002" title=" " alt="" coords="114,80,182,69,183,74,115,86"/>
-<area shape="rect" id="Node000003" href="$classcan_1_1CANReceiver.html" title=" " alt="" coords="147,104,274,130"/>
-<area shape="poly" id="edge4_Node000000_Node000003" title=" " alt="" coords="115,100,147,105,146,110,114,105"/>
-<area shape="rect" id="Node000004" href="$classcan_1_1CANSender.html" title="Node used to send CAN to the network." alt="" coords="152,153,269,179"/>
-<area shape="poly" id="edge5_Node000000_Node000004" title=" " alt="" coords="91,111,148,140,173,150,171,155,146,145,89,116"/>
+<area shape="poly" id="edge2_Node000000_Node000001" title=" " alt="" coords="76,92,108,65,145,40,183,23,186,28,148,45,111,69,80,96"/>
+<area shape="rect" id="Node000002" href="$classHand__Control.html" title=" " alt="" coords="160,55,260,80"/>
+<area shape="poly" id="edge3_Node000000_Node000002" title=" " alt="" coords="110,96,166,78,167,84,111,101"/>
+<area shape="rect" id="Node000003" href="$classRover.html" title=" " alt="" coords="183,104,238,130"/>
+<area shape="poly" id="edge4_Node000000_Node000003" title=" " alt="" coords="114,114,182,114,182,120,114,120"/>
+<area shape="rect" id="Node000004" href="$classcan_1_1CANReceiver.html" title=" " alt="" coords="147,153,274,179"/>
+<area shape="poly" id="edge5_Node000000_Node000004" title=" " alt="" coords="111,132,167,150,166,155,110,137"/>
+<area shape="rect" id="Node000005" href="$classcan_1_1CANSender.html" title="Node used to send CAN to the network." alt="" coords="152,203,269,228"/>
+<area shape="poly" id="edge6_Node000000_Node000005" title=" " alt="" coords="80,138,111,164,148,189,170,200,167,204,145,194,108,169,76,142"/>
 </map>
