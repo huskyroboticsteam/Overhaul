@@ -1,4 +1,5 @@
 var searchData=
 [
-  ['hand_5fcontrol_0',['Hand_Control',['../classHand__Control.html',1,'']]]
+  ['frameheader_0',['FrameHeader',['../structunilidar__sdk2_1_1FrameHeader.html',1,'unilidar_sdk2']]],
+  ['frametail_1',['FrameTail',['../structunilidar__sdk2_1_1FrameTail.html',1,'unilidar_sdk2']]]
 ];

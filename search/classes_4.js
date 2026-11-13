@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['notifiable_0',['Notifiable',['../classutil_1_1impl_1_1Notifiable.html',1,'util::impl']]]
+  ['hand_5fcontrol_0',['Hand_Control',['../classHand__Control.html',1,'']]]
 ];

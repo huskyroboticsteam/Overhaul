@@ -1,6 +1,8 @@
 var searchData=
 [
-  ['raiihelper_0',['RAIIHelper',['../classutil_1_1RAIIHelper.html',1,'util::RAIIHelper'],['../classutil_1_1RAIIHelper.html#a319819be0066e81cf1e89762676b4130',1,'util::RAIIHelper::RAIIHelper(const std::function&lt; void()&gt; &amp;f)'],['../classutil_1_1RAIIHelper.html#a87d7a2d46207f257adebfd8f31b3101f',1,'util::RAIIHelper::RAIIHelper(RAIIHelper &amp;&amp;other)']]],
-  ['removeevent_1',['removeEvent',['../classutil_1_1PeriodicScheduler.html#ad4ca024dc74ffdcf80fea87e5c17a516',1,'util::PeriodicScheduler']]],
-  ['rover_2',['Rover',['../classRover.html',1,'']]]
+  ['periodicscheduler_0',['PeriodicScheduler',['../classutil_1_1PeriodicScheduler.html',1,'util::PeriodicScheduler&lt; Clock &gt;'],['../classutil_1_1PeriodicScheduler.html#a6d7b387f9a7743b601aca004c7524d08',1,'util::PeriodicScheduler::PeriodicScheduler()']]],
+  ['periodicscheduler_3c_20std_3a_3achrono_3a_3asteady_5fclock_20_3e_1',['PeriodicScheduler&lt; std::chrono::steady_clock &gt;',['../classutil_1_1PeriodicScheduler.html',1,'util']]],
+  ['periodictask_2',['PeriodicTask',['../classutil_1_1PeriodicTask.html',1,'util::PeriodicTask&lt; Clock &gt;'],['../classutil_1_1PeriodicTask.html#ab7bcb7de2b55ab8cdb3fb48dccb9c229',1,'util::PeriodicTask::PeriodicTask()']]],
+  ['pointcloudunitree_3',['PointCloudUnitree',['../structunilidar__sdk2_1_1PointCloudUnitree.html',1,'unilidar_sdk2']]],
+  ['pointunitree_4',['PointUnitree',['../structunilidar__sdk2_1_1PointUnitree.html',1,'unilidar_sdk2']]]
 ];

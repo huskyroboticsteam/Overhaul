@@ -1,5 +1,5 @@
 var searchData=
 [
-  ['raiihelper_0',['RAIIHelper',['../classutil_1_1RAIIHelper.html#a319819be0066e81cf1e89762676b4130',1,'util::RAIIHelper::RAIIHelper(const std::function&lt; void()&gt; &amp;f)'],['../classutil_1_1RAIIHelper.html#a87d7a2d46207f257adebfd8f31b3101f',1,'util::RAIIHelper::RAIIHelper(RAIIHelper &amp;&amp;other)']]],
-  ['removeevent_1',['removeEvent',['../classutil_1_1PeriodicScheduler.html#ad4ca024dc74ffdcf80fea87e5c17a516',1,'util::PeriodicScheduler']]]
+  ['periodicscheduler_0',['PeriodicScheduler',['../classutil_1_1PeriodicScheduler.html#a6d7b387f9a7743b601aca004c7524d08',1,'util::PeriodicScheduler']]],
+  ['periodictask_1',['PeriodicTask',['../classutil_1_1PeriodicTask.html#ab7bcb7de2b55ab8cdb3fb48dccb9c229',1,'util::PeriodicTask']]]
 ];

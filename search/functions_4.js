@@ -1,4 +1,7 @@
 var searchData=
 [
-  ['notify_0',['notify',['../classutil_1_1AsyncTask.html#aa3410b83c36ea34a1503ff6d61f093d7',1,'util::AsyncTask::notify()'],['../classutil_1_1PeriodicTask.html#ad060d682418dcce364fe2008b662cf2a',1,'util::PeriodicTask::notify()']]]
+  ['initializeserial_0',['initializeSerial',['../classunilidar__sdk2_1_1UnitreeLidarReader.html#a7959adb4367d7c8c13c08d1162d69386',1,'unilidar_sdk2::UnitreeLidarReader']]],
+  ['initializeudp_1',['initializeUDP',['../classunilidar__sdk2_1_1UnitreeLidarReader.html#a09fb290cf7f7cd810659922988d37508',1,'unilidar_sdk2::UnitreeLidarReader']]],
+  ['isrunning_2',['isRunning',['../classutil_1_1AsyncTask.html#a43503af0b5f2252e5921364b3d6671a2',1,'util::AsyncTask']]],
+  ['isrunninginternal_3',['isRunningInternal',['../classutil_1_1AsyncTask.html#a20bdfa788fbca27e37507bec70d893ee',1,'util::AsyncTask']]]
 ];

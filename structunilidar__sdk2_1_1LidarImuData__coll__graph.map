@@ -1,0 +1,7 @@
+<map id="unilidar_sdk2::LidarImuData" name="unilidar_sdk2::LidarImuData">
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,183,187,208"/>
+<area shape="rect" id="Node000002" href="$structunilidar__sdk2_1_1DataInfo.html" title=" " alt="" coords="20,94,172,120"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="99,135,99,182,93,182,93,135"/>
+<area shape="rect" id="Node000003" href="$structunilidar__sdk2_1_1TimeStamp.html" title=" " alt="" coords="11,5,181,31"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="99,47,99,94,93,94,93,47"/>
+</map>

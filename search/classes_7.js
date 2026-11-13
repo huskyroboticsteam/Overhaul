@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['watchdog_0',['Watchdog',['../classutil_1_1Watchdog.html',1,'util']]]
+  ['notifiable_0',['Notifiable',['../classutil_1_1impl_1_1Notifiable.html',1,'util::impl']]]
 ];
