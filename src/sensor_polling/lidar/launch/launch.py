@@ -5,8 +5,8 @@ from launch_ros.actions import Node
 def generate_launch_description():
     return LaunchDescription([
         Node(
-            package='imu_gps',
-            executable='unitree_lidar_imu',
+            package='sensor_polling',
+            executable='unitree_lidar',
             name='unitree_lidar_sdk_node',
             output='screen',
             parameters=[{

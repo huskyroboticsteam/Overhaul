@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.8)
-project(imu_gps)
+project(sensor_polling)
 
 if(NOT CMAKE_CXX_STANDARD)
   set(CMAKE_CXX_STANDARD 17)
@@ -18,7 +18,7 @@ find_package(std_msgs REQUIRED)
 find_package(Threads REQUIRED)
 
 
-set(UNITREE_SDK_DIR ${CMAKE_CURRENT_SOURCE_DIR}/imu_lidar)
+set(UNITREE_SDK_DIR ${CMAKE_CURRENT_SOURCE_DIR}/lidar)
 file(GLOB UNITREE_SDK_LIB "${UNITREE_SDK_DIR}/lib/${CMAKE_SYSTEM_PROCESSOR}/*.a")
 if(NOT UNITREE_SDK_LIB)
   message(FATAL_ERROR
@@ -26,18 +26,18 @@ if(NOT UNITREE_SDK_LIB)
 endif()
 
 # C++ node
-add_executable(unitree_lidar_imu
-  imu_lidar/publisher.cpp
+add_executable(unitree_lidar
+  lidar/publisher.cpp
 )
 
-target_include_directories(unitree_lidar_imu PRIVATE
+target_include_directories(unitree_lidar PRIVATE
   ${UNITREE_SDK_DIR}/include
 )
 
-ament_target_dependencies(unitree_lidar_imu rclcpp geometry_msgs sensor_msgs)
-target_link_libraries(unitree_lidar_imu ${UNITREE_SDK_LIB} Threads::Threads)
+ament_target_dependencies(unitree_lidar rclcpp geometry_msgs sensor_msgs)
+target_link_libraries(unitree_lidar ${UNITREE_SDK_LIB} Threads::Threads)
 
-install(TARGETS unitree_lidar_imu
+install(TARGETS unitree_lidar
   DESTINATION lib/${PROJECT_NAME}
 )
 
@@ -52,7 +52,7 @@ endif()
 ament_python_install_package(${PROJECT_NAME})
 
 install(PROGRAMS
-  imu_gps/publisher.py
+  sensor_polling/pixhawk/publisher.py
   DESTINATION lib/${PROJECT_NAME}
 )
 
