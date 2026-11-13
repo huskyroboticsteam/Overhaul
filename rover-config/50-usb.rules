@@ -1,0 +1,8 @@
+# Unitree 4D Lidar L2
+
+SUBSYSTEM=="tty", ATTRS{idVendor}=="1a86", ATTRS{idProduct}=="55d3", SYMLINK+="unitree_lidar"
+
+
+# IMU GPS
+
+SUBSYSYTEM=="tty", ATTRS{idVendor}=="3162", ATTRS{idProduct}=="0053", SYMLINK+="ttyARDUPILOT"
