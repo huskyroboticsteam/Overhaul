@@ -15,7 +15,7 @@ RUN if getent passwd "$USER_UID"; then \
 
 # Create the user
 RUN groupadd --gid $USER_GID $USERNAME \
-    && useradd --uid $USER_UID --gid $USER_GID -m $USERNAME \
+    && useradd --uid $USER_UID --gid $USER_GID -m $USERNAME
 
 # Install dependencies and tools
 RUN apt-get update \
