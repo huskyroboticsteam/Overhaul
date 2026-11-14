@@ -19,10 +19,11 @@ jobs:
       run: |
         cd ${{ github.workspace }}
         sudo apt-get update && \
-             apt-get docker.io
+             apt-get install docker.io
+
         cd .devcontainer
         sudo docker build . -t overhaul-img
-        
+
     - name: Build
       run: |
         sudo docker run -it --mount source=~/Overhaul,target=/home/ws,type=bind overhaul-img
