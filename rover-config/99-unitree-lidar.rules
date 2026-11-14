@@ -1,8 +1,12 @@
-# Unitree 4D Lidar L2
+# Udev rules for usb devices.
+#
+# To help write these rules, try running after plugging in:
+#   sudo dmesg -c
+#
+# Install this in /etc/udev/rules.d
 
+# Unitree 4D Lidar L2
 SUBSYSTEM=="tty", ATTRS{idVendor}=="1a86", ATTRS{idProduct}=="55d3", SYMLINK+="unitree_lidar"
 
-
-# IMU GPS
-
+# Pixhawk
 SUBSYSYTEM=="tty", ATTRS{idVendor}=="3162", ATTRS{idProduct}=="0053", SYMLINK+="ttyARDUPILOT"
