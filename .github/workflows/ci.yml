@@ -16,4 +16,4 @@ jobs:
       uses: actions/checkout@v7
 
     - name: Build & Test
-      uses: huskyroboticsteam/Overhaul/test@main
+      uses: ./.github/actions/setup-docker
