@@ -1,6 +1,9 @@
 #include <string>
 
-#include <rclcpp/rclcpp.hpp>
+#include <rclcpp/rclcpp.hpp> 
+#include "geometry_msgs/msg/twist.hpp"
+
+using std::placeholders::_1;
 
 using std::placeholders::_1;
 
