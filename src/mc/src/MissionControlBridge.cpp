@@ -67,9 +67,6 @@ void MissionControlBridge::handleJointPowerRequest(const mc::msg::JointPowerRequ
 void MissionControlBridge::tryConnect() {
   try {
     this->server_.listen(this->port_);
-    // std::string str = this->server_.get_local_endpoint().address().to_string().c_str();
-    // std::string str = this->server_.get_connection()->get_raw_socket().
-    // RCLCPP_INFO(this->get_logger(), str.c_str());
     this->server_.start_accept();
     this->server_.run();
   } catch (const websocketpp::exception& e) {
