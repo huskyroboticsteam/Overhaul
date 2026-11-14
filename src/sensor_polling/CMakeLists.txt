@@ -16,6 +16,9 @@ find_package(geometry_msgs REQUIRED)
 find_package(sensor_msgs REQUIRED)
 find_package(std_msgs REQUIRED)
 find_package(Threads REQUIRED)
+find_package(cv_bridge REQUIRED)
+find_package(image_transport REQUIRED)
+find_package(OpenCV REQUIRED)
 
 
 set(UNITREE_SDK_DIR ${CMAKE_CURRENT_SOURCE_DIR}/lidar)
@@ -30,6 +33,10 @@ add_executable(unitree_lidar
   lidar/publisher.cpp
 )
 
+add_executable(basic_cam
+  cameras/basic_cam/publisher.cpp
+)
+
 target_include_directories(unitree_lidar PRIVATE
   ${UNITREE_SDK_DIR}/include
 )
@@ -37,7 +44,13 @@ target_include_directories(unitree_lidar PRIVATE
 ament_target_dependencies(unitree_lidar rclcpp geometry_msgs sensor_msgs)
 target_link_libraries(unitree_lidar ${UNITREE_SDK_LIB} Threads::Threads)
 
+ament_target_dependencies(basic_cam rclcpp sensor_msgs cv_bridge image_transport OpenCV Threads)
+
 install(TARGETS unitree_lidar
+  DESTINATION lib/${PROJECT_NAME}
+)
+
+install(TARGETS basic_cam
   DESTINATION lib/${PROJECT_NAME}
 )
 
