@@ -19,7 +19,7 @@ jobs:
       run: |
         cd ${{ github.workspace }}
         sudo apt-get update && \
-             apt-get install docker.io
+        sudo apt-get install docker.io
 
         cd .devcontainer
         sudo docker build . -t overhaul-img
