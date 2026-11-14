@@ -1,0 +1,23 @@
+# Example geometry/limits, not measured rover calibration.
+drive:
+  ros__parameters:
+    wheels: [FrontLeft]
+    wheel_x: [0.0]
+    wheel_y: [0.0]
+    wheel_radius: 0.15
+    fixed_wheel: true
+    max_velocity: 10.0
+
+front_left_motor:
+  ros__parameters:
+    wheel: FrontLeft
+    max_velocity: 10.0
+    command_timeout: 0.5
+    feedback_timeout: 0.5
+    settle_timeout: 1.0
+    velocity_tolerance: 0.25
+    update_period: 0.1
+    response_timeout: 0.2
+    encoder_id: 0
+    direction: 1
+    wheel_radius: 0.15

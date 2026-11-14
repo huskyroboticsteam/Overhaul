@@ -14,23 +14,28 @@ class Controller(Node):
 
     def __init__(self):
         super().__init__('controller')
-        self.direction_publisher_ = self.create_publisher(Twist, 'direction', 10)
+        self.direction_publisher_ = self.create_publisher(Twist, '/DriveRequest', 1)
         self.vector_ = Twist() # Desired vector
 
         # Setup default vector
         self.vector_.linear.x = self.vector_.linear.y = self.vector_.linear.z = 0.0 
         self.vector_.angular.x = self.vector_.angular.y = self.vector_.angular.z = 0.0 
         self.direction_publisher_.publish(self.vector_)
+        # Refresh the command lease while the keyboard controller is running.
+        self.timer_ = self.create_timer(0.05, self.publish_direction)
+
+    def publish_direction(self):
+        self.direction_publisher_.publish(self.vector_)
 
     def on_press(self, key):
         if key == keyboard.KeyCode.from_char("w"):
-            self.vector_.linear.x = -1.0
+            self.vector_.linear.x = 0.3
         if key == keyboard.KeyCode.from_char("a"):
-            self.vector_.linear.y = -1.0
+            self.vector_.linear.y = 0.3
         if key == keyboard.KeyCode.from_char("s"):
-            self.vector_.linear.x = 1.0
+            self.vector_.linear.x = -0.3
         if key == keyboard.KeyCode.from_char("d"):
-            self.vector_.linear.y = 1.0
+            self.vector_.linear.y = -0.3
 
         print("Current vec " + str(self.vector_))
 
@@ -41,6 +46,7 @@ class Controller(Node):
         # I am lazy, prob reset only for lifted key
         self.vector_.linear.x = self.vector_.linear.y = self.vector_.linear.z = 0.0 
         self.vector_.angular.x = self.vector_.angular.y = self.vector_.angular.z = 0.0 
+        self.direction_publisher_.publish(self.vector_)
         pass
 
     

@@ -1,5 +1,4 @@
 #include "../include/can/CAN.h"
-
 #include <linux/can/raw.h>
 #include <net/if.h>
 #include <sys/socket.h>

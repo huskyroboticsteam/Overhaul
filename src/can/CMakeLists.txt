@@ -19,7 +19,16 @@ FetchContent_Declare(
 )
 FetchContent_MakeAvailable(CAN26)
 add_library(CAN26 STATIC ${can26_SOURCE_DIR}/CANPacket.c)
-target_include_directories(CAN26 SYSTEM PUBLIC ${can26_SOURCE_DIR})
+target_include_directories(CAN26 SYSTEM PUBLIC
+  $<BUILD_INTERFACE:${can26_SOURCE_DIR}>
+  $<INSTALL_INTERFACE:include/can26>
+  $<INSTALL_INTERFACE:include>)
+install(TARGETS CAN26 EXPORT export_CAN26 ARCHIVE DESTINATION lib)
+install(DIRECTORY ${can26_SOURCE_DIR}/ DESTINATION include/can26
+  FILES_MATCHING PATTERN "*.h" PATTERN ".git" EXCLUDE)
+install(DIRECTORY include/ DESTINATION include)
+ament_export_targets(export_CAN26 HAS_LIBRARY_TARGET)
+ament_export_include_directories(include)
 
 # Create custom .msg/.srv into usable interfaces
 rosidl_generate_interfaces(${PROJECT_NAME}
@@ -62,6 +71,11 @@ install(TARGETS
 )
 
 if(BUILD_TESTING)
+  add_executable(motor_protocol_test test/motor_protocol_test.cpp)
+  target_include_directories(motor_protocol_test PRIVATE include)
+  target_compile_features(motor_protocol_test PRIVATE cxx_std_17)
+  target_link_libraries(motor_protocol_test CAN26)
+  add_test(NAME motor_protocol_test COMMAND motor_protocol_test)
   find_package(ament_lint_auto REQUIRED)
   # the following line skips the linter which checks for copyrights
   # comment the line when a copyright and license is added to all source files

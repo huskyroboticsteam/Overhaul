@@ -1,67 +1,81 @@
-#include <cmath>
+#include "rover/DriveKinematics.hpp"
+#include <drive_interfaces/msg/wheel_command.hpp>
+#include <geometry_msgs/msg/twist.hpp>
+#include <rclcpp/rclcpp.hpp>
 #include <memory>
 #include <string>
-#include <functional>
-#include <rclcpp/rclcpp.hpp>
-#include "geometry_msgs/msg/twist.hpp"
-
-using std::placeholders::_1;
-using namespace rclcpp;
-using namespace geometry_msgs;
-using namespace msg;
-
+#include <vector>
 
 class Drive : public rclcpp::Node {
-  public:
-    Drive() : Node("Drive_node") {
-      RCLCPP_INFO(this->get_logger(), "Started drive node");
+ public:
+  Drive() : Node("drive") {
+    const auto names = declare_parameter<std::vector<std::string>>("wheels", {"FrontLeft"});
+    const auto xs = declare_parameter<std::vector<double>>("wheel_x", {0.0});
+    const auto ys = declare_parameter<std::vector<double>>("wheel_y", {0.0});
+    radius_ = declare_parameter("wheel_radius", 0.15);
+    fixed_ = declare_parameter("fixed_wheel", true);
+    max_velocity_ = declare_parameter("max_velocity", 10.0);
+    if (names.empty() || names.size() != xs.size() || names.size() != ys.size() ||
+        !std::isfinite(max_velocity_) || max_velocity_ <= 0) {
+      throw std::invalid_argument("Invalid wheel arrays or maximum velocity");
+    }
+    for (size_t i = 0; i < names.size(); ++i) {
+      rover::drive::wheelTarget(0, 0, 0, xs[i], ys[i], radius_, fixed_);
+      wheels_.push_back({xs[i], ys[i], create_publisher<drive_interfaces::msg::WheelCommand>(
+          "/Drive/" + names[i], rclcpp::QoS(1))});
+    }
+    subscription_ = create_subscription<geometry_msgs::msg::Twist>("/DriveRequest", rclcpp::QoS(1),
+        [this](const geometry_msgs::msg::Twist & msg) { command(msg); });
+  }
 
-      dir_subscriber_ = this->create_subscription<geometry_msgs::msg::Twist>(
-        "direction", 10, std::bind(&Drive::dir_callback, this, _1));
-
-      for (const std::string &curr_el : DRIVE_UNITS) {
-        Publisher<Twist>::SharedPtr ptr = 
-          this->create_publisher<geometry_msgs::msg::Twist>(curr_el, 10);
-        drive_unit_publishers.push_back(ptr);
+ private:
+  void command(const geometry_msgs::msg::Twist & msg) {
+    try {
+      if (!std::isfinite(msg.linear.z) || !std::isfinite(msg.angular.x) ||
+          !std::isfinite(msg.angular.y) || msg.linear.z != 0 || msg.angular.x != 0 || msg.angular.y != 0) {
+        throw std::invalid_argument("DriveRequest supports planar motion only");
+      }
+      std::vector<rover::drive::WheelTarget> targets;
+      for (const auto & wheel : wheels_) {
+        auto target = rover::drive::wheelTarget(msg.linear.x, msg.linear.y, msg.angular.z,
+            wheel.x, wheel.y, radius_, fixed_);
+        if (!std::isfinite(target.velocity) || std::abs(target.velocity) > max_velocity_) {
+          throw std::invalid_argument("DriveRequest exceeds wheel velocity limit");
+        }
+        targets.push_back(target);
+      }
+      for (size_t i = 0; i < targets.size(); ++i) {
+        drive_interfaces::msg::WheelCommand output;
+        output.velocity = targets[i].velocity;
+        output.steering_angle = targets[i].steering_angle;
+        wheels_[i].publisher->publish(output);
+      }
+    } catch (const std::invalid_argument & error) {
+      RCLCPP_WARN(get_logger(), "Rejected DriveRequest: %s", error.what());
+      for (const auto & wheel : wheels_) {
+        wheel.publisher->publish(drive_interfaces::msg::WheelCommand{});
       }
     }
-  private:
-
-    // Sim swerve drive targets
-    const std::vector<std::string> DRIVE_UNITS{"/Direction/BackLeft",
-                                              "/Direction/BackRight",
-                                              "/Direction/FrontLeft",
-                                              "/Direction/FrontRight"};
-
-    void dir_callback(const geometry_msgs::msg::Twist desired_vec) const {
-
-      RCLCPP_INFO(this->get_logger(), "x: %f, y: %f", desired_vec.linear.x, desired_vec.linear.y);
-
-      // Desired rotation state
-      double desired_rot = std::atan2(desired_vec.linear.y, desired_vec.linear.x);
-
-      // Sim handling
-      Twist::SharedPtr desired_swerve_state = std::make_shared<Twist>();
-      desired_swerve_state->angular.x = desired_rot;
-      desired_swerve_state->linear.x = 
-        std::sqrt(std::pow(desired_vec.linear.x, 2) + 
-        std::pow(desired_vec.linear.y, 2));
-
-      RCLCPP_INFO(this->get_logger(), "mag, %f desired, %f", desired_swerve_state->linear.x, desired_rot);
-
-      for (Publisher<Twist>::SharedPtr motor_publisher : drive_unit_publishers) {
-        motor_publisher->publish(*desired_swerve_state);
-      }
-    }
-    Subscription<Twist>::SharedPtr dir_subscriber_;
-    std::vector<Publisher<Twist>::SharedPtr> drive_unit_publishers;
-
+    // No timer replays commands: loss of /DriveRequest must expire the motor lease.
+  }
+  struct Wheel {
+    double x, y;
+    rclcpp::Publisher<drive_interfaces::msg::WheelCommand>::SharedPtr publisher;
+  };
+  double radius_, max_velocity_;
+  bool fixed_;
+  std::vector<Wheel> wheels_;
+  rclcpp::Subscription<geometry_msgs::msg::Twist>::SharedPtr subscription_;
 };
 
-int main(int argc, char** argv)
-{
+int main(int argc, char ** argv) {
   rclcpp::init(argc, argv);
-  rclcpp::spin(std::make_shared<Drive>());
+  try { rclcpp::spin(std::make_shared<Drive>()); }
+  catch (const std::exception & error) {
+    RCLCPP_ERROR(rclcpp::get_logger("drive"), "%s", error.what());
+    rclcpp::shutdown();
+    return 1;
+  }
   rclcpp::shutdown();
   return 0;
 }

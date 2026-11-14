@@ -1,69 +1,59 @@
-#include "../include/can/CANSender.h"
-
-#include <memory>
-#include <net/if.h>
-#include <sys/socket.h>
-#include <sys/ioctl.h>
-#include <termios.h>
+#include "can/CANSender.h"
+#include <fcntl.h>
+#include <unistd.h>
+#include <cerrno>
+#include <cstring>
+#include <stdexcept>
 
 namespace can {
-
 CANSender::CANSender() : Node("CAN_sender_node") {
-	auto can_name_desc = rcl_interfaces::msg::ParameterDescriptor{};
-	can_name_desc.description = "Specifies the name of the CAN interface, default can0";
-	this->declare_parameter("CAN_name", "can0", can_name_desc);
-	std::string can_name = this->get_parameter("CAN_name").as_string();
-
-    this->subscription_ = this->create_subscription<can::msg::CANPacket>(
-        "can_tx", rclcpp::QoS(rclcpp::KeepAll()), std::bind(&CANSender::sendCANPacket, this, std::placeholders::_1));
-
-    this->fd_ = createCANSocket(can_name, this->get_logger(), CANDevice_t{});
-    
-    if (this->fd_ < 0) {
-        std::__throw_runtime_error("Unable to open CAN connection!");
-    }
+  const auto name = declare_parameter<std::string>("CAN_name", "can0");
+  fd_ = createCANSocket(name, get_logger(), std::nullopt);
+  if (fd_ < 0) { throw std::runtime_error("Unable to open CAN send connection"); }
+  const int flags = fcntl(fd_, F_GETFL, 0);
+  if (flags < 0 || fcntl(fd_, F_SETFL, flags | O_NONBLOCK) < 0) {
+    close(fd_);
+    throw std::runtime_error("Unable to configure nonblocking CAN send socket");
+  }
+  subscription_ = create_subscription<can::msg::CANPacket>("can_tx", rclcpp::QoS(10),
+      std::bind(&CANSender::sendCANPacket, this, std::placeholders::_1));
 }
+
+CANSender::~CANSender() { if (fd_ >= 0) { close(fd_); } }
 
 void CANSender::sendCANPacket(const can::msg::CANPacket::SharedPtr msg) const {
-    CANPacket_t packet = CANPacket_t{};
-    CANDevice_t device = CANDevice_t{};
-    device.deviceUUID = msg->device.device_uuid;
-    device.motorDomain = msg->device.motor;
-    device.peripheralDomain = msg->device.peripheral;
-    device.powerDomain = msg->device.power;
+  if (msg->contents_length > msg->contents.size() || msg->device.device_uuid > 127 ||
+      msg->sender_uuid > 127) {
+    RCLCPP_ERROR(get_logger(), "Invalid CAN packet length or UUID");
+    return;
+  }
+  CANPacket_t packet{};
+  packet.device.deviceUUID = msg->device.device_uuid;
+  packet.device.motorDomain = msg->device.motor;
+  packet.device.peripheralDomain = msg->device.peripheral;
+  packet.device.powerDomain = msg->device.power;
+  packet.priority = CANPriority_t(msg->priority);
+  packet.command = msg->command;
+  packet.senderUUID = msg->sender_uuid;
+  packet.contentsLength = msg->contents_length;
+  std::memcpy(packet.contents, msg->contents.data(), msg->contents_length);
 
-    packet.device = device;
-    packet.priority = CANPriority_t(msg->priority);
-    packet.contentsLength = msg->contents_length;
-    packet.command = msg->command;
-    packet.senderUUID = msg->sender_uuid;
-    for (int i = 0; i < msg->contents_length; i++) {
-        packet.contents[i] = msg->contents[i];
-    }
-
-    canfd_frame frame;
-    std::memset(&frame, 0, sizeof(frame));
-    frame.can_id = CANGetPacketHeader(&packet);
-    frame.len = CANGetDlc(&packet);
-    std::memcpy(frame.data, CANGetData(&packet), frame.len);
-
-    bool success = sendCANFrame(frame);
-
-    if (!success) {
-        RCLCPP_ERROR(this->get_logger(), "Failed to send CAN packet to uuid=%x: %s", msg->device.device_uuid, std::strerror(errno));
-    }
+  can_frame frame{};
+  frame.can_id = CANGetPacketHeader(&packet);
+  frame.can_dlc = CANGetDlc(&packet);
+  std::memcpy(frame.data, CANGetData(&packet), frame.can_dlc);
+  if (!sendCANFrame(frame)) {
+    RCLCPP_ERROR(get_logger(), "Failed to send CAN packet to uuid=%x: %s",
+        msg->device.device_uuid, std::strerror(errno));
+  }
 }
 
-bool CANSender::sendCANFrame(const canfd_frame& frame) const {
-    bool success = write(this->fd_, &frame, sizeof(struct can_frame)) == sizeof(struct can_frame);
-    tcdrain(this->fd_);
-    return success;
+bool CANSender::sendCANFrame(const can_frame & frame) const {
+  return write(fd_, &frame, sizeof(frame)) == sizeof(frame);
 }
+}  // namespace can
 
-} // namespace can
-
-int main(int argc, char** argv)
-{
+int main(int argc, char ** argv) {
   rclcpp::init(argc, argv);
   rclcpp::spin(std::make_shared<can::CANSender>());
   rclcpp::shutdown();

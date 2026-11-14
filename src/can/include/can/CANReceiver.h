@@ -7,6 +7,7 @@ namespace can {
 class CANReceiver : public rclcpp::Node {
   public:
     CANReceiver();
+    ~CANReceiver() override;
 
   private:
     /**
@@ -20,8 +21,8 @@ class CANReceiver : public rclcpp::Node {
     bool receivePacket(int fd, CANPacket_t& packet);
 
     rclcpp::Publisher<can::msg::CANPacket>::SharedPtr publisher_;
-    std::string can_name_;
-    int fd_;
+    rclcpp::TimerBase::SharedPtr timer_;
+    int fd_ = -1;
 };
 
 } // namespace can

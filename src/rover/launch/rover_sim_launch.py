@@ -52,7 +52,18 @@ def generate_launch_description():
         package='rover',
         executable='Drive',
         name='Drive',
+        # Preserve the existing translation-only four-wheel simulator layout.
+        # Supply measured wheel positions before using angular.z for rover yaw.
+        parameters=[{'fixed_wheel': False,
+                     'wheels': ['BackLeft', 'BackRight', 'FrontLeft', 'FrontRight'],
+                     'wheel_x': [0.0, 0.0, 0.0, 0.0],
+                     'wheel_y': [0.0, 0.0, 0.0, 0.0]}],
         output='both',)
+
+    motors = [Node(package='rover', executable='WheelMotor',
+                   name='motor_' + wheel, output='screen',
+                   parameters=[{'wheel': wheel, 'backend': 'sim'}])
+              for wheel in ['BackLeft', 'BackRight', 'FrontLeft', 'FrontRight']]
 
     # Setup to launch the simulator and Gazebo world
     gz_sim = IncludeLaunchDescription(
@@ -105,4 +116,5 @@ def generate_launch_description():
         rviz,
         rover,
         drive,
+        *motors,
     ])
