@@ -1,0 +1,7 @@
+name: 'Build Docker Container'
+description: 'Action to Build Docker Container to run tests'
+inputs:
+outputs:
+runs:
+  using: 'docker'
+  image: 'Dockerfile'

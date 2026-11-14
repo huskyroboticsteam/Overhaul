@@ -15,16 +15,5 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v7
 
-    - name: Build Docker
-      run: |
-        cd ${{ github.workspace }}
-        sudo apt-get update && \
-        sudo apt-get install docker.io
-
-        cd .devcontainer
-        sudo docker build . -t overhaul-img
-
-    - name: Build
-      run: |
-        sudo docker run -it --mount source=~/Overhaul,target=/home/ws,type=bind overhaul-img
-        colcon test --ctest-args -LE linter --event-handlers console_direct+ && colcon test-result --verbose
+    - name: Build & Test
+      uses: huskyroboticsteam/Overhaul/test@main
