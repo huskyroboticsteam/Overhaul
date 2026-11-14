@@ -9,11 +9,3 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  build:
-    runs-on: ubuntu-latest
-    steps:
-    - name: Checkout
-      uses: actions/checkout@v7
-
-    - name: Build & Test
-      uses: ./.github/actions/setup-docker
