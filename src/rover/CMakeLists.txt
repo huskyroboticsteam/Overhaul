@@ -13,7 +13,12 @@ find_package(rclpy REQUIRED)
 find_package(geometry_msgs REQUIRED)
 
 add_executable(Rover src/Rover.cpp)
+add_executable(Drive src/Drive.cpp)
 target_include_directories(Rover PUBLIC
+  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+  $<INSTALL_INTERFACE:include>)
+
+target_include_directories(Drive PUBLIC
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
   $<INSTALL_INTERFACE:include>)
 
@@ -25,10 +30,24 @@ ament_target_dependencies(
   geometry_msgs
 )
 
+target_compile_features(Drive PUBLIC c_std_99 cxx_std_17)  # Require C99 and C++17
+ament_target_dependencies(
+  Drive
+  rclcpp
+  rcl_interfaces
+  geometry_msgs
+)
+
 install(TARGETS
   Rover
   DESTINATION lib/${PROJECT_NAME}
 )
+
+install(TARGETS
+  Drive
+  DESTINATION lib/${PROJECT_NAME}
+)
+
 
 if(BUILD_TESTING)
   find_package(ament_lint_auto REQUIRED)

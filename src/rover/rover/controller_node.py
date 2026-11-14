@@ -24,11 +24,11 @@ class Controller(Node):
 
     def on_press(self, key):
         if key == keyboard.KeyCode.from_char("w"):
-            self.vector_.linear.y = 1.0
-        if key == keyboard.KeyCode.from_char("a"):
             self.vector_.linear.x = -1.0
-        if key == keyboard.KeyCode.from_char("s"):
+        if key == keyboard.KeyCode.from_char("a"):
             self.vector_.linear.y = -1.0
+        if key == keyboard.KeyCode.from_char("s"):
+            self.vector_.linear.x = 1.0
         if key == keyboard.KeyCode.from_char("d"):
             self.vector_.linear.y = 1.0
 
