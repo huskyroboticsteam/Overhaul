@@ -6,4 +6,4 @@ log/
 
 __pycache__/
 *.pyc
-src/ros-humble-vision-opencv-3.2.1/
+src/vision_opencv/

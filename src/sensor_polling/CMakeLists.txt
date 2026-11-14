@@ -18,7 +18,7 @@ find_package(std_msgs REQUIRED)
 find_package(Threads REQUIRED)
 find_package(cv_bridge REQUIRED)
 find_package(image_transport REQUIRED)
-find_package(OpenCV REQUIRED)
+find_package(OpenCV 4.8	EXACT REQUIRED)
 
 
 set(UNITREE_SDK_DIR ${CMAKE_CURRENT_SOURCE_DIR}/lidar)

@@ -21,23 +21,25 @@ class BasicCamPublisher : public rclcpp::Node
         : Node(node_name), count_(0)
         {
             publisher_ = this->create_publisher<sensor_msgs::msg::Image>(std::string("/camera/basic_cam/") + node_name, 10);
-            timer_ = this->create_wall_timer(
-            1000ms / hz, std::bind(&BasicCamPublisher::timer_callback, this));
             cap_ = cv::VideoCapture();
             frame_id_ = node_name;
 
-            while (rclcpp::ok() && !cap_.open(camera_dev_id)) {
+            while (rclcpp::ok() && !cap_.open(camera_dev_id, cv::CAP_V4L2)) {
                 RCLCPP_ERROR(get_logger(), "Error: Could not open the webcam.");
                 rclcpp::sleep_for(1s);
             }
+	    timer_ = this->create_wall_timer(
+            1000ms / hz, std::bind(&BasicCamPublisher::timer_callback, this));
         }
 
     private:
         void timer_callback()
         {
+	    if (!cap_.isOpened()) {
+	        return;
+	    }
             cv::Mat frame;
-            cap_.read(frame);
-            if (frame.empty()) {
+            if (!cap_.read(frame) || frame.empty() || frame.rows <= 0 || frame.cols <= 0) {
                 RCLCPP_WARN(get_logger(), "WARNING: Did not get a frame from the camera.");
                 return;
             }
