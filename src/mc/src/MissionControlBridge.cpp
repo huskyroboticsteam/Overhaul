@@ -1,6 +1,7 @@
 #include "../include/mc/MissionControlBridge.h"
 
 #include <can/msg/can_device.hpp>
+#include <nlohmann/json.hpp>
 #include <rclcpp/rclcpp.hpp>
 
 namespace mc {
@@ -90,6 +91,15 @@ void MissionControlBridge::onMessage(websocketpp::connection_hdl hdl,
   std::string str = message->get_payload();
 
   RCLCPP_INFO(this->get_logger(), "Message on %s: %s", path.c_str(), str.c_str());
+
+  nlohmann::json j = nlohmann::json::parse(str, nullptr, false);
+
+  if (j["type"]=="jointPowerRequest") {
+    auto req = std::make_shared<mc::msg::JointPowerRequest>();
+    req->joint = j.value("joint", std::string());
+    req->power = j.value("power", 0.0f);
+    handleJointPowerRequest(req);
+  }
 }
 
 }  // namespace mc

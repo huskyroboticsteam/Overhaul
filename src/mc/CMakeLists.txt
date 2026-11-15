@@ -10,6 +10,7 @@ find_package(ament_cmake REQUIRED)
 find_package(rclcpp REQUIRED)
 find_package(can REQUIRED)
 find_package(frozen REQUIRED)
+find_package(nlohmann_json REQUIRED)
 
 # messages
 find_package(geometry_msgs REQUIRED)
