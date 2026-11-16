@@ -12,6 +12,7 @@
 
   <depend>rclcpp</depend>
   <depend>can</depend>
+  <depend>utils</depend>
   <depend>geometry_msgs</depend>
   <depend>rcl_interfaces</depend>
 

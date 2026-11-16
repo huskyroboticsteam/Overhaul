@@ -1,14 +1,14 @@
 #pragma once
 
-#include <mc/msg/drive_request.hpp>
-#include <mc/msg/joint_power_request.hpp>
 #include <std_msgs/msg/float32.hpp>
 
 #include <frozen/string.h>
-#include <frozen/unordered_map.h>
+#include <nlohmann/json.hpp>
 #include <rclcpp/rclcpp.hpp>
 #include <websocketpp/config/asio_no_tls.hpp>
 #include <websocketpp/server.hpp>
+
+#include <unordered_map>
 
 namespace mc {
 
@@ -27,30 +27,26 @@ public:
   MissionControlBridge& operator=(const MissionControlBridge&) = delete;
 
   void tryConnect();
+  
+  void addProtocol(frozen::string path, const std::function<void(const nlohmann::json&)> handler, const std::function<bool(const nlohmann::json&)> validator);
 
-  void handleDriveRequest(const mc::msg::DriveRequest::SharedPtr msg) const;
-  void handleJointPowerRequest(const mc::msg::JointPowerRequest::SharedPtr msg) const;
+  // void handleDriveRequest(const mc::msg::DriveRequest::SharedPtr msg) const;
+  // void handleJointPowerRequest(const mc::msg::JointPowerRequest::SharedPtr msg) const;
 
 private:
-  // std::string server_name_;
   uint16_t port_;
   websocketpp::server<websocketpp::config::asio> server_;
-  // publishers
-  rclcpp::Publisher<geometry_msgs::msg::Twist>::SharedPtr drive_pub_;
-  rclcpp::Publisher<std_msgs::msg::Float32>::SharedPtr elbow_pub_;
 
-  rclcpp::TimerBase::SharedPtr timer_;
+  std::unordered_map<frozen::string, std::function<void(const nlohmann::json&)>> handlerMap;
+  std::unordered_map<frozen::string, std::function<bool(const nlohmann::json&)>> validatorMap;
+
+  // publisher map
+  std::unordered_map<frozen::string, rclcpp::PublisherBase::SharedPtr> joint_pub_map_;
 
   void onOpen(websocketpp::connection_hdl hdl);
-  void onMessage(websocketpp::connection_hdl hdl, std::shared_ptr<websocketpp::config::core::message_type> message);
-};
+  void onMessage(websocketpp::connection_hdl hdl, message_t message);
 
-constexpr auto jointMotorMap = frozen::make_unordered_map<frozen::string, frozen::string>({
-    { "base", "base" },
-    { "shoulder", "shoulder" },
-    { "elbow", "elbow" },
-    { "forearm", "forearm" },
-    { "hand", "hand" },
-});
+  void handleJointPowerRequest(const nlohmann::json&) const;
+};
 
 }  // namespace mc

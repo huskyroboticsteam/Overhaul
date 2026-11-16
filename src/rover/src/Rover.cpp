@@ -3,10 +3,6 @@
 #include <rclcpp/rclcpp.hpp> 
 #include "geometry_msgs/msg/twist.hpp"
 
-using std::placeholders::_1;
-
-using std::placeholders::_1;
-
 class Rover : public rclcpp::Node {
 public:
   Rover() : Node("rover_node") {

@@ -7,9 +7,10 @@ endif()
 
 # find dependencies
 find_package(ament_cmake REQUIRED)
-find_package(rclcpp REQUIRED)
 find_package(can REQUIRED)
 find_package(frozen REQUIRED)
+find_package(rclcpp REQUIRED)
+find_package(utils REQUIRED)
 
 # messages
 find_package(geometry_msgs REQUIRED)
@@ -39,7 +40,7 @@ ament_target_dependencies(
   rcl_interfaces
 )
 
-target_link_libraries(MCBridge ${cpp_typesupport_target})
+target_link_libraries(MCBridge ${cpp_typesupport_target} utils::utils)
 
 install(TARGETS
   MCBridge
