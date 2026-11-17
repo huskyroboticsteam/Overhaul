@@ -1,0 +1,10 @@
+{
+  "name": "excalidraw-export",
+  "private": true,
+  "type": "module",
+  "description": "Renders .excalidraw diagrams to SVG for CI",
+  "dependencies": {
+    "@excalidraw/utils": "0.1.7",
+    "playwright": "1.64.1"
+  }
+}
