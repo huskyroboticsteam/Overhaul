@@ -13,49 +13,51 @@ CANReceiver::CANReceiver() : Node("CAN_receiver_node") {
 	this->declare_parameter("CAN_name", "can0", can_name_desc);
 	std::string can_name = this->get_parameter("CAN_name").as_string();
 
-	this->publisher_ = this->create_publisher<can::msg::CANPacket>("can_rx", rclcpp::QoS(rclcpp::KeepAll()));
+	this->publisher_ = this->create_publisher<can::msg::CANPacket>("can/rx", rclcpp::QoS(rclcpp::KeepAll()));
 
 	// create dedicated CAN socket for reading
-	int fd = createCANSocket(can_name, this->get_logger(), CANDevice_t{0, 0, 0, CAN_UUID_JETSON});
-	if (fd < 0) {
+	this->fd_ = createCANSocket(can_name, this->get_logger(), CANDevice_t{0, 0, 0, CAN_UUID_JETSON});
+	if (this->fd_ < 0) {
 		RCLCPP_ERROR(this->get_logger(), "Unable to open CAN connection!");
 		return;
 	}
 
+	timer_ = this->create_wall_timer(std::chrono::nanoseconds(0), std::bind(&CANReceiver::publishPacket, this));
+}
+
+void CANReceiver::publishPacket() {
 	CANPacket_t packet;
-	while (true) {
-		// no synchronization necessary, since this thread owns the FD
-		if (receivePacket(fd, packet)) {
-			// Copy packet into message
-			can::msg::CANPacket message = can::msg::CANPacket();
-			can::msg::CANDevice device = can::msg::CANDevice();
-			device.device_uuid = packet.device.deviceUUID;
-			device.motor = packet.device.motorDomain;
-			device.peripheral = packet.device.peripheralDomain;
-			device.power = packet.device.powerDomain;
+	// no synchronization necessary, since this thread owns the FD
+	if (receivePacket(packet)) {
+		// Copy packet into message
+		can::msg::CANPacket message = can::msg::CANPacket();
+		can::msg::CANDevice device = can::msg::CANDevice();
+		device.device_uuid = packet.device.deviceUUID;
+		device.motor = packet.device.motorDomain;
+		device.peripheral = packet.device.peripheralDomain;
+		device.power = packet.device.powerDomain;
 
-			message.device = device;
-			message.priority = packet.priority;
-			message.contents_length = packet.contentsLength;
-			message.command = packet.command;
-			message.sender_uuid = packet.senderUUID;
-			for (int i = 0; i < packet.contentsLength; i++) {
-				message.contents[i] = packet.contents[i];
-			}
-
-			// Publish message
-			this->publisher_->publish(message);
-		} else {
-			// we had a bus error, so sleep for a bit
-			std::this_thread::sleep_for(READ_ERR_SLEEP);
+		message.device = device;
+		message.priority = packet.priority;
+		message.contents_length = packet.contentsLength;
+		message.command = packet.command;
+		message.sender_uuid = packet.senderUUID;
+		for (int i = 0; i < packet.contentsLength; i++) {
+			message.contents[i] = packet.contents[i];
 		}
+
+		// Publish message
+		this->publisher_->publish(message);
+	} else {
+		// we had a bus error, so sleep for a bit
+		std::this_thread::sleep_for(READ_ERR_SLEEP);
 	}
 }
 
-bool CANReceiver::receivePacket(int fd, CANPacket_t& packet) {
+bool CANReceiver::receivePacket(CANPacket_t& packet) {
 	int ret;
 	can_frame frame;
-	ret = read(fd, &frame, sizeof(can_frame));
+	ret = read(this->fd_, &frame, sizeof(can_frame));
 	if (ret >= 0) {
 		// Parse 11-bit CAN ID into CANDevice_t + priority
 		// [priority:1][deviceUUID:7][peripheral:1][power:1][motor:1]
@@ -78,7 +80,7 @@ bool CANReceiver::receivePacket(int fd, CANPacket_t& packet) {
 		}
 		return true;
 	} else {
-    RCLCPP_ERROR(this->get_logger(), "Failed to receive CAN packet: %s", std::strerror(errno));
+		RCLCPP_ERROR(this->get_logger(), "Failed to receive CAN packet: %s", std::strerror(errno));
 		return false;
 	}
 }
@@ -88,7 +90,17 @@ bool CANReceiver::receivePacket(int fd, CANPacket_t& packet) {
 int main(int argc, char** argv)
 {
   rclcpp::init(argc, argv);
-  rclcpp::spin(std::make_shared<can::CANReceiver>());
+
+  rclcpp::executors::SingleThreadedExecutor executor;
+  rclcpp::Node::SharedPtr node = std::make_shared<can::CANReceiver>();
+  executor.add_node(node);
+
+	std::thread thread = std::thread([&]() { executor.spin(); });
+
+	while (rclcpp::ok()) {}
+
   rclcpp::shutdown();
+  thread.join();
+
   return 0;
 }
