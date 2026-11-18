@@ -54,6 +54,7 @@ add_executable(basic_cam
 
 add_executable(zed_cam
   cameras/zed_cam/publisher.cpp
+  cameras/zed_cam/cam_publisher.cpp
 )
 
 target_include_directories(unitree_lidar PRIVATE
