@@ -49,4 +49,7 @@ private:
   void handleJointPowerRequest(const nlohmann::json&) const;
 };
 
+// Validators
+static bool validateJointPowerRequest(const nlohmann::json&);
+
 }  // namespace mc

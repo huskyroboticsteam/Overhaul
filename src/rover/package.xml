@@ -12,6 +12,8 @@
 
   <depend>rclcpp</depend>
   <depend>rclpy</depend>
+  <depend>can</depend>
+  <depend>mc</depend>
   <depend>rcl_interfaces</depend>
   <depend>geometry_msgs</depend>
 

@@ -61,6 +61,11 @@ install(TARGETS
   DESTINATION lib/${PROJECT_NAME}
 )
 
+install(TARGETS
+  CAN26
+  EXPORT export_CAN26
+)
+
 if(BUILD_TESTING)
   find_package(ament_lint_auto REQUIRED)
   # the following line skips the linter which checks for copyrights
@@ -73,5 +78,6 @@ if(BUILD_TESTING)
   ament_lint_auto_find_test_dependencies()
 endif()
 
+ament_export_targets(export_CAN26 HAS_LIBRARY_TARGET)
 ament_export_dependencies(rosidl_default_runtime)
 ament_package()

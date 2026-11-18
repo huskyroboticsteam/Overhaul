@@ -25,21 +25,23 @@ CANSender::CANSender() : Node("CAN_sender_node") {
 }
 
 void CANSender::sendCANPacket(const can::msg::CANPacket::SharedPtr msg) const {
-  CANPacket_t packet = CANPacket_t{};
-  CANDevice_t device = CANDevice_t{};
-  device.deviceUUID = msg->device.device_uuid;
-  device.motorDomain = msg->device.motor;
-  device.peripheralDomain = msg->device.peripheral;
-  device.powerDomain = msg->device.power;
+  // CANPacket_t packet = CANPacket_t{};
+  // CANDevice_t device = CANDevice_t{};
+  // device.deviceUUID = msg->device.device_uuid;
+  // device.motorDomain = msg->device.motor;
+  // device.peripheralDomain = msg->device.peripheral;
+  // device.powerDomain = msg->device.power;
 
-  packet.device = device;
-  packet.priority = CANPriority_t(msg->priority);
-  packet.contentsLength = msg->contents_length;
-  packet.command = msg->command;
-  packet.senderUUID = msg->sender_uuid;
-  for (int i = 0; i < msg->contents_length; i++) {
-    packet.contents[i] = msg->contents[i];
-  }
+  // packet.device = device;
+  // packet.priority = CANPriority_t(msg->priority);
+  // packet.contentsLength = msg->contents_length;
+  // packet.command = msg->command;
+  // packet.senderUUID = msg->sender_uuid;
+  // for (int i = 0; i < msg->contents_length; i++) {
+  //   packet.contents[i] = msg->contents[i];
+  // }
+
+  CANPacket_t packet = can::ros2can_packet(*msg);
 
   canfd_frame frame;
   std::memset(&frame, 0, sizeof(frame));

@@ -7,11 +7,6 @@
 
 namespace mc {
 
-static bool validateJointPowerRequest(const nlohmann::json& j) {
-  return utils::validateKey(j, "joint", nlohmann::json::value_t::string) &&
-         utils::validateRange(j, "power", -1, 1);
-}
-
 MissionControlBridge::MissionControlBridge() : Node("mc_node"), server_() {
   // declare params
 
@@ -30,6 +25,7 @@ MissionControlBridge::MissionControlBridge() : Node("mc_node"), server_() {
   this->server_.set_open_handler([&](websocketpp::connection_hdl hdl) { this->onOpen(hdl); });
   this->server_.set_message_handler([&](websocketpp::connection_hdl hdl, message_t msg) { this->onMessage(hdl, msg); });
 
+  // publishers
   this->joint_pub_map_.try_emplace("armBase",
     this->create_publisher<std_msgs::msg::Float32>("mc/armBase/power", rclcpp::QoS(rclcpp::KeepAll())));
   this->joint_pub_map_.try_emplace("shoulder",
@@ -99,6 +95,10 @@ void MissionControlBridge::onMessage(websocketpp::connection_hdl hdl, message_t 
   }
 }
 
+static bool validateJointPowerRequest(const nlohmann::json& j) {
+  return utils::validateKey(j, "joint", nlohmann::json::value_t::string) &&
+         utils::validateRange(j, "power", -1, 1);
+}
 void MissionControlBridge::handleJointPowerRequest(const nlohmann::json& j) const {
   std::string joint = j.at("joint");
 

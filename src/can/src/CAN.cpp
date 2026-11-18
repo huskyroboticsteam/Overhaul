@@ -64,8 +64,8 @@ int createCANSocket(std::string can_name, std::optional<rclcpp::Logger> logger, 
 can::msg::CANDevice can2ros_device(CANDevice_t device) {
   return can::build<can::msg::CANDevice>()
       .device_uuid(device.deviceUUID)
-      .motor(device.motorDomain)
       .peripheral(device.peripheralDomain)
+      .motor(device.motorDomain)
       .power(device.powerDomain);
 }
 
