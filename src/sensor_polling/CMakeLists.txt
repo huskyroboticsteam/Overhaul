@@ -5,6 +5,8 @@ if(NOT CMAKE_CXX_STANDARD)
   set(CMAKE_CXX_STANDARD 17)
 endif()
 
+option(LINK_SHARED_ZED "Link with the ZED SDK shared executable" ON)
+
 if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
   add_compile_options(-Wall -Wextra -Wpedantic)
 endif()
@@ -24,7 +26,15 @@ if (BUILD_FOR_ROVER)
 else()
   find_package(OpenCV REQUIRED)
 endif()
+find_package(ZED REQUIRED)
+find_package(CUDA ${ZED_CUDA_VERSION} REQUIRED)
+find_package(zed_msgs REQUIRED)
 
+include_directories(${CUDA_INCLUDE_DIRS})
+include_directories(${ZED_INCLUDE_DIRS})
+
+link_directories(${ZED_LIBRARY_DIR})
+link_directories(${CUDA_LIBRARY_DIRS})
 
 set(UNITREE_SDK_DIR ${CMAKE_CURRENT_SOURCE_DIR}/lidar)
 file(GLOB UNITREE_SDK_LIB "${UNITREE_SDK_DIR}/lib/${CMAKE_SYSTEM_PROCESSOR}/*.a")
@@ -42,9 +52,21 @@ add_executable(basic_cam
   cameras/basic_cam/publisher.cpp
 )
 
+add_executable(zed_cam
+  cameras/zed_cam/publisher.cpp
+)
+
 target_include_directories(unitree_lidar PRIVATE
   ${UNITREE_SDK_DIR}/include
 )
+
+if (LINK_SHARED_ZED)
+    set(ZED_LIBS ${ZED_LIBRARIES} ${CUDA_CUDA_LIBRARY} ${CUDA_CUDART_LIBRARY})
+else()
+    set(ZED_LIBS ${ZED_STATIC_LIBRARIES} ${CUDA_CUDA_LIBRARY} ${CUDA_LIBRARY})
+endif()
+
+target_link_libraries(${PROJECT_NAME} ${ZED_LIBS})
 
 ament_target_dependencies(unitree_lidar rclcpp geometry_msgs sensor_msgs)
 target_link_libraries(unitree_lidar ${UNITREE_SDK_LIB} Threads::Threads)
