@@ -41,8 +41,6 @@ add_executable(CANReceiver
   src/CANReceiver.cpp)
 add_executable(CANSender
   src/CANSender.cpp)
-add_executable(Hand_Control
-  src/Hand_Control.cpp)
 
 target_include_directories(CANReceiver PUBLIC
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
@@ -53,7 +51,6 @@ target_include_directories(CANSender PUBLIC
 
 target_link_libraries(CANReceiver CAN)
 target_link_libraries(CANSender CAN)
-target_link_libraries(Hand_Control CAN)
 
 target_compile_features(CANReceiver PUBLIC c_std_99 cxx_std_17)  # Require C99 and C++17
 target_compile_features(CANSender PUBLIC c_std_99 cxx_std_17)  # Require C99 and C++17
@@ -61,8 +58,12 @@ target_compile_features(CANSender PUBLIC c_std_99 cxx_std_17)  # Require C99 and
 install(TARGETS
   CANReceiver
   CANSender
-  Hand_Control
   DESTINATION lib/${PROJECT_NAME}
+)
+
+install(TARGETS
+  CAN26
+  EXPORT export_CAN26
 )
 
 if(BUILD_TESTING)
@@ -77,5 +78,6 @@ if(BUILD_TESTING)
   ament_lint_auto_find_test_dependencies()
 endif()
 
+ament_export_targets(export_CAN26 HAS_LIBRARY_TARGET)
 ament_export_dependencies(rosidl_default_runtime)
 ament_package()

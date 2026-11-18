@@ -1,5 +1,5 @@
 uint16 device_uuid
 
-bool motor
-bool peripheral
-bool power
+bool peripheral 0
+bool motor 0
+bool power 0
