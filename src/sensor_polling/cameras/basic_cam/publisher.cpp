@@ -8,7 +8,7 @@
 #include "sensor_msgs/image_encodings.hpp"
 
 #include <opencv2/opencv.hpp>
-#include "cv_bridge/cv_bridge.h"
+#include "cv_bridge/cv_bridge.hpp"
 
 
 using namespace std::chrono_literals;
