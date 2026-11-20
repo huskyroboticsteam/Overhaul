@@ -13,6 +13,8 @@ public:
 private:
     void right_cam_callback();
 
+    sl::Camera zed_cam_;
+    sl::InitParameters init_params_;
     rclcpp::TimerBase::SharedPtr timer_right_cam_;
     rclcpp::Publisher<sensor_msgs::msg::Image>::SharedPtr
         publisher_right_cam_;
