@@ -36,7 +36,7 @@ jobs:
       - name: Run tests
         run: |
           docker run --rm overhaul:test \
-            bash -c 'colcon test --ctest-args -LE linter --event-handlers console_direct+ && colcon test-result --verbose'
+            bash -c 'colcon test --allow-overriding cv_bridge image_geometry --ctest-args -LE linter --event-handlers console_direct+ && colcon test-result --verbose'
 
   publish:
     needs: test
