@@ -59,12 +59,12 @@ CANReceiver::CANReceiver() : Node("CAN_receiver_node") {
 				message.contents[i] = packet.contents[i];
 			}
 
-			// publish to the publisher for the command ID, if it exists
+			// if command ID matches a publisher, publish to it
 			auto it = this->publishers_.find(message.command);
 			if (it != this->publishers_.end()) {
 				it->second->publish(message);
 			} else {
-				std::cerr << "Unsupported command ID: " << static_cast<int>(message.command) << "\n";
+				RCLCPP_ERROR(this->get_logger(), "Invalid command ID: %d", message.command);
 			}
 		} else {
 			// we had a bus error, so sleep for a bit
