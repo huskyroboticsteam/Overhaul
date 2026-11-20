@@ -20,7 +20,7 @@ find_package(std_msgs REQUIRED)
 find_package(Threads REQUIRED)
 find_package(cv_bridge REQUIRED)
 find_package(image_transport REQUIRED)
-find_package(OpenCV 4.8	EXACT REQUIRED)
+find_package(OpenCV 4.8 EXACT REQUIRED)
 find_package(ZED REQUIRED)
 find_package(CUDA ${ZED_CUDA_VERSION} REQUIRED)
 find_package(zed_msgs REQUIRED)
@@ -62,12 +62,14 @@ else()
     set(ZED_LIBS ${ZED_STATIC_LIBRARIES} ${CUDA_CUDA_LIBRARY} ${CUDA_LIBRARY})
 endif()
 
-target_link_libraries(${PROJECT_NAME} ${ZED_LIBS})
+ament_target_dependencies(zed_cam rclcpp sensor_msgs std_msgs geometry_msgs zed_msgs cv_bridge image_transport OpenCV)
+target_link_libraries(zed_cam ${ZED_LIBS} Threads::Threads)
 
 ament_target_dependencies(unitree_lidar rclcpp geometry_msgs sensor_msgs)
 target_link_libraries(unitree_lidar ${UNITREE_SDK_LIB} Threads::Threads)
 
 ament_target_dependencies(basic_cam rclcpp sensor_msgs cv_bridge image_transport OpenCV Threads)
+
 
 install(TARGETS unitree_lidar
   DESTINATION lib/${PROJECT_NAME}
@@ -77,6 +79,9 @@ install(TARGETS basic_cam
   DESTINATION lib/${PROJECT_NAME}
 )
 
+install (TARGETS zed_cam
+  DESTINATION lib/${PROJECT_NAME}
+)
 if(BUILD_TESTING)
   find_package(ament_lint_auto REQUIRED)
   set(ament_cmake_copyright_FOUND TRUE)

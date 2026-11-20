@@ -1,5 +1,7 @@
 #pragma once
 
+#include <sl/Camera.hpp>
+
 #include "rclcpp/rclcpp.hpp"
 #include "sensor_msgs/msg/image.hpp"
 

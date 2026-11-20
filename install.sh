@@ -1,6 +1,6 @@
 sudo apt install python3-pip
 pip3 install dronekit pyserial
-sudo apt install libopencv-dev python3-opencv ros-humble-cv-bridge ros-humble-image-transport
+sudo apt install libopencv-dev python3-opencv ros-humble-cv-bridge ros-humble-image-transport ros-humble-zed-msgs
 rosdep install --from-paths src --ignore-src -y 
 colcon build
 sudo lsusb
