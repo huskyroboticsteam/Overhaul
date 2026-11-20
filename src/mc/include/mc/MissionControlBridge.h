@@ -37,7 +37,14 @@ private:
   websocketpp::server<websocketpp::config::asio> server_;
   // publishers
   rclcpp::Publisher<geometry_msgs::msg::Twist>::SharedPtr drive_pub_;
-  rclcpp::Publisher<std_msgs::msg::Float32>::SharedPtr elbow_pub_;
+  rclcpp::Publisher<std_msgs::msg::Float64>::SharedPtr elbow_pub_;
+  rclcpp::Publisher<std_msgs::msg::Float64>::SharedPtr shoulder_pub_;
+  rclcpp::Publisher<std_msgs::msg::Float64>::SharedPtr hand_pub_;
+  rclcpp::Publisher<std_msgs::msg::Float64>::SharedPtr forearm_pub_;
+  rclcpp::Publisher<std_msgs::msg::Float64>::SharedPtr armBase_pub_;
+  rclcpp::Publisher<std_msgs::msg::Float64>::SharedPtr wristPitch_pub_;
+  rclcpp::Publisher<std_msgs::msg::Float64>::SharedPtr wristRoll_pub_;
+  rclcpp::Publisher<std_msgs::msg::Float64>::SharedPtr handActuator_pub_;
 
   rclcpp::TimerBase::SharedPtr timer_;
 
@@ -46,11 +53,14 @@ private:
 };
 
 constexpr auto jointMotorMap = frozen::make_unordered_map<frozen::string, frozen::string>({
-    { "base", "base" },
+    { "armBase", "armBase" },
     { "shoulder", "shoulder" },
     { "elbow", "elbow" },
     { "forearm", "forearm" },
     { "hand", "hand" },
+    { "wristPitch", "wristPitch" },
+    { "wristRoll", "wristRoll" },
+    { "handActuator", "handActuator" },
 });
 
 }  // namespace mc

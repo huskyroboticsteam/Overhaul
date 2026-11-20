@@ -25,8 +25,25 @@ MissionControlBridge::MissionControlBridge() : Node("mc_node"), server_() {
   this->server_.set_open_handler([&](websocketpp::connection_hdl hdl) { this->onOpen(hdl); });
   this->server_.set_message_handler([&](websocketpp::connection_hdl hdl, message_t msg) { this->onMessage(hdl, msg); });
 
+  this->drive_pub_ =
+      this->create_publisher<geometry_msgs::msg::Twist>("mc/drive_request", rclcpp::QoS(rclcpp::KeepAll()));
+
   this->elbow_pub_ =
-      this->create_publisher<std_msgs::msg::Float32>("motor/elbow/power", rclcpp::QoS(rclcpp::KeepAll()));
+      this->create_publisher<std_msgs::msg::Float64>("mc/elbow_power", rclcpp::QoS(rclcpp::KeepAll()));
+  this->shoulder_pub_ =
+      this->create_publisher<std_msgs::msg::Float64>("mc/shoulder_power", rclcpp::QoS(rclcpp::KeepAll()));
+  this->hand_pub_ =
+      this->create_publisher<std_msgs::msg::Float64>("mc/hand_power", rclcpp::QoS(rclcpp::KeepAll()));
+  this->forearm_pub_ =
+      this->create_publisher<std_msgs::msg::Float64>("mc/forearm_power", rclcpp::QoS(rclcpp::KeepAll()));
+  this->armBase_pub_ =
+      this->create_publisher<std_msgs::msg::Float64>("mc/armBase_power", rclcpp::QoS(rclcpp::KeepAll()));
+  this->wristPitch_pub_ =
+      this->create_publisher<std_msgs::msg::Float64>("mc/wristPitch_power", rclcpp::QoS(rclcpp::KeepAll()));
+  this->wristRoll_pub_ =
+      this->create_publisher<std_msgs::msg::Float64>("mc/wristRoll_power", rclcpp::QoS(rclcpp::KeepAll()));
+  this->handActuator_pub_ =
+      this->create_publisher<std_msgs::msg::Float64>("mc/handActuator_power", rclcpp::QoS(rclcpp::KeepAll()));
 }
 
 MissionControlBridge::~MissionControlBridge() {
@@ -40,6 +57,8 @@ void MissionControlBridge::handleDriveRequest(const mc::msg::DriveRequest::Share
 
   RCLCPP_DEBUG(this->get_logger(), "%f, %f, %f (%f, %f, %f)", drive.x, drive.y, drive.z, orientation.x, orientation.y,
                orientation.z);
+
+  this->drive_pub_->publish(dir);
 }
 
 void MissionControlBridge::handleJointPowerRequest(const mc::msg::JointPowerRequest::SharedPtr msg) const {
@@ -55,13 +74,27 @@ void MissionControlBridge::handleJointPowerRequest(const mc::msg::JointPowerRequ
     RCLCPP_ERROR(this->get_logger(), "no defined control for joint %s!", joint.c_str());
     return;
   } else if (motor->second == "elbow") {
-    this->elbow_pub_->publish(std_msgs::build<std_msgs::msg::Float32>().data(power));
+    this->elbow_pub_->publish(std_msgs::build<std_msgs::msg::Float64>().data(power));
 
     // device = mc::motorDeviceMap.find(motor->second)->second;
     // float vel = power * 10.0f;
 
     // can::msg::CANPacket packet = can::createMotorVelocityPacket(device, vel);
     // this->can_pub_->publish(packet);
+  } else if (motor->second == "shoulder") {
+    this->shoulder_pub_->publish(std_msgs::build<std_msgs::msg::Float64>().data(power));
+  }  else if (motor->second == "hand") {
+    this->hand_pub_->publish(std_msgs::build<std_msgs::msg::Float64>().data(power));
+  } else if (motor->second == "forearm") {
+    this->forearm_pub_->publish(std_msgs::build<std_msgs::msg::Float64>().data(power));
+  } else if (motor->second == "armBase") {
+    this->armBase_pub_->publish(std_msgs::build<std_msgs::msg::Float64>().data(power));
+  } else if (motor->second == "wristPitch") {
+    this->wristPitch_pub_->publish(std_msgs::build<std_msgs::msg::Float64>().data(power));
+  } else if (motor->second == "wristRoll") {
+    this->wristRoll_pub_->publish(std_msgs::build<std_msgs::msg::Float64>().data(power));
+  } else if (motor->second == "handActuator") {
+    this->wristRoll_pub_->publish(std_msgs::build<std_msgs::msg::Float64>().data(power));
   }
 }
 
@@ -99,6 +132,11 @@ void MissionControlBridge::onMessage(websocketpp::connection_hdl hdl,
     req->joint = j.value("joint", std::string());
     req->power = j.value("power", 0.0f);
     handleJointPowerRequest(req);
+  } else if (j["type"]=="driveRequest") {
+    auto req = std::make_shared<mc::msg::DriveRequest>();
+    req->dir.linear.x = j.value("straight", 0.0);
+    req->dir.angular.z = 0.0 - j.value("steer", 0.0);
+    handleDriveRequest(req);
   }
 }
 
