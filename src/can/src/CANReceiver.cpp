@@ -1,6 +1,9 @@
 #include "../include/can/CANReceiver.h"
 
 #include <linux/can/raw.h>
+#include <yaml-cpp/yaml.h>
+#include <yaml-cpp/node/node.h>
+#include <yaml-cpp/node/parse.h>
 
 namespace can {
 
@@ -13,7 +16,20 @@ CANReceiver::CANReceiver() : Node("CAN_receiver_node") {
 	this->declare_parameter("CAN_name", "can0", can_name_desc);
 	std::string can_name = this->get_parameter("CAN_name").as_string();
 
-	this->publisher_ = this->create_publisher<can::msg::CANPacket>("can_rx", rclcpp::QoS(rclcpp::KeepAll()));
+	// read packet schema file at CAN26_DIR/schema.yaml
+	YAML::Node config = YAML::LoadFile(std::string(CAN26_DIR) + "/schema.yaml");
+
+	// create a publisher for each packet name
+	for (const auto& packet : config["messages"]) {
+		int cmd_id = packet["commandId"].as<int>();
+		std::string name = packet["name"].as<std::string>();
+
+		this->publishers_[cmd_id] =
+			this->create_publisher<can::msg::CANPacket>(
+				name,
+				rclcpp::QoS(rclcpp::KeepAll())
+			);
+	}
 
 	// create dedicated CAN socket for reading
 	int fd = createCANSocket(can_name, this->get_logger(), CANDevice_t{0, 0, 0, CAN_UUID_JETSON});
@@ -43,8 +59,13 @@ CANReceiver::CANReceiver() : Node("CAN_receiver_node") {
 				message.contents[i] = packet.contents[i];
 			}
 
-			// Publish message
-			this->publisher_->publish(message);
+			// publish to the publisher for the command ID, if it exists
+			auto it = this->publishers_.find(message.command);
+			if (it != this->publishers_.end()) {
+				it->second->publish(message);
+			} else {
+				std::cerr << "Unsupported command ID: " << static_cast<int>(message.command) << "\n";
+			}
 		} else {
 			// we had a bus error, so sleep for a bit
 			std::this_thread::sleep_for(READ_ERR_SLEEP);
