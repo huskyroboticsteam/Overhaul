@@ -10,6 +10,7 @@ find_package(ament_cmake REQUIRED)
 find_package(rclcpp REQUIRED)
 find_package(rcl_interfaces REQUIRED)
 find_package(rosidl_default_generators REQUIRED)
+find_package(std_msgs REQUIRED)
 
 include(FetchContent)
 FetchContent_Declare(
@@ -44,10 +45,18 @@ add_executable(CANSender
 add_executable(Hand_Control
   src/Hand_Control.cpp)
 
+ament_target_dependencies(
+  Hand_Control
+  std_msgs
+)
+
 target_include_directories(CANReceiver PUBLIC
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
   $<INSTALL_INTERFACE:include>)
 target_include_directories(CANSender PUBLIC
+  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+  $<INSTALL_INTERFACE:include>)
+target_include_directories(Hand_Control PUBLIC
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
   $<INSTALL_INTERFACE:include>)
 
@@ -57,6 +66,7 @@ target_link_libraries(Hand_Control CAN)
 
 target_compile_features(CANReceiver PUBLIC c_std_99 cxx_std_17)  # Require C99 and C++17
 target_compile_features(CANSender PUBLIC c_std_99 cxx_std_17)  # Require C99 and C++17
+target_compile_features(Hand_Control PUBLIC c_std_99 cxx_std_17)  # Require C99 and C++17
 
 install(TARGETS
   CANReceiver

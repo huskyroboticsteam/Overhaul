@@ -13,6 +13,8 @@ extern "C" {
  */
 namespace can {
 
+const CANDevice_t JETSON_DEVICE = {0, 0, 0, CAN_UUID_JETSON};
+
 /**
  * @brief Creates the CAN Socket
  * 
