@@ -59,6 +59,7 @@ RUN apt-get update \
     libx264-dev \
     lsb-release \
     nlohmann-json3-dev \
+    openssh-client \
     ublox-linux \
     unzip \
     && rm -rf /var/lib/apt/lists/*

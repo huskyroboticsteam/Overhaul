@@ -29,10 +29,10 @@ rosidl_generate_interfaces(${PROJECT_NAME}
 )
 rosidl_get_typesupport_target(cpp_typesupport_target "${PROJECT_NAME}" "rosidl_typesupport_cpp")
 
-add_library(CAN STATIC src/CAN.cpp)
-target_link_libraries(CAN ${cpp_typesupport_target} CAN26)
+add_library(can_lib STATIC src/CAN.cpp)
+target_link_libraries(can_lib ${cpp_typesupport_target} CAN26)
 ament_target_dependencies(
-  CAN
+  can_lib
   rclcpp
   rcl_interfaces
 )
@@ -49,8 +49,8 @@ target_include_directories(CANSender PUBLIC
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
   $<INSTALL_INTERFACE:include>)
 
-target_link_libraries(CANReceiver CAN)
-target_link_libraries(CANSender CAN)
+target_link_libraries(CANReceiver can_lib)
+target_link_libraries(CANSender can_lib)
 
 target_compile_features(CANReceiver PUBLIC c_std_99 cxx_std_17)  # Require C99 and C++17
 target_compile_features(CANSender PUBLIC c_std_99 cxx_std_17)  # Require C99 and C++17
@@ -59,11 +59,6 @@ install(TARGETS
   CANReceiver
   CANSender
   DESTINATION lib/${PROJECT_NAME}
-)
-
-install(TARGETS
-  CAN26
-  EXPORT export_CAN26
 )
 
 if(BUILD_TESTING)
@@ -78,6 +73,5 @@ if(BUILD_TESTING)
   ament_lint_auto_find_test_dependencies()
 endif()
 
-ament_export_targets(export_CAN26 HAS_LIBRARY_TARGET)
 ament_export_dependencies(rosidl_default_runtime)
 ament_package()

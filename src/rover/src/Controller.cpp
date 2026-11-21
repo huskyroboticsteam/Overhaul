@@ -1,40 +1,63 @@
 #include "../include/rover/Controller.h"
 
-Controller::Controller() : Node("controller"), last_motor_power_() {
-  this->subscription_ = this->create_subscription<std_msgs::msg::Float32>(
-    "/mc/armBase_power", rclcpp::QoS(rclcpp::KeepAll()), std::bind(
-      Controller::handlePowerUpdate, this, std::placeholders::_1, "armBase"
+Controller::Controller() : Node("controller") {
+  // Move to some sort of constants file
+  const std::array<std::string, 4> joints[] = {"armBase", "shoulder", "elbow", "forearm"};
+  std::for_each(joints->begin(), joints->end(),
+    [&](auto joint){ createPowerSubscriber(joint); }
+  );
+
+  // Create motor power publishers
+  std::for_each(jointMotorMap.begin(), jointMotorMap.end(),
+    [&](std::pair<std::string, std::string> pair){
+      createMotorPowerPublisher(pair.second);
+    }
+  );
+
+  // for (const auto &elem : this->motor_pub_map_) {
+  //   RCLCPP_INFO(this->get_logger(), "%s", elem.first.data());
+  // }
+}
+
+void Controller::createPowerSubscriber(std::string joint) {
+  // Need to cast to function to make ROS happy...
+  std::function<void(std_msgs::msg::Float32::SharedPtr)> callback = std::bind(
+    &Controller::handlePowerUpdate, this, std::placeholders::_1, joint
+  );
+
+  this->joint_subs_.emplace(this->create_subscription<std_msgs::msg::Float32>(
+    "/joint/" + joint + "/power", rclcpp::QoS(rclcpp::KeepAll()), callback
+  ));
+}
+
+void Controller::createMotorPowerPublisher(std::string motor) {
+  // RCLCPP_INFO(this->get_logger(), "%s", motor.c_str());
+  auto result = this->motor_pub_map_.try_emplace(frozen::string(motor),
+    this->create_publisher<std_msgs::msg::Float32>(
+      "/board/" + motor + "/power", rclcpp::QoS(rclcpp::KeepAll())
     )
   );
 
-  this->can_pub_ = this->create_publisher<can::msg::CANPacket>(
-    "/can/tx", rclcpp::QoS(rclcpp::KeepAll()));
-
-  this->timer_ = this->create_wall_timer(std::chrono::milliseconds(333), std::bind(Controller::periodicTask, this));
-}
-
-void Controller::handlePowerUpdate(const std_msgs::msg::Float32::SharedPtr msg, std::string joint) {
-  if (auto it = jointMotorMap.find(joint); it != jointMotorMap.end()) {
-    CANDevice_t device = it->second;
-    double velocity = velocityMap.at(device.deviceUUID) * msg->data;
-
-    std::lock_guard lock(this->mutex_);
-    this->last_motor_power_.try_emplace(device.deviceUUID, velocity);
+  if (!result.second) {
+    RCLCPP_WARN(this->get_logger(), "Could not create publisher for motor %s!", motor.c_str());
   }
 }
 
-void Controller::periodicTask() {
-  std::lock_guard lock(this->mutex_);
-  for (const auto pair : this->last_motor_power_) {
-    const uint16_t motor = pair.first;
-    const double vel = pair.second;
+void Controller::handlePowerUpdate(const std_msgs::msg::Float32::SharedPtr msg, std::string joint) const {
+  // RCLCPP_INFO(this->get_logger(), "%s @ %f", joint.c_str(), msg->data);
+  if (auto it = jointMotorMap.find(joint); it != jointMotorMap.end()) {
+    std::string motor = it->second;
+    RCLCPP_INFO(this->get_logger(), "motor %s", motor.c_str());
 
-    if (vel != 0.0) {
-      CANDevice_t jetson = CANDevice_t{ 0, 0, 0, 0x1 };
-      CANPacket_t packet = CANMotorPacket_BLDC_SetInputVelocity(jetson, CANDevice_t{motor, 0, 1, 0}, vel, 0.0f);
-
-      this->can_pub_->publish(can::can2ros_packet(packet));
+    auto pub_it = this->motor_pub_map_.find(frozen::string(motor));
+    if (pub_it != this->motor_pub_map_.end()) {
+      auto pub = std::dynamic_pointer_cast<rclcpp::Publisher<std_msgs::msg::Float32>>(pub_it->second);
+      pub->publish(*msg);
+    } else {
+      RCLCPP_WARN(this->get_logger(), "No publisher for motor %s!", motor.c_str());
     }
+  } else {
+    RCLCPP_WARN(this->get_logger(), "No defined control for joint %s!", joint.c_str());
   }
 }
 

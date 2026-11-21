@@ -2,37 +2,45 @@
 
 #include <std_msgs/msg/float32.hpp>
 
-#include <can/include/can/CAN.h>
-
 #include <frozen/string.h>
 #include <frozen/unordered_map.h>
+#include <frozen/unordered_set.h>
 #include <rclcpp/rclcpp.hpp>
 
-constexpr auto jointMotorMap = frozen::make_unordered_map<frozen::string, CANDevice_t>(
-  {
-    {"armBase", CANDevice_t{CAN_UUID_BLDC_BASE, 1, 0, 0}}
-  }
-);
+// constexpr auto jointMotorMap = frozen::make_unordered_set<frozen::string>({
+//   "armBase",
+//   "shoulder",
+//   "elbow",
+//   "forearm",
+//   "hand"
+// });
 
-constexpr auto velocityMap = frozen::make_unordered_map<CANDeviceUUID_t, double>(
-  {
-    {CAN_UUID_BLDC_BASE, 10.0}
-  }
-);
+// constexpr auto jointMotorMap = frozen::make_unordered_map<frozen::string, frozen::string>({
+//   {"armBase", "armBase"},
+//   {"shoulder", "shoulder"},
+//   {"elbow", "elbow"},
+//   {"forearm", "forearm"},
+//   {"hand", "hand"}
+// });
+
+const auto jointMotorMap = std::unordered_map<std::string, std::string>({
+  {"armBase", "armBase"},
+  {"shoulder", "shoulder"},
+  {"elbow", "elbow"},
+  {"forearm", "forearm"},
+  {"hand", "hand"}
+});
 
 class Controller : public rclcpp::Node {
 public:
   Controller();
 
 private:
-  std::mutex mutex_;
-  std::unordered_map<CANDeviceUUID_t, double> last_motor_power_;
+  std::unordered_set<rclcpp::SubscriptionBase::SharedPtr> joint_subs_;
+  void createPowerSubscriber(std::string joint);
 
-  rclcpp::Subscription<std_msgs::msg::Float32>::SharedPtr subscription_;
-  void handlePowerUpdate(const std_msgs::msg::Float32::SharedPtr msg, std::string joint);
+  std::unordered_map<frozen::string, rclcpp::PublisherBase::SharedPtr> motor_pub_map_;
+  void createMotorPowerPublisher(std::string motor);
 
-  rclcpp::Publisher<can::msg::CANPacket>::SharedPtr can_pub_;
-
-  rclcpp::TimerBase::SharedPtr timer_;
-  void periodicTask();
+  void handlePowerUpdate(const std_msgs::msg::Float32::SharedPtr msg, std::string joint) const;
 };

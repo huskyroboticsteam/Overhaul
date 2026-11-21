@@ -27,13 +27,13 @@ MissionControlBridge::MissionControlBridge() : Node("mc_node"), server_() {
 
   // publishers
   this->joint_pub_map_.try_emplace("armBase",
-    this->create_publisher<std_msgs::msg::Float32>("mc/armBase/power", rclcpp::QoS(rclcpp::KeepAll())));
+    this->create_publisher<std_msgs::msg::Float32>("joint/armBase/power", rclcpp::QoS(rclcpp::KeepAll())));
   this->joint_pub_map_.try_emplace("shoulder",
-    this->create_publisher<std_msgs::msg::Float32>("mc/shoulder/power", rclcpp::QoS(rclcpp::KeepAll())));
+    this->create_publisher<std_msgs::msg::Float32>("joint/shoulder/power", rclcpp::QoS(rclcpp::KeepAll())));
   this->joint_pub_map_.try_emplace("elbow",
-    this->create_publisher<std_msgs::msg::Float32>("mc/elbow/power", rclcpp::QoS(rclcpp::KeepAll())));
+    this->create_publisher<std_msgs::msg::Float32>("joint/elbow/power", rclcpp::QoS(rclcpp::KeepAll())));
   this->joint_pub_map_.try_emplace("forearm",
-    this->create_publisher<std_msgs::msg::Float32>("mc/forearm/power", rclcpp::QoS(rclcpp::KeepAll())));
+    this->create_publisher<std_msgs::msg::Float32>("joint/forearm/power", rclcpp::QoS(rclcpp::KeepAll())));
   
   // define protocols
   this->addProtocol("jointPowerRequest",

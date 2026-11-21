@@ -3,6 +3,7 @@
     <node pkg="rover" exec="Rover" name="rover">
         <param name="peripheral" value="launch" />
     </node>
+    <node pkg="rover" exec="Controller" />
 
     <!-- <node pkg="rover" exec="Drive" name="drive"> -->
 

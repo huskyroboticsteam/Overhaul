@@ -44,7 +44,7 @@ ament_target_dependencies(
   rcl_interfaces
   geometry_msgs
 )
-target_link_libraries(Controller can::can)
+# target_link_libraries(Controller can::can)
 
 target_compile_features(Drive PUBLIC c_std_99 cxx_std_17)  # Require C99 and C++17
 ament_target_dependencies(
@@ -68,7 +68,6 @@ install(TARGETS
   Controller
   DESTINATION lib/${PROJECT_NAME}
 )
-
 
 if(BUILD_TESTING)
   find_package(ament_lint_auto REQUIRED)
