@@ -1,3 +1,17 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="Node000000" href="$structunilidar__sdk2_1_1LidarIpAddressConfigPacket.html" title=" " alt="" coords="5,5,197,46"/>
+<area shape="rect" id="Node000000" title=" " alt="" coords="5,153,99,179"/>
+<area shape="rect" id="Node000001" href="$classBasicCamPublisher.html" title=" " alt="" coords="154,5,290,31"/>
+<area shape="poly" id="edge5_Node000000_Node000001" title=" " alt="" coords="65,138,97,88,119,62,145,40,165,29,167,34,148,44,123,66,101,91,69,141"/>
+<area shape="rect" id="Node000002" href="$classDrive.html" title=" " alt="" coords="196,55,248,80"/>
+<area shape="poly" id="edge6_Node000000_Node000002" title=" " alt="" coords="76,140,108,114,145,89,195,71,197,76,148,94,111,118,80,145"/>
+<area shape="rect" id="Node000003" href="$classHand__Control.html" title=" " alt="" coords="172,104,272,130"/>
+<area shape="poly" id="edge7_Node000000_Node000003" title=" " alt="" coords="113,146,174,128,176,133,114,151"/>
+<area shape="rect" id="Node000004" href="$classRover.html" title=" " alt="" coords="194,153,250,179"/>
+<area shape="poly" id="edge8_Node000000_Node000004" title=" " alt="" coords="114,164,194,164,194,169,114,169"/>
+<area shape="rect" id="Node000005" href="$classUnitreeLidarSDKNode.html" title=" " alt="" coords="147,203,297,228"/>
+<area shape="poly" id="edge9_Node000000_Node000005" title=" " alt="" coords="114,181,176,199,174,205,113,186"/>
+<area shape="rect" id="Node000006" href="$classcan_1_1CANReceiver.html" title=" " alt="" coords="158,252,286,278"/>
+<area shape="poly" id="edge10_Node000000_Node000006" title=" " alt="" coords="80,188,111,214,148,238,172,249,170,254,145,243,108,218,76,192"/>
+<area shape="rect" id="Node000007" href="$classcan_1_1CANSender.html" title="Node used to send CAN to the network." alt="" coords="163,301,280,327"/>
+<area shape="poly" id="edge11_Node000000_Node000007" title=" " alt="" coords="69,192,101,241,123,266,148,288,167,298,165,303,145,292,119,270,97,244,65,194"/>
 </map>

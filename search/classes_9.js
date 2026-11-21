@@ -1,5 +1,5 @@
 var searchData=
 [
-  ['raiihelper_0',['RAIIHelper',['../classutil_1_1RAIIHelper.html',1,'util']]],
-  ['rover_1',['Rover',['../classRover.html',1,'']]]
+  ['notifiable_0',['Notifiable',['../classutil_1_1impl_1_1Notifiable.html',1,'util::impl']]],
+  ['numpyallocator_1',['NumpyAllocator',['../classNumpyAllocator.html',1,'']]]
 ];

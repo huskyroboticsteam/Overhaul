@@ -136,10 +136,10 @@ Public Member Functions</h2></td></tr>
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-attribs" name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
 <tr class="memitem:a64b30ccb02451f558c42c4813d8b57a2" id="r_a64b30ccb02451f558c42c4813d8b57a2"><td class="memItemLeft" align="right" valign="top"><a id="a64b30ccb02451f558c42c4813d8b57a2" name="a64b30ccb02451f558c42c4813d8b57a2"></a>
-&#160;</td><td class="memItemRight" valign="bottom"><b>publisher_imu_</b> = self.create_publisher(Imu, '/imu/pixhawk', int(args.frequency))</td></tr>
+&#160;</td><td class="memItemRight" valign="bottom"><b>publisher_imu_</b> = self.create_publisher(Imu, '/imu/pixhawk', 5)</td></tr>
 <tr class="separator:a64b30ccb02451f558c42c4813d8b57a2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a8a57745c93f780f508d223ae8ae1a1af" id="r_a8a57745c93f780f508d223ae8ae1a1af"><td class="memItemLeft" align="right" valign="top"><a id="a8a57745c93f780f508d223ae8ae1a1af" name="a8a57745c93f780f508d223ae8ae1a1af"></a>
-&#160;</td><td class="memItemRight" valign="bottom"><b>publisher_gps_</b> = self.create_publisher(NavSatFix, '/gps/pixhawk', int(args.frequency))</td></tr>
+&#160;</td><td class="memItemRight" valign="bottom"><b>publisher_gps_</b> = self.create_publisher(NavSatFix, '/gps/pixhawk', 5)</td></tr>
 <tr class="separator:a8a57745c93f780f508d223ae8ae1a1af"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:afd0b8ff9a3faa1f81e4bd473a74ac707" id="r_afd0b8ff9a3faa1f81e4bd473a74ac707"><td class="memItemLeft" align="right" valign="top"><a id="afd0b8ff9a3faa1f81e4bd473a74ac707" name="afd0b8ff9a3faa1f81e4bd473a74ac707"></a>
 &#160;</td><td class="memItemRight" valign="bottom"><b>timer</b> = self.create_timer(timer_period, self.timer_callback)</td></tr>

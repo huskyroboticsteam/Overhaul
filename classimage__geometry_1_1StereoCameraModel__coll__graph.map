@@ -1,0 +1,5 @@
+<map id="image_geometry::StereoCameraModel" name="image_geometry::StereoCameraModel">
+<area shape="rect" id="Node000001" title="Simplifies interpreting stereo image pairs geometrically using the parameters from the left and right..." alt="" coords="6,124,212,165"/>
+<area shape="rect" id="Node000002" href="$classimage__geometry_1_1cameramodels_1_1PinholeCameraModel.html" title=" " alt="" coords="5,5,213,46"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="112,61,112,123,106,123,106,61"/>
+</map>

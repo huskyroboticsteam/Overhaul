@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['watchdog_0',['Watchdog',['../classutil_1_1Watchdog.html',1,'util']]]
+  ['stereocameramodel_0',['StereoCameraModel',['../classimage__geometry_1_1cameramodels_1_1StereoCameraModel.html',1,'image_geometry.cameramodels.StereoCameraModel'],['../classimage__geometry_1_1StereoCameraModel.html',1,'image_geometry::StereoCameraModel']]]
 ];
