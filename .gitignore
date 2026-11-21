@@ -6,4 +6,3 @@ log/
 
 __pycache__/
 *.pyc
-src/vision_opencv/
