@@ -41,8 +41,6 @@ add_executable(CANReceiver
   src/CANReceiver.cpp)
 add_executable(CANSender
   src/CANSender.cpp)
-add_executable(Hand_Control
-  src/Hand_Control.cpp)
 
 target_include_directories(CANReceiver PUBLIC
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
@@ -53,7 +51,6 @@ target_include_directories(CANSender PUBLIC
 
 target_link_libraries(CANReceiver can_lib)
 target_link_libraries(CANSender can_lib)
-target_link_libraries(Hand_Control can_lib)
 
 target_compile_features(CANReceiver PUBLIC c_std_99 cxx_std_17)  # Require C99 and C++17
 target_compile_features(CANSender PUBLIC c_std_99 cxx_std_17)  # Require C99 and C++17
@@ -61,7 +58,6 @@ target_compile_features(CANSender PUBLIC c_std_99 cxx_std_17)  # Require C99 and
 install(TARGETS
   CANReceiver
   CANSender
-  Hand_Control
   DESTINATION lib/${PROJECT_NAME}
 )
 
