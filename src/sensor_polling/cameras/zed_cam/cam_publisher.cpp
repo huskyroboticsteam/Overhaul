@@ -1,4 +1,4 @@
-#include "publisher.hpp";
+#include "publisher.hpp"
 
 void ZedCamPublisher::right_cam_callback()
 {
