@@ -19,3 +19,5 @@ private:
     rclcpp::Publisher<sensor_msgs::msg::Image>::SharedPtr
         publisher_right_cam_;
 };
+
+InitParameters get_camera_init_params();
