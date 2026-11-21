@@ -1,6 +1,8 @@
 #pragma once
 
 #include "./CAN.h"
+#include <string>
+#include <unordered_map>
 
 namespace can {
 
@@ -19,7 +21,9 @@ class CANReceiver : public rclcpp::Node {
      */
     bool receivePacket(int fd, CANPacket_t& packet);
 
-    rclcpp::Publisher<can::msg::CANPacket>::SharedPtr publisher_;
+    // publishers, one for each CAN packet command ID
+    std::unordered_map<int, rclcpp::Publisher<can::msg::CANPacket>::SharedPtr> publishers_;
+
     std::string can_name_;
     int fd_;
 };

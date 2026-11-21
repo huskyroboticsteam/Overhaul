@@ -10,12 +10,13 @@ find_package(ament_cmake REQUIRED)
 find_package(rclcpp REQUIRED)
 find_package(rcl_interfaces REQUIRED)
 find_package(rosidl_default_generators REQUIRED)
+find_package(yaml-cpp REQUIRED)
 
 include(FetchContent)
 FetchContent_Declare(
   CAN26
   GIT_REPOSITORY https://github.com/huskyroboticsteam/CAN26.git
-  GIT_TAG 0aee8a7b4de9c09b57fc47f48bf4d0837d12f340
+  GIT_TAG 171adecf4a4750a06daf8e36043e3752e5aeb997
 )
 FetchContent_MakeAvailable(CAN26)
 add_library(CAN26 STATIC ${can26_SOURCE_DIR}/CANPacket.c)
@@ -29,12 +30,13 @@ rosidl_generate_interfaces(${PROJECT_NAME}
 )
 rosidl_get_typesupport_target(cpp_typesupport_target "${PROJECT_NAME}" "rosidl_typesupport_cpp")
 
-add_library(can_lib STATIC src/CAN.cpp)
-target_link_libraries(can_lib ${cpp_typesupport_target} CAN26)
+add_library(CAN STATIC src/CAN.cpp)
+target_link_libraries(CAN ${cpp_typesupport_target} CAN26)
 ament_target_dependencies(
-  can_lib
+  CAN
   rclcpp
   rcl_interfaces
+  yaml-cpp
 )
 
 add_executable(CANReceiver
@@ -51,12 +53,14 @@ target_include_directories(CANSender PUBLIC
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
   $<INSTALL_INTERFACE:include>)
 
-target_link_libraries(CANReceiver can_lib)
-target_link_libraries(CANSender can_lib)
-target_link_libraries(Hand_Control can_lib)
+target_link_libraries(CANReceiver CAN yaml-cpp)
+target_link_libraries(CANSender CAN)
+target_link_libraries(Hand_Control CAN)
 
 target_compile_features(CANReceiver PUBLIC c_std_99 cxx_std_17)  # Require C99 and C++17
 target_compile_features(CANSender PUBLIC c_std_99 cxx_std_17)  # Require C99 and C++17
+
+target_compile_definitions(CANReceiver PRIVATE CAN26_DIR="${can26_SOURCE_DIR}")  # Expose CAN26 dir containing YAML schema
 
 install(TARGETS
   CANReceiver
