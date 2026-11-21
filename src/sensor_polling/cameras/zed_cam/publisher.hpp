@@ -20,4 +20,4 @@ private:
         publisher_right_cam_;
 };
 
-InitParameters get_camera_init_params();
+sl::InitParameters get_camera_init_params();
