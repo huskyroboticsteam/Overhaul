@@ -11,7 +11,7 @@ using namespace std::chrono_literals;
 ZedCamPublisher::ZedCamPublisher()
     : Node("zed_cam_node")
 {
-    init_params_(get_camera_init_params());
+    init_params_ = get_camera_init_params();
     
     zed_cam_.open(init_params_);
     publisher_right_cam_ =
