@@ -16,12 +16,21 @@
   <depend>sensor_msgs</depend>
   <depend>std_msgs</depend>
 
+  <depend>tf2</depend>
+  <depend>tf2_ros</depend>
+  <depend>pcl_conversions</depend>
+  <depend>libpcl-all-dev</depend>
+  <depend>eigen</depend>
+
   <exec_depend>rclpy</exec_depend>
   <exec_depend>tf2_ros_py</exec_depend>
   <exec_depend>python3-numpy</exec_depend>
   <exec_depend>python3-websockets</exec_depend>
 
-  <test_depend>ament_lint_auto</test_depend>+
+  <exec_depend>rviz2</exec_depend>
+  <exec_depend>launch_ros</exec_depend>
+
+  <test_depend>ament_lint_auto</test_depend>
   <test_depend>ament_lint_common</test_depend>
 
   <export>

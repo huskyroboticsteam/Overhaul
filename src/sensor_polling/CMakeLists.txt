@@ -1,8 +1,9 @@
 cmake_minimum_required(VERSION 3.8)
 project(sensor_polling)
 
-if(NOT CMAKE_CXX_STANDARD)
-  set(CMAKE_CXX_STANDARD 17)
+# Default to C99
+if(NOT CMAKE_C_STANDARD)
+  set(CMAKE_C_STANDARD 99)
 endif()
 
 if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
@@ -15,8 +16,12 @@ find_package(rclcpp REQUIRED)
 find_package(geometry_msgs REQUIRED)
 find_package(sensor_msgs REQUIRED)
 find_package(std_msgs REQUIRED)
+find_package(tf2 REQUIRED)
+find_package(tf2_ros REQUIRED)
+find_package(pcl_conversions REQUIRED)
+find_package(PCL REQUIRED)
+find_package(Eigen3 REQUIRED)
 find_package(Threads REQUIRED)
-
 
 set(UNITREE_SDK_DIR ${CMAKE_CURRENT_SOURCE_DIR}/lidar)
 file(GLOB UNITREE_SDK_LIB "${UNITREE_SDK_DIR}/lib/${CMAKE_SYSTEM_PROCESSOR}/*.a")
@@ -25,20 +30,38 @@ if(NOT UNITREE_SDK_LIB)
     "No Unitree SDK library found in ${UNITREE_SDK_DIR}/lib/${CMAKE_SYSTEM_PROCESSOR}")
 endif()
 
-# C++ node
 add_executable(unitree_lidar
   lidar/publisher.cpp
 )
 
 target_include_directories(unitree_lidar PRIVATE
   ${UNITREE_SDK_DIR}/include
+  ${PCL_INCLUDE_DIRS}
+  ${EIGEN3_INCLUDE_DIR}
 )
 
-ament_target_dependencies(unitree_lidar rclcpp geometry_msgs sensor_msgs)
-target_link_libraries(unitree_lidar ${UNITREE_SDK_LIB} Threads::Threads)
+target_compile_definitions(unitree_lidar PRIVATE ${PCL_DEFINITIONS})
+target_compile_definitions(unitree_lidar PRIVATE PCL_NO_PRECOMPILE)
+
+ament_target_dependencies(unitree_lidar
+  rclcpp geometry_msgs sensor_msgs std_msgs tf2 tf2_ros pcl_conversions)
+
+target_link_libraries(unitree_lidar
+  ${UNITREE_SDK_LIB}
+  ${PCL_LIBRARIES}
+  Threads::Threads)
 
 install(TARGETS unitree_lidar
   DESTINATION lib/${PROJECT_NAME}
+)
+
+# install rviz file and launch file
+install(FILES lidar/rviz/view.rviz
+  DESTINATION share/${PROJECT_NAME}/rviz
+)
+
+install(FILES lidar/launch/launch.py
+  DESTINATION share/${PROJECT_NAME}/launch
 )
 
 if(BUILD_TESTING)
