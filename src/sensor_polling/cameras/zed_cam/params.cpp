@@ -1,7 +1,7 @@
 #include "publisher.hpp"
 
 sl::InitParameters get_camera_init_params() {
-    init_params = sl::InitParameters();
+    sl::InitParameters init_params;
     init_params.camera_resolution = sl::RESOLUTION::HD1200;
     init_params.camera_fps = 60;
     init_params.depth_mode = sl::DEPTH_MODE::NEURAL_LIGHT;  // lets us use PVA 
