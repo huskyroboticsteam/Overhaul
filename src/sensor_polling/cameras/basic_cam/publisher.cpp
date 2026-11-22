@@ -7,10 +7,6 @@
 #include "sensor_msgs/msg/image.hpp"
 #include "sensor_msgs/image_encodings.hpp"
 
-<<<<<<< HEAD
-=======
-
->>>>>>> 247e5c7cc67064ac7283b6756bfb7a1209cffb8c
 #include <opencv2/opencv.hpp>
 #include "cv_bridge/cv_bridge.h"
 
@@ -20,7 +16,6 @@ using namespace std::chrono_literals;
 class BasicCamPublisher : public rclcpp::Node
 {
     public:
-<<<<<<< HEAD
 
         // Creates a new BasicCamPublisher Node based on the given node name, hz, and camera device id
         // Also handles the creation of the VideoCapture object
@@ -28,12 +23,6 @@ class BasicCamPublisher : public rclcpp::Node
         : Node(node_name), count_(0)
         {
             publisher_ = this->create_publisher<sensor_msgs::msg::Image>(std::string("/video/basic_cam/") + node_name, 10);
-=======
-        BasicCamPublisher(const std::string &node_name, const int hz, const std::string &camera_dev_id)
-        : Node(node_name), count_(0)
-        {
-            publisher_ = this->create_publisher<sensor_msgs::msg::Image>(std::string("/camera/basic_cam/") + node_name, 10);
->>>>>>> 247e5c7cc67064ac7283b6756bfb7a1209cffb8c
             cap_ = cv::VideoCapture();
             frame_id_ = node_name;
 
@@ -41,29 +30,17 @@ class BasicCamPublisher : public rclcpp::Node
                 RCLCPP_ERROR(get_logger(), "Error: Could not open the webcam.");
                 rclcpp::sleep_for(1s);
             }
-<<<<<<< HEAD
 	        timer_ = this->create_wall_timer(
-=======
-	    timer_ = this->create_wall_timer(
->>>>>>> 247e5c7cc67064ac7283b6756bfb7a1209cffb8c
             1000ms / hz, std::bind(&BasicCamPublisher::timer_callback, this));
         }
 
     private:
-<<<<<<< HEAD
 
         // Function that handles the publishing the Image 
         void timer_callback() {
             if (!cap_.isOpened()) {
                 return;
             }
-=======
-        void timer_callback()
-        {
-	    if (!cap_.isOpened()) {
-	        return;
-	    }
->>>>>>> 247e5c7cc67064ac7283b6756bfb7a1209cffb8c
             cv::Mat frame;
             if (!cap_.read(frame) || frame.empty() || frame.rows <= 0 || frame.cols <= 0) {
                 RCLCPP_WARN(get_logger(), "WARNING: Did not get a frame from the camera.");
